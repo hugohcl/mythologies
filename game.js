@@ -792,7 +792,7 @@ function renderMJTabs() {
     var cp=CPS[ck];
     var btn=document.createElement('button'); btn.className='mjtb'+(S.mjC===ck?' on':'');
     if(S.mjC===ck){btn.style.color='var(--gold)';btn.style.background='var(--gd)';btn.style.borderColor='var(--gb)';}
-    var label=cp.name.replace('Le Moulin de Dosches','Moulin').replace('Église Saint-Jean-Baptiste','Église').replace('La Mairie','Mairie').replace('Le Lavoir','Lavoir').replace("La Ferme d'Octave","Ferme ★");
+    var label=cp.name.replace('Église Saint-Jean-Baptiste','Église').replace('La Mairie','Mairie').replace('Le Lavoir','Lavoir').replace('La Fresque du portail','Fresque').replace('Salle Polyvalente de la Rose','Salle').replace("La Ferme d'Octave","Ferme ★");
     btn.textContent=cp.icon+' '+label;
     btn.addEventListener('click',(function(key){return function(){S.mjC=key;renderMJTabs();renderMJContent();};})(ck));
     ct.appendChild(btn);

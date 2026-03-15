@@ -54,125 +54,142 @@ const CPS = {
   ferme:  {name:"La Ferme d'Octave",              icon:"🏡", addr:"1 rue de la Fontaine des Champs — ARRIVÉE",  code:null}
 };
 
+// ─────────────────────────────────────────────────────────────────
+// HINTS : clé = CP QUI VIENT D'ÊTRE VALIDÉ → indices vers le SUIVANT
+//
+// Routes :
+//   🦉 Grec    : Ferme → Fresque → Église → Lavoir → Salle → Ferme
+//   🐦‍⬛ Nordique : Ferme → Mairie → Salle → Fresque → Lavoir → Ferme
+//   🐯 Hindou  : Ferme → Lavoir → Mairie → Église → Fresque → Ferme
+// ─────────────────────────────────────────────────────────────────
 const HINTS = {
-  ferme:{
-    grec:[
+
+  // ── FERME → 1er checkpoint de chaque équipe ──────────────────
+  ferme: {
+    grec: [  // Ferme → Fresque
       "Sisyphe gravissait sa colline éternellement. Vous n'aurez qu'à la gravir une fois — là où Borée et Euros se rencontrent, un artiste anonyme a peint le monde qu'il aimait.",
       "L'aiguille de fer pointe vers le quart nord-est. Suivez-la jusqu'à la montée, puis jusqu'au portail peint.",
-      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur le moulin et les champs.",
+      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur les champs.",
       "La fresque peinte sur le portail, en montant vers le nord-est du village."
     ],
-    nordique:[
+    nordique: [  // Ferme → Mairie
       "Odin lisait les runes des destins ; la République lit ses lois. Elle les affiche sur un bâtiment gardé par une femme de pierre dont le prénom fleurit au printemps.",
       "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
       "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
       "La mairie."
     ],
-    hindou:[
+    hindou: [  // Ferme → Lavoir
       "Le Gange descend du ciel pour purifier. Une source plus modeste accomplit le même office depuis des siècles, sous un toit de pierre.",
       "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
       "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
       "Le lavoir."
     ]
   },
-  fresque:{
-    grec:[
-      "L'Agora réunissait les citoyens libres sous le ciel d'Athènes. Ce lieu porte le nom d'une fleur liée à Aphrodite elle-même.",
-      "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
-      "La grande halle de charpente avec un jardin devant, sur la pente sud du village.",
-      "La salle polyvalente."
-    ],
-    nordique:[
-      "Entre Niflheim au nord et les terres de l'aurore à l'est, les Ases gravaient des runes sur les rochers. Ici, un mortel a dessiné son village sur une paroi.",
-      "L'aiguille de fer pointe vers le quart nord-est. Suivez-la jusqu'à la montée, puis jusqu'au portail peint.",
-      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur le moulin et les champs.",
-      "La fresque peinte sur le portail, en montant vers le nord-est du village."
-    ],
-    hindou:[
-      "Là où Vayu rencontre Indra — entre le vent du nord et le souffle de l'est — un pèlerin a tracé son mandala sur un portail au bout d'une montée.",
-      "L'aiguille de fer pointe vers le quart nord-est. Suivez-la jusqu'à la montée, puis jusqu'au portail peint.",
-      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur le moulin et les champs.",
-      "La fresque peinte sur le portail, en montant vers le nord-est du village."
-    ]
-  },
-  salle:{
-    grec:[
+
+  // ── FRESQUE → prochaine étape de chaque équipe ───────────────
+  //   Grec : Fresque → Église
+  //   Nordique : Fresque → Lavoir
+  //   Hindou : Fresque → Ferme (arrivée)
+  fresque: {
+    grec: [
       "Chaque polis avait son temenos — dédié à l'éclaireur qui précédait un plus grand et accomplissait dans les eaux d'un fleuve oriental le rite qui porte son prénom.",
       "Un trésor de bois sculpté classé par l'État se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
       "La vieille bâtisse de pierre avec un clocher, au cœur du village.",
       "L'église du village."
     ],
-    nordique:[
-      "Valhöll accueillait tous les guerriers sans distinction. Ce hall communal porte le nom d'une fleur que les scaldes offraient à leur muse.",
-      "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
-      "La grande halle de charpente avec un jardin devant, sur la pente sud du village.",
-      "La salle polyvalente."
-    ],
-    hindou:[
-      "Le Sabha védique rassemblait la communauté. Ce lieu porte le nom de la fleur de Lakshmi.",
-      "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
-      "La grande halle de charpente avec un jardin devant, sur la pente sud du village.",
-      "La salle polyvalente."
-    ]
-  },
-  eglise:{
-    grec:[
-      "Les Naïades habitaient chaque source. Elles ne sont plus là, mais l'eau coule encore — et la rue où elles vivaient dit dans son propre nom ce qu'elles ont toujours fait.",
-      "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
-      "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
-      "Le lavoir."
-    ],
-    nordique:[
-      "Comme les Norses honoraient les Ases, ce lieu de pierre abrite un trésor sculpté — son saint annonçait dans l'eau la venue d'un autre.",
-      "Un trésor de bois sculpté classé par l'État se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
-      "La vieille bâtisse de pierre avec un clocher, au cœur du village.",
-      "L'église du village."
-    ],
-    hindou:[
-      "Chaque mandir est un axis mundi. Ce lieu de pierre abrite un trésor classé — son saint pratiquait la purification dans les eaux d'un fleuve d'Orient.",
-      "Un trésor de bois sculpté classé par l'État se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
-      "La vieille bâtisse de pierre avec un clocher, au cœur du village.",
-      "L'église du village."
-    ]
-  },
-  lavoir:{
-    grec:[
-      "L'Aréopage gravait les lois dans le marbre. Chaque commune française possède son propre Aréopage — et à son fronton veille une femme dont le prénom est une fleur.",
-      "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
-      "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
-      "La mairie."
-    ],
-    nordique:[
+    nordique: [
       "Mimir gardait le puits de sagesse sous les racines d'Yggdrasil. L'eau qui jaillit ici ne donne pas la sagesse — mais elle a longtemps blanchi les draps des femmes du village.",
       "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
       "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
       "Le lavoir."
     ],
-    hindou:[
+    hindou: [  // Dernier CP → retour à la Ferme
+      "Votre yatra touche à sa fin. Retournez au point de départ — là où votre odyssée champenoise a commencé.",
+      "La rue de la Fontaine des Champs vous guide jusqu'au bout.",
+      "Retournez à la ferme par la rue de la Fontaine des Champs.",
+      "La Ferme d'Octave — 1 rue de la Fontaine des Champs."
+    ]
+  },
+
+  // ── ÉGLISE → prochaine étape de chaque équipe ────────────────
+  //   Grec : Église → Lavoir
+  //   Hindou : Église → Fresque
+  eglise: {
+    grec: [
+      "Les Naïades habitaient chaque source. Elles ne sont plus là, mais l'eau coule encore — et la rue où elles vivaient dit dans son propre nom ce qu'elles ont toujours fait.",
+      "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
+      "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
+      "Le lavoir."
+    ],
+    nordique: ["—","—","—","—"],  // Nordique ne passe pas par l'Église
+    hindou: [
+      "Là où Vayu rencontre Indra — entre le vent du nord et le souffle de l'est — un pèlerin a tracé son mandala sur un portail au bout d'une montée.",
+      "L'aiguille de fer pointe vers le quart nord-est. Suivez-la jusqu'à la montée, puis jusqu'au portail peint.",
+      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur les champs.",
+      "La fresque peinte sur le portail, en montant vers le nord-est du village."
+    ]
+  },
+
+  // ── LAVOIR → prochaine étape de chaque équipe ────────────────
+  //   Grec : Lavoir → Salle
+  //   Nordique : Lavoir → Ferme (arrivée)
+  //   Hindou : Lavoir → Mairie
+  lavoir: {
+    grec: [
+      "L'Agora réunissait les citoyens libres sous le ciel d'Athènes. Ce lieu porte le nom d'une fleur liée à Aphrodite elle-même.",
+      "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
+      "La grande halle de charpente avec un jardin devant, sur la pente sud du village.",
+      "La salle polyvalente."
+    ],
+    nordique: [  // Dernier CP → retour à la Ferme
+      "Comme Sigurd de retour de sa quête, votre saga s'achève. Retournez au point de départ.",
+      "La rue de la Fontaine des Champs vous guide jusqu'au bout.",
+      "Retournez à la ferme par la rue de la Fontaine des Champs.",
+      "La Ferme d'Octave — 1 rue de la Fontaine des Champs."
+    ],
+    hindou: [
       "Brahma instaura les lois du cosmos ; la République instaure les lois des hommes. Son temple terrestre est gardé par une femme-fleur de pierre.",
       "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
       "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
       "La mairie."
     ]
   },
-  mairie:{
-    grec:[
-      "Les Naïades habitaient chaque source. Elles ne sont plus là, mais l'eau coule encore — et la rue où elles vivaient dit dans son propre nom ce qu'elles ont toujours fait.",
-      "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
-      "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
-      "Le lavoir."
+
+  // ── SALLE → prochaine étape de chaque équipe ─────────────────
+  //   Grec : Salle → Ferme (arrivée)
+  //   Nordique : Salle → Fresque
+  salle: {
+    grec: [  // Dernier CP → retour à la Ferme
+      "Comme Ulysse apercevant Ithaque, votre odyssée champenoise s'achève. Retournez au point de départ.",
+      "La rue de la Fontaine des Champs vous guide jusqu'au bout.",
+      "Retournez à la ferme par la rue de la Fontaine des Champs.",
+      "La Ferme d'Octave — 1 rue de la Fontaine des Champs."
     ],
-    nordique:[
-      "Odin lisait les runes des destins ; la République lit ses lois. Elle les affiche sur un bâtiment gardé par une femme de pierre dont le prénom fleurit au printemps.",
-      "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
-      "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
-      "La mairie."
+    nordique: [
+      "Entre Niflheim au nord et les terres de l'aurore à l'est, les Ases gravaient des runes sur les rochers. Ici, un mortel a dessiné son village sur une paroi.",
+      "L'aiguille de fer pointe vers le quart nord-est. Suivez-la jusqu'à la montée, puis jusqu'au portail peint.",
+      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur les champs.",
+      "La fresque peinte sur le portail, en montant vers le nord-est du village."
     ],
-    hindou:[
-      "Brahma instaura les lois du cosmos ; la République instaure les lois des hommes. Son temple terrestre est gardé par une femme-fleur de pierre.",
-      "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
-      "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
-      "La mairie."
+    hindou: ["—","—","—","—"]  // Hindou ne passe pas par la Salle
+  },
+
+  // ── MAIRIE → prochaine étape de chaque équipe ────────────────
+  //   Nordique : Mairie → Salle
+  //   Hindou : Mairie → Église
+  mairie: {
+    grec: ["—","—","—","—"],  // Grec ne passe pas par la Mairie
+    nordique: [
+      "Valhöll accueillait tous les guerriers sans distinction. Ce hall communal porte le nom d'une fleur que les scaldes offraient à leur muse.",
+      "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
+      "La grande halle de charpente avec un jardin devant, sur la pente sud du village.",
+      "La salle polyvalente."
+    ],
+    hindou: [
+      "Chaque mandir est un axis mundi. Ce lieu de pierre abrite un trésor classé — son saint pratiquait la purification dans les eaux d'un fleuve d'Orient.",
+      "Un trésor de bois sculpté classé par l'État se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
+      "La vieille bâtisse de pierre avec un clocher, au cœur du village.",
+      "L'église du village."
     ]
   }
 };
