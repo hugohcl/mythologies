@@ -470,6 +470,7 @@ function validateCode() {
   if(entered.length<4){ setText('codeErr','Entrez les 4 lettres.'); return; }
   if(entered===exp){
     for(var i=0;i<4;i++){ if(row.children[i]) row.children[i].classList.add('ok'); }
+    if(document.activeElement) document.activeElement.blur();
     playSound('success');
     vibrate([80,50,80]);
     setTimeout(function(){ showCit(S.team.key); },50);
@@ -562,7 +563,7 @@ function confirmDest(inputId, errId, nextKey, onSuccess) {
   var v=inp.value.trim().toLowerCase();
   if(!v){ if(err) err.textContent='Entrez une destination.'; return; }
   var ok=(ACC[nextKey]||[]).some(function(a){ return v.indexOf(a)>=0||(a.indexOf(v)>=0&&v.length>3); });
-  if(ok){ if(err) err.textContent=''; onSuccess(); }
+  if(ok){ if(err) err.textContent=''; inp.blur(); onSuccess(); }
   else {
     addP(2,'Mauvaise destination');
     if(err) err.textContent='Mauvaise destination — +2 min';
