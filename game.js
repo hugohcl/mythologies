@@ -164,6 +164,55 @@ function checkOnline(cb) {
 // ═══════════════════════════════════════════
 // CONFETTIS
 // ═══════════════════════════════════════════
+function flashSuccess() {
+  var el = document.getElementById('successFlash');
+  if (!el) return;
+  el.classList.remove('flash');
+  void el.offsetWidth; // reflow
+  el.classList.add('flash');
+  setTimeout(function(){ el.classList.remove('flash'); }, 600);
+}
+
+var _ambient = {ctx: null, on: false, master: null};
+function toggleAmbient() {
+  var btn = document.getElementById('btnAmbient');
+  _ambient.on = !_ambient.on;
+  if (_ambient.on) {
+    try {
+      _ambient.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var master = _ambient.ctx.createGain();
+      master.gain.setValueAtTime(0, _ambient.ctx.currentTime);
+      master.gain.linearRampToValueAtTime(0.055, _ambient.ctx.currentTime + 2.5);
+      master.connect(_ambient.ctx.destination);
+      _ambient.master = master;
+      [[55,.5,'sine'],[110,.3,'sine'],[165,.12,'sine'],[220,.06,'triangle'],[330,.04,'sine']].forEach(function(h){
+        var osc = _ambient.ctx.createOscillator();
+        var lfo = _ambient.ctx.createOscillator();
+        var lfoGain = _ambient.ctx.createGain();
+        var g = _ambient.ctx.createGain();
+        osc.type = h[2]; osc.frequency.value = h[0];
+        lfo.type = 'sine'; lfo.frequency.value = 0.07 + Math.random()*0.05;
+        lfoGain.gain.value = h[0] * 0.008;
+        lfo.connect(lfoGain); lfoGain.connect(osc.frequency);
+        g.gain.value = h[1];
+        osc.connect(g); g.connect(master);
+        osc.start(); lfo.start();
+      });
+      if (btn) { btn.textContent = '♪'; btn.style.color = 'var(--gold)'; btn.style.opacity = '1'; }
+    } catch(e) { _ambient.on = false; }
+  } else {
+    try {
+      if (_ambient.ctx) {
+        var m = _ambient.master;
+        if (m) { m.gain.linearRampToValueAtTime(0, _ambient.ctx.currentTime + 1.2); }
+        var ctx = _ambient.ctx; _ambient.ctx = null; _ambient.master = null;
+        setTimeout(function(){ try { ctx.close(); } catch(e){} }, 1400);
+      }
+    } catch(e) {}
+    if (btn) { btn.textContent = '♫'; btn.style.color = ''; btn.style.opacity = ''; }
+  }
+}
+
 function launchConfetti() {
   var canvas = document.getElementById('confetti');
   if (!canvas) return;
@@ -360,9 +409,11 @@ function startGame() {
     setTimeout(function(){ el.style.transform='scale(1)'; },150);
     n--;
     if(n===0){
-      el.innerHTML='<span style="font-size:48px;letter-spacing:5px">PARTEZ !</span>';
+      el.innerHTML='<span style="font-family:\'Cinzel Decorative\',serif;font-size:46px;letter-spacing:4px;animation:partez .55s cubic-bezier(.2,1.4,.4,1) forwards;display:inline-block;text-shadow:0 0 50px rgba(255,220,100,.9),0 0 100px rgba(201,168,76,.5)">PARTEZ !</span>';
+      var s4bg=document.getElementById('s4');
+      if(s4bg){s4bg.style.transition='background .15s';s4bg.style.background='rgba(201,168,76,.12)';setTimeout(function(){s4bg.style.background='';},400);}
       clearInterval(iv);
-      setTimeout(function(){ startC(); if(S.team) S.mjST[S.team.key]=S.t0; showS5(); save(); saveMJ(); },700);
+      setTimeout(function(){ startC(); if(S.team) S.mjST[S.team.key]=S.t0; showS5(); save(); saveMJ(); },800);
     } else {
       playSound('tick');
       el.textContent=n;
@@ -397,7 +448,15 @@ function showEnRoute(cpk) {
   go('s6','forward');
   var auto=setTimeout(function(){ showEnigme(cpk); },3500);
   var s6=document.getElementById('s6');
-  s6.onclick=function(){ clearTimeout(auto); s6.onclick=null; showEnigme(cpk); };
+  s6.onclick=function(e){ if(e.target.id==='btnEnRouteBack') return; clearTimeout(auto); s6.onclick=null; showEnigme(cpk); };
+  var backBtn=document.getElementById('btnEnRouteBack');
+  if(backBtn){
+    backBtn.onclick=function(e){
+      e.stopPropagation(); clearTimeout(auto); s6.onclick=null;
+      if(S.idx===0){ showS5(); }
+      else{ S.idx--; save(); showHintsScreen(S.team.route[S.idx]); }
+    };
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -471,6 +530,7 @@ function validateCode() {
   if(entered===exp){
     for(var i=0;i<4;i++){ if(row.children[i]) row.children[i].classList.add('ok'); }
     if(document.activeElement) document.activeElement.blur();
+    flashSuccess();
     playSound('success');
     vibrate([80,50,80]);
     setTimeout(function(){ showCit(S.team.key); },50);
@@ -552,6 +612,16 @@ function buildHints(containerId, cpk, tk) {
         }
       };
     })(hk,lvl,card,body,btn));
+
+    // Auto-ouvrir l'Indice I (gratuit) à la première visite
+    if (idx === 0 && !opened) {
+      S.oh[hk] = true;
+      body.classList.add('open');
+      btn.textContent = 'Masquer';
+      card.style.borderColor = lvl.c + '50';
+      card.style.background = lvl.c + '0e';
+      save();
+    }
 
     container.appendChild(card);
   });
