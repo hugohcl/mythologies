@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════
 var S = {
   team:null, idx:0, t0:null, pen:0, oh:{}, iv:null,
-  onPen:false, plog:[], mjT:"grec", mjC:"moulin",
+  onPen:false, plog:[], mjT:"grec", mjC:"fresque",
   mjST:{}, mjIv:null, pendingTeam:null, quizAnswers:{}
 };
 

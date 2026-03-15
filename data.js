@@ -17,7 +17,7 @@ const TEAMS = {
     arrival:"Comme Ulysse retrouvant Ithaque après vingt ans d'errance, votre odyssée s'achève ici.",
     members:["Antoine","Bastien","Matthieu","Thomas"],
     color:"#5a8fd4", bg:"rgba(90,143,212,0.12)", border:"rgba(90,143,212,0.32)",
-    route:["moulin","eglise","mairie","lavoir"]
+    route:["fresque","eglise","lavoir","salle"]
   },
   nordique: {
     key:"nordique", name:"Équipe Nordique", mascot:"🐦‍⬛", tagline:"Les Guerriers du Valhalla",
@@ -25,7 +25,7 @@ const TEAMS = {
     arrival:"Comme Sigurd de retour de sa quête, vos exploits seront chantés au mead-hall ce soir.",
     members:["Alex","Livia","Raphaël","Victor"],
     color:"#c8c8c8", bg:"rgba(160,160,160,0.10)", border:"rgba(160,160,160,0.28)",
-    route:["mairie","moulin","lavoir","eglise"]
+    route:["mairie","salle","fresque","lavoir"]
   },
   hindou: {
     key:"hindou", name:"Équipe Hindoue", mascot:"🐯", tagline:"Les Disciples du Dharma",
@@ -33,66 +33,164 @@ const TEAMS = {
     arrival:"Votre yatra s'achève. Le moksha vous attend — repos mérité après ce périple.",
     members:["Axel","Jade","LG","Patrick"],
     color:"#c080e8", bg:"rgba(160,80,200,0.12)", border:"rgba(160,80,200,0.32)",
-    route:["lavoir","mairie","eglise","moulin"]
+    route:["lavoir","mairie","eglise","fresque"]
   }
 };
 
 const ENIGMES = {
-  moulin:"Face à l'entrée du moulin, tournez-vous vers la haie à l'est. Comptez 15 pas. Cherchez sous la pierre plate la plus éloignée du chemin. [PLACEHOLDER — à compléter vendredi]",
-  eglise:"Entrez dans le cimetière par le portail. Longez le mur de droite sur 8 pas. Cherchez dans le creux du troisième pilier, à hauteur de genou. [PLACEHOLDER — à compléter vendredi]",
-  mairie:"Face à la Mairie, prenez à droite. Derrière le panneau d'affichage, à 1,20m de hauteur. [PLACEHOLDER — à compléter vendredi]",
-  lavoir:"Depuis le bassin, longez le mur nord sur 10 pas. Cherchez derrière le lierre dans le creux du deuxième pilier. [PLACEHOLDER — à compléter vendredi]"
+  fresque:"[PLACEHOLDER — à compléter après repérage vendredi]",
+  eglise: "[PLACEHOLDER — à compléter après repérage vendredi]",
+  lavoir: "[PLACEHOLDER — à compléter après repérage vendredi]",
+  salle:  "[PLACEHOLDER — à compléter après repérage vendredi]",
+  mairie: "[PLACEHOLDER — à compléter après repérage vendredi]"
 };
 
 const CPS = {
-  moulin:{name:"Moulin de Dosches",        icon:"⚙️", addr:"Rue du Moulin — sommet du village",           code:"VENT"},
-  eglise:{name:"Église Saint-Jean-Baptiste",icon:"⛪", addr:"Centre du village — Rue de l'Église",         code:"JEAN"},
-  mairie:{name:"La Mairie",                 icon:"🏛️",addr:"4 rue du Grand-Cernay",                       code:"LOIS"},
-  lavoir:{name:"Le Lavoir",                 icon:"💧", addr:"4 rue de la Fontaine des Champs",             code:"ONDE"},
-  ferme: {name:"La Ferme d'Octave",         icon:"🏡", addr:"1 rue de la Fontaine des Champs — ARRIVÉE",   code:null}
+  fresque:{name:"La Fresque du portail",          icon:"🎨", addr:"17 rue des Buchettes — nord-est du village", code:"NORD"},
+  eglise: {name:"Église Saint-Jean-Baptiste",     icon:"⛪", addr:"Rue de l'Église — centre du village",        code:"JEAN"},
+  lavoir: {name:"Le Lavoir",                      icon:"💧", addr:"Rue de la Fontaine des Champs",              code:"ONDE"},
+  salle:  {name:"Salle Polyvalente de la Rose",   icon:"🌹", addr:"2 rue de la Côte aux Suisses",               code:"ROSE"},
+  mairie: {name:"La Mairie",                      icon:"🏛️", addr:"4 rue du Grand-Cernay",                      code:"LOIS"},
+  ferme:  {name:"La Ferme d'Octave",              icon:"🏡", addr:"1 rue de la Fontaine des Champs — ARRIVÉE",  code:null}
 };
 
 const HINTS = {
   ferme:{
-    grec:["Dans la tradition des Anciens, chaque cité avait son temenos. À Dosches, cherchez ce qui domine tous les toits depuis une colline — une construction de bois dont quatre bras captent le souffle des plaines de Champagne. Inaugurée en 2007, elle reproduit ce que le XVIIIe siècle érigea avant que la révolution industrielle ne le condamne au silence.","Cherchez à Dosches ce qui domine le village depuis sa colline — une construction en bois dont les quatre bras captent le souffle des plaines. On le voit depuis la Grande Rue si on sait lever la tête.","Montez vers le sommet du village. Cherchez une structure en bois qui tourne avec le vent.","Moulin de Dosches — Rue du Moulin, au sommet du village."],
-    nordique:["Odin a tracé votre première étape. Dans le Midgard de Dosches, le pouvoir de l'État s'exerce depuis un bâtiment gardé par le buste d'une femme allégorique dont le prénom est celui d'une fleur symbole de liberté. Il siège au numéro 4 d'une rue portant le nom d'un cours d'eau qui borde les terres agricoles à l'ouest du bourg.","Comme Asgard avait ses halls de gouvernance, chaque commune française a son bâtiment officiel orné de Marianne. Trouvez-le à Dosches — sur une rue portant le nom d'un grand ruisseau.","Le bâtiment officiel qui gouverne la commune. Cherchez le drapeau tricolore.","La Mairie — 4 rue du Grand-Cernay."],
-    hindou:["Dans la cosmologie hindoue, l'eau est purificatrice — Ganga descend des cieux pour laver les péchés des mortels. À Dosches, une source naturelle alimente un bassin de pierre couvert, refuge des lavandières. La rue sur laquelle il se trouve dit dans son propre nom ce qui y coule.","L'eau est sacrée dans la tradition hindoue. À Dosches, cherchez le bassin de pierre couvert alimenté par une source naturelle. La rue indique dans son nom ce qui y jaillit.","Un bassin de pierre couvert, alimenté par une source. La rue de ce lieu évoque l'eau et les champs.","Le Lavoir — 4 rue de la Fontaine des Champs."]
+    grec:[
+      "Sisyphe gravissait sa colline éternellement. Vous n'aurez qu'à la gravir une fois — là où Borée et Euros se rencontrent, un artiste anonyme a peint le monde qu'il aimait.",
+      "L'aiguille de fer pointe vers le quart nord-est. Suivez-la jusqu'à la montée, puis jusqu'au portail peint.",
+      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur le moulin et les champs.",
+      "La fresque peinte sur le portail, en montant vers le nord-est du village."
+    ],
+    nordique:[
+      "Odin lisait les runes des destins ; la République lit ses lois. Elle les affiche sur un bâtiment gardé par une femme de pierre dont le prénom fleurit au printemps.",
+      "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
+      "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
+      "La mairie."
+    ],
+    hindou:[
+      "Le Gange descend du ciel pour purifier. Une source plus modeste accomplit le même office depuis des siècles, sous un toit de pierre.",
+      "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
+      "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
+      "Le lavoir."
+    ]
   },
-  moulin:{
-    grec:["Dans la tradition des Anciens, un édifice de pierre conserve une œuvre en bois polychrome classée Monument Historique. Son saint tutélaire était l'éclaireur : il accomplissait dans les eaux d'un fleuve oriental le rite qui porte désormais son prénom.","Cherchez à Dosches le lieu de culte chrétien dont le saint patron a donné son nom au rite de l'eau. Il abrite un trésor classé Monument Historique.","L'église du village, dédiée à un saint dont le nom est aussi un prénom très courant.","Église Saint-Jean-Baptiste — centre du village."],
-    nordique:["Mimir gardait sous les racines d'Yggdrasil un puits dont les eaux conféraient la sagesse absolue. À Dosches, une source naturelle alimente un bassin de pierre couvert. Cette source porte le prénom du saint tutélaire de l'église, et la rue dit dans son propre nom ce qui y coule.","Trouvez le bassin de pierre couvert du village. La rue où il se situe porte le nom de ce qui y jaillit.","Le lavoir du village, alimenté par une source. La rue évoque l'eau et les champs.","Le Lavoir — 4 rue de la Fontaine des Champs."],
-    hindou:["Le pèlerin qui achève son yatra retrouve son ashram. Votre demeure porte le prénom d'un homme dont le nom latin évoque le rang de huitième — Octavius. Elle vous attend au numéro 1 de la rue portant le nom de ce qui jaillit librement des terres champenoises.","Le moksha est proche. Votre maison de base est une ferme dont le nom contient un prénom masculin latin. Elle est au numéro 1 d'une rue dont le nom évoque une source des champs.","Votre maison de base — une ferme dont le nom est un prénom d'homme.","La Ferme d'Octave — 1 rue de la Fontaine des Champs. C'est l'arrivée !"]
+  fresque:{
+    grec:[
+      "L'Agora réunissait les citoyens libres sous le ciel d'Athènes. Ce lieu porte le nom d'une fleur liée à Aphrodite elle-même.",
+      "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
+      "La grande halle de charpente avec un jardin devant, sur la pente sud du village.",
+      "La salle polyvalente."
+    ],
+    nordique:[
+      "Entre Niflheim au nord et les terres de l'aurore à l'est, les Ases gravaient des runes sur les rochers. Ici, un mortel a dessiné son village sur une paroi.",
+      "L'aiguille de fer pointe vers le quart nord-est. Suivez-la jusqu'à la montée, puis jusqu'au portail peint.",
+      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur le moulin et les champs.",
+      "La fresque peinte sur le portail, en montant vers le nord-est du village."
+    ],
+    hindou:[
+      "Là où Vayu rencontre Indra — entre le vent du nord et le souffle de l'est — un pèlerin a tracé son mandala sur un portail au bout d'une montée.",
+      "L'aiguille de fer pointe vers le quart nord-est. Suivez-la jusqu'à la montée, puis jusqu'au portail peint.",
+      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur le moulin et les champs.",
+      "La fresque peinte sur le portail, en montant vers le nord-est du village."
+    ]
+  },
+  salle:{
+    grec:[
+      "Chaque polis avait son temenos — dédié à l'éclaireur qui précédait un plus grand et accomplissait dans les eaux d'un fleuve oriental le rite qui porte son prénom.",
+      "Un trésor de bois sculpté classé par l'État se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
+      "La vieille bâtisse de pierre avec un clocher, au cœur du village.",
+      "L'église du village."
+    ],
+    nordique:[
+      "Valhöll accueillait tous les guerriers sans distinction. Ce hall communal porte le nom d'une fleur que les scaldes offraient à leur muse.",
+      "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
+      "La grande halle de charpente avec un jardin devant, sur la pente sud du village.",
+      "La salle polyvalente."
+    ],
+    hindou:[
+      "Le Sabha védique rassemblait la communauté. Ce lieu porte le nom de la fleur de Lakshmi.",
+      "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
+      "La grande halle de charpente avec un jardin devant, sur la pente sud du village.",
+      "La salle polyvalente."
+    ]
   },
   eglise:{
-    grec:["L'Aréopage d'Athènes était le conseil des sages. La République française perpétue cette tradition dans un bâtiment gardé par le buste d'une femme allégorique dont le prénom est celui d'une fleur symbole de liberté. À Dosches, il siège au numéro 4 d'une rue portant le nom d'un cours d'eau à l'ouest.","Les hommes gouvernent depuis un bâtiment orné de Marianne. Trouvez-le à Dosches — sur une rue portant le nom d'un grand ruisseau.","Le bâtiment officiel qui gère la commune. Cherchez le drapeau tricolore.","La Mairie — 4 rue du Grand-Cernay."],
-    nordique:["Comme Sigurd trouva son repos après mille épreuves, votre saga s'achève. Votre mead-hall porte le prénom d'un homme dont le nom latin évoque le huitième rang — il vous attend au numéro 1 de la rue portant le nom de ce qui jaillit naturellement des Champs.","Tout guerrier revient au mead-hall. Votre maison de base est une ferme dont le nom contient un prénom masculin. Elle est au numéro 1 d'une rue évoquant une source.","Votre maison de base — une ferme dont le nom est un prénom d'homme.","La Ferme d'Octave — 1 rue de la Fontaine des Champs. C'est l'arrivée !"],
-    hindou:["Vayu, dieu védique du vent, insuffle sa puissance dans une construction de bois qui domine le village. Réhabilité en 2007, cet édifice à quatre bras se dresse au point le plus élevé du territoire communal, visible depuis la Grande Rue pour qui sait lever les yeux.","Le vent est sacré dans la cosmologie hindoue. Cherchez au sommet du village la structure en bois dont les quatre ailes captent le souffle de Vayu.","Montez vers le point le plus haut du village. Cherchez quelque chose qui tourne avec le vent.","Le Moulin de Dosches — Rue du Moulin, au sommet du village."]
-  },
-  mairie:{
-    grec:["Les Naïades peuplaient chaque source. À Dosches, une source qui porte le prénom du saint tutélaire de l'église alimente un bassin de pierre couvert. La rue dit dans son nom ce qui y coule.","Poséidon régnait sur toutes les eaux. Cherchez à Dosches le bassin de pierre couvert, alimenté par une source. La rue indique dans son nom ce qui y jaillit.","Un bassin de pierre couvert, alimenté par une source. La rue évoque l'eau et les champs.","Le Lavoir — 4 rue de la Fontaine des Champs."],
-    nordique:["Tel Yggdrasil dont les branches touchent les neuf cieux, une construction de bois s'élève au-dessus du village. Ses quatre bras captent le souffle d'Odin. Elle fut reconstituée en 2007 selon les plans d'un moulin à pivot du XVIIIe siècle.","Cherchez en haut du village la structure à quatre ailes qui tourne avec le souffle du nord.","Montez vers le point le plus haut du village. Cherchez quelque chose qui tourne avec le vent.","Le Moulin de Dosches — Rue du Moulin, au sommet du village."],
-    hindou:["Dans la tradition hindoue, chaque mandir est un axis mundi. À Dosches, un édifice dont le transept remonte au XVIe siècle abrite une Vierge à l'Enfant en bois polychrome classée Monument Historique. Son saint patron fut le premier à reconnaître le divin dans l'humain — dans les eaux d'un fleuve oriental.","L'église du village abrite un trésor classé. Son saint patron pratiquait un rite de purification dans l'eau.","Le lieu de culte du village. Son saint patron est connu pour un rite pratiqué dans l'eau.","Église Saint-Jean-Baptiste — centre du village."]
+    grec:[
+      "Les Naïades habitaient chaque source. Elles ne sont plus là, mais l'eau coule encore — et la rue où elles vivaient dit dans son propre nom ce qu'elles ont toujours fait.",
+      "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
+      "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
+      "Le lavoir."
+    ],
+    nordique:[
+      "Comme les Norses honoraient les Ases, ce lieu de pierre abrite un trésor sculpté — son saint annonçait dans l'eau la venue d'un autre.",
+      "Un trésor de bois sculpté classé par l'État se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
+      "La vieille bâtisse de pierre avec un clocher, au cœur du village.",
+      "L'église du village."
+    ],
+    hindou:[
+      "Chaque mandir est un axis mundi. Ce lieu de pierre abrite un trésor classé — son saint pratiquait la purification dans les eaux d'un fleuve d'Orient.",
+      "Un trésor de bois sculpté classé par l'État se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
+      "La vieille bâtisse de pierre avec un clocher, au cœur du village.",
+      "L'église du village."
+    ]
   },
   lavoir:{
-    grec:["Ulysse, après vingt ans d'errance, reconnut enfin les rivages de son île. Comme lui, votre odyssée touche à sa fin. Votre Ithaque est une ferme portant le prénom d'un homme dont le nom latin évoque le rang de huitième — elle vous attend au numéro 1 de la rue portant le nom de ce qui jaillit naturellement des champs.","Votre base est une ferme champenoise dont le nom contient un prénom masculin latin. Au numéro 1 d'une rue évoquant une source des champs.","Votre maison de base — une ferme dont le nom est un prénom d'homme.","La Ferme d'Octave — 1 rue de la Fontaine des Champs. C'est l'arrivée !"],
-    nordique:["Les hommes du Midgard érigèrent leurs sanctuaires pour dialoguer avec le divin. À Dosches, un édifice dont le transept remonte au XVIe siècle abrite une Vierge à l'Enfant classée Monument Historique. Son saint fut envoyé en éclaireur — il annonçait un autre dans les eaux du Jourdain.","L'église du village abrite un trésor classé. Son saint patron pratiquait un rite dans l'eau.","Le lieu de culte du village. Son saint patron est connu pour un rite pratiqué dans l'eau.","Église Saint-Jean-Baptiste — centre du village."],
-    hindou:["Brahma instaura l'ordre cosmique. Dans chaque commune française, un bâtiment perpétue cet ordre — il porte le buste d'une femme allégorique dont le prénom est celui d'une fleur symbole de liberté. À Dosches, il siège au numéro 4 d'une rue portant le nom d'un cours d'eau qui serpente à l'ouest.","Indra règne sur les cieux ; sur terre, la République gouverne depuis la Mairie. Trouvez celle de Dosches — sur une rue portant le nom d'un ruisseau.","Le bâtiment officiel qui gère la commune. Cherchez le drapeau tricolore.","La Mairie — 4 rue du Grand-Cernay."]
+    grec:[
+      "L'Aréopage gravait les lois dans le marbre. Chaque commune française possède son propre Aréopage — et à son fronton veille une femme dont le prénom est une fleur.",
+      "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
+      "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
+      "La mairie."
+    ],
+    nordique:[
+      "Mimir gardait le puits de sagesse sous les racines d'Yggdrasil. L'eau qui jaillit ici ne donne pas la sagesse — mais elle a longtemps blanchi les draps des femmes du village.",
+      "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
+      "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
+      "Le lavoir."
+    ],
+    hindou:[
+      "Brahma instaura les lois du cosmos ; la République instaure les lois des hommes. Son temple terrestre est gardé par une femme-fleur de pierre.",
+      "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
+      "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
+      "La mairie."
+    ]
+  },
+  mairie:{
+    grec:[
+      "Les Naïades habitaient chaque source. Elles ne sont plus là, mais l'eau coule encore — et la rue où elles vivaient dit dans son propre nom ce qu'elles ont toujours fait.",
+      "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
+      "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
+      "Le lavoir."
+    ],
+    nordique:[
+      "Odin lisait les runes des destins ; la République lit ses lois. Elle les affiche sur un bâtiment gardé par une femme de pierre dont le prénom fleurit au printemps.",
+      "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
+      "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
+      "La mairie."
+    ],
+    hindou:[
+      "Brahma instaura les lois du cosmos ; la République instaure les lois des hommes. Son temple terrestre est gardé par une femme-fleur de pierre.",
+      "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
+      "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
+      "La mairie."
+    ]
   }
 };
 
 const LVL = [
-  {l:"Indice I",  p:0,  d:"Coriace",       c:"#2a9d6a"},
-  {l:"Indice II", p:2,  d:"Intermédiaire", c:"#d4a017"},
-  {l:"Indice III",p:5,  d:"Facile",        c:"#d07030"},
-  {l:"Indice IV", p:10, d:"Très facile",   c:"#b83030"}
+  {l:"Indice I",   p:0, d:"Coriace",       c:"#2a9d6a"},
+  {l:"Indice II",  p:2, d:"Intermédiaire", c:"#d4a017"},
+  {l:"Indice III", p:5, d:"Facile",        c:"#d07030"},
+  {l:"Indice IV",  p:8, d:"Très facile",   c:"#b83030"}
 ];
 
 const ACC = {
-  moulin:["moulin","le moulin","moulin de dosches"],
-  eglise:["église","eglise","saint-jean","saint jean","l'église","l'eglise"],
-  mairie:["mairie","la mairie"],
-  lavoir:["lavoir","le lavoir"],
-  ferme: ["ferme","la ferme","ferme d'octave","octave"]
+  fresque:["fresque","la fresque","portail","buchettes"],
+  eglise: ["eglise","église","saint-jean","saint jean","l'église","l'eglise"],
+  lavoir: ["lavoir","le lavoir"],
+  salle:  ["salle","polyvalente","rose","salle polyvalente"],
+  mairie: ["mairie","la mairie"],
+  ferme:  ["ferme","la ferme","octave","ferme d'octave"]
 };
 
 const CITS = {
