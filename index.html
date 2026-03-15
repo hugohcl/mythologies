@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#120e0a">
+<meta name="apple-mobile-web-app-title" content="Mythologies">
+<link rel="apple-touch-icon" id="appleIcon" href="logo.png">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="manifest" id="manifestLink">
+<title>Mythologies</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overscroll-behavior:none}
+:root{
+  --gold:#C9A84C;--gold2:#e8c46a;--gd:rgba(201,168,76,0.09);--gb:rgba(201,168,76,0.22);
+  --bg:#0f0c09;--bg2:#181410;--bg3:#201a12;
+  --text:#ddd0b0;--muted:#8a7060;--muted2:#b09070;
+  --danger:#c0392b;--ok:#27ae60;
+  --tc:var(--gold);--tb:var(--gd);--tbr:var(--gb);
+  --shadow-gold:0 0 28px rgba(201,168,76,0.22);
+  --glow:0 0 18px rgba(201,168,76,0.35);
+}
+html,body{height:100%;height:100dvh;background:var(--bg);color:var(--text);font-family:'IM Fell English',Georgia,serif;overflow:hidden;position:fixed;width:100%;overscroll-behavior:none}
+
+/* ── SCREEN TRANSITIONS ── */
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;transition:opacity .28s,transform .28s}
+.screen.hidden{opacity:0;pointer-events:none;transform:translateX(28px)}
+.screen.hidden.exit-forward{transform:translateX(-28px)}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(180deg,var(--bg3) 0%,var(--bg2) 100%);border-bottom:1px solid rgba(201,168,76,0.18);padding:calc(16px + env(safe-area-inset-top)) 20px 13px;flex-shrink:0;position:relative}
+.ht{font-family:'Cinzel',serif;font-size:17px;color:var(--gold);letter-spacing:3px;text-align:center;text-shadow:var(--glow)}
+.hs{font-size:12px;color:var(--muted);text-align:center;margin-top:4px;font-style:italic;letter-spacing:.3px}
+.mjpill{position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;background:rgba(180,30,30,.9);color:#fff;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;padding:3px 9px;border-radius:10px}
+
+/* ── SCROLL ── */
+.scroll{flex:1;overflow-y:auto;padding:16px 16px calc(28px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ── CHRONO BAR ── */
+.cbar{background:var(--bg2);border-bottom:1px solid rgba(255,255,255,.05);padding:9px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.ct{font-family:'Cinzel',serif;font-size:26px;color:var(--gold);letter-spacing:2px;text-shadow:var(--glow)}
+.clbl{font-size:9px;color:var(--muted);margin-bottom:2px;letter-spacing:1.5px;text-transform:uppercase}
+.cpen{font-size:12px;color:var(--muted);text-align:right}
+.cpen b{color:var(--danger);font-family:'Cinzel',serif}
+
+/* ── PROGRESS STEPS ── */
+.steps{display:flex;gap:5px;padding:7px 20px;justify-content:center;flex-shrink:0;background:var(--bg2)}
+.sd{flex:1;max-width:44px;height:3px;border-radius:2px;background:rgba(255,255,255,.07);transition:background .4s,opacity .4s}
+.sd.done{background:var(--gold);opacity:.35}
+.sd.active{background:var(--gold);box-shadow:0 0 6px rgba(201,168,76,.5)}
+
+/* ── CARDS ── */
+.card{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:15px 16px;margin-bottom:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.ctit{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);margin-bottom:8px;letter-spacing:1.2px;text-transform:uppercase;opacity:.85}
+.ct2{background:var(--tb);border-color:var(--tbr);box-shadow:inset 0 1px 0 rgba(201,168,76,.06)}
+
+/* ── TEAM CARDS ── */
+.tcard{border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:16px 18px 16px 22px;margin-bottom:11px;cursor:pointer;transition:transform .15s,box-shadow .15s;background:rgba(255,255,255,.03);touch-action:manipulation;position:relative;overflow:hidden}
+.tcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px 0 0 2px}
+.tcard:active{transform:scale(.985);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.tn{font-family:'Cinzel',serif;font-size:18px;margin-bottom:3px;letter-spacing:.5px}
+.tm{font-size:13px;color:var(--muted);margin-bottom:9px}
+.tbg{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:4px 11px;font-size:11px;background:rgba(255,255,255,.04);color:var(--muted)}
+
+/* ── BUTTONS ── */
+.btn{display:block;width:100%;padding:14px;border-radius:13px;border:none;cursor:pointer;font-family:'Cinzel',serif;font-size:13px;letter-spacing:1.2px;transition:transform .12s,opacity .12s;margin-bottom:9px;touch-action:manipulation}
+.btn:active{transform:scale(.97);opacity:.9}
+.btn:last-child{margin-bottom:0}
+.bg{background:linear-gradient(135deg,#d4a94a 0%,#8a6120 100%);color:#080600;font-weight:700;box-shadow:0 4px 22px rgba(201,168,76,.32),inset 0 1px 0 rgba(255,230,120,.25)}
+.bt{background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.38);color:var(--gold);font-weight:600}
+.bt:active{background:rgba(201,168,76,.2)}
+.bgh{background:transparent;border:1px solid rgba(255,255,255,.12);color:var(--muted)}
+.bred{background:linear-gradient(135deg,#c0392b,#922b21);color:#fff;font-weight:700}
+.btn:disabled{opacity:.28;pointer-events:none}
+
+/* ── CODE INPUTS ── */
+.crow{display:flex;gap:11px;justify-content:center;margin-bottom:16px}
+.cc{width:62px;height:74px;border-radius:14px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);font-family:'Cinzel',serif;font-size:30px;font-weight:700;color:var(--gold);text-align:center;text-transform:uppercase;outline:none;transition:border-color .18s,box-shadow .18s;box-shadow:inset 0 2px 8px rgba(0,0,0,.3)}
+.cc:focus{border-color:var(--gold);background:rgba(201,168,76,.08);box-shadow:inset 0 2px 8px rgba(0,0,0,.3),0 0 0 3px rgba(201,168,76,.15)}
+.cc.err{border-color:var(--danger)!important;box-shadow:0 0 0 3px rgba(192,57,43,.2)!important;animation:shk .28s}
+.cc.ok{border-color:var(--ok)!important;background:rgba(39,174,96,.1);box-shadow:0 0 0 3px rgba(39,174,96,.15)!important}
+@keyframes shk{0%,100%{transform:translateX(0)}30%{transform:translateX(-7px)}70%{transform:translateX(7px)}}
+
+/* ── HINT CARDS ── */
+.hcard{border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden;margin-bottom:10px;background:rgba(255,255,255,.02)}
+.hhdr{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 15px;gap:10px}
+.hlbl{font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:.5px}
+.hmeta{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap}
+.hdiff{font-size:12px;color:var(--muted)}
+.hpill{font-size:11px;padding:2px 8px;border-radius:8px;font-weight:600}
+.hbtn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:var(--muted);padding:7px 13px;border-radius:8px;font-family:'Cinzel',serif;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0;touch-action:manipulation;letter-spacing:.5px}
+.hbody{padding:12px 15px 14px;border-top:1px solid rgba(255,255,255,.06);font-style:italic;line-height:1.9;font-size:15px;color:var(--text);display:none;background:rgba(0,0,0,.15)}
+.hbody.open{display:block}
+
+/* ── CP HEADER ── */
+.cph{background:var(--tb);border:1px solid var(--tbr);border-radius:13px;padding:12px 16px;margin-bottom:14px}
+.cpn{font-family:'Cinzel',serif;font-size:17px;color:var(--gold);margin-bottom:4px;letter-spacing:.5px;text-shadow:0 0 12px rgba(201,168,76,.25)}
+.cpa{font-size:12px;color:var(--muted)}
+.cs{background:var(--tb);border:1px solid var(--tbr);border-radius:14px;padding:15px;margin-top:4px}
+
+/* ── TEXT INPUT ── */
+.din{width:100%;padding:13px 15px;border-radius:11px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--text);font-family:'IM Fell English',Georgia,serif;font-size:16px;outline:none;margin-bottom:10px;transition:border-color .2s,box-shadow .2s}
+.din:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.12)}
+
+/* ── MISC ── */
+.srow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px}
+.srow:last-child{border-bottom:none}
+.sl{color:var(--muted)}
+.sv{font-family:'Cinzel',serif;color:var(--gold);font-size:14px}
+.orn{color:var(--gold);opacity:.28;text-align:center;font-size:15px;margin:6px 0;letter-spacing:5px}
+.div{height:1px;background:linear-gradient(90deg,transparent,var(--gb),transparent);margin:14px 0}
+
+/* ── MJ TABS ── */
+.mjtab{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.mjtb{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:7px 12px;border-radius:9px;font-family:'Cinzel',serif;font-size:11px;cursor:pointer;color:var(--muted);touch-action:manipulation;letter-spacing:.5px}
+.mjtb.on{border-color:var(--gold);color:var(--gold);background:var(--tb)}
+.mjlr{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;margin-bottom:9px}
+
+/* ── OVERLAYS ── */
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+#citOv{position:fixed;inset:0;z-index:3000;background:rgba(6,4,2,.96);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:36px;pointer-events:none;opacity:0;transition:opacity .4s}
+#citOv.show{opacity:1}
+#confetti{position:fixed;inset:0;z-index:2500;pointer-events:none;display:none}
+
+/* ── BANNERS / TOAST ── */
+.banner{position:fixed;top:0;left:0;right:0;z-index:2000;padding:13px 18px;text-align:center;font-family:'Cinzel',serif;font-size:13px;letter-spacing:1px;transform:translateY(-100%);transition:transform .3s}
+.banner.show{transform:translateY(0)}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(90px);color:#fff;padding:10px 22px;border-radius:24px;font-family:'Cinzel',serif;font-size:13px;transition:transform .28s;white-space:nowrap;z-index:1999;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── TEST OVERLAY ── */
+#testOv{position:fixed;top:calc(10px + env(safe-area-inset-top));right:10px;z-index:4000;background:rgba(10,6,3,.97);border:1px solid rgba(201,168,76,.4);border-radius:11px;display:none}
+#testOv .tov-toggle{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(201,168,76,.6);padding:6px 10px;cursor:pointer;user-select:none;display:flex;align-items:center;gap:5px;white-space:nowrap}
+#testOv .tov-toggle::after{content:'▾';font-size:10px;color:rgba(201,168,76,.5)}
+#testOv.collapsed .tov-toggle::after{content:'▸'}
+#testOv .tov-body{padding:0 10px 8px;min-width:150px}
+#testOv.collapsed .tov-body{display:none}
+#testOv .tov-row{font-size:11px;color:var(--muted);margin-bottom:3px;line-height:1.4}
+#testOv .tov-val{font-family:'Cinzel',serif;color:#C9A84C;letter-spacing:1px;font-size:12px}
+#testOv .tov-btn{display:block;width:100%;margin-top:6px;padding:5px;background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:7px;font-family:'Cinzel',serif;font-size:10px;color:var(--muted);cursor:pointer;letter-spacing:1px}
+#testOv .tov-btn:active{opacity:.7}
+
+/* ── SAFE AREA (non-scroll centered screens) ── */
+#s2,#s4,#s6{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+
+/* ── MJ / QUIZ / LB ── */
+.qrow{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);gap:8px}
+.qrow:last-child{border-bottom:none}
+.qtxt{font-size:13px;color:var(--muted);flex:1;line-height:1.5}
+.qbtns{display:flex;gap:4px;flex-shrink:0}
+.qbtn{border:1px solid rgba(255,255,255,.15);background:transparent;color:var(--muted);border-radius:6px;padding:4px 9px;font-size:13px;cursor:pointer;touch-action:manipulation}
+.qbtn.yes{background:rgba(39,174,96,.2);border-color:var(--ok);color:var(--ok)}
+.qbtn.no{background:rgba(192,57,43,.2);border-color:var(--danger);color:var(--danger)}
+.lbrow{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:11px;margin-bottom:8px}
+
+/* ── HOME SCREEN HERO ── */
+.s1-hero{display:flex;flex-direction:column;align-items:center;padding:calc(28px + env(safe-area-inset-top)) 24px 20px;background:linear-gradient(180deg,rgba(201,168,76,.07) 0%,transparent 100%);border-bottom:1px solid rgba(201,168,76,.14);flex-shrink:0}
+.s1-logo{width:74px;height:74px;object-fit:contain;margin-bottom:16px;filter:drop-shadow(0 0 18px rgba(201,168,76,.55))}
+.s1-title{font-family:'Cinzel',serif;font-weight:700;font-size:30px;color:var(--gold);letter-spacing:7px;text-align:center;text-shadow:0 0 32px rgba(201,168,76,.5),0 2px 4px rgba(0,0,0,.6);margin-bottom:7px}
+.s1-sub{font-size:12px;color:var(--muted);font-style:italic;text-align:center;letter-spacing:.4px}
+
+/* ── COUNTDOWN ── */
+#cdNum{font-family:'Cinzel',serif;font-size:130px;color:var(--gold);line-height:1;transition:transform .15s;text-shadow:0 0 60px rgba(201,168,76,.45)}
+.cd-lbl{font-family:'Cinzel',serif;font-size:11px;color:var(--muted);letter-spacing:4px;margin-top:4px}
+
+/* ── EN ROUTE ── */
+.er-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:28px;text-align:center;gap:0}
+.er-icon{font-size:52px;animation:pulse 2.2s infinite;margin-bottom:18px}
+.er-name{font-family:'Cinzel',serif;font-size:32px;letter-spacing:2px;margin-bottom:8px;line-height:1.2}
+.er-addr{font-size:12px;color:var(--muted);opacity:.8;margin-bottom:36px;letter-spacing:.3px}
+.er-tap{font-size:13px;color:var(--muted);opacity:.65;font-style:italic;letter-spacing:.8px}
+
+/* ── ARRIVAL ── */
+.arr-hero{text-align:center;padding:22px 20px 12px}
+.arr-trophy{font-size:52px;margin-bottom:10px}
+.arr-team{font-family:'Cinzel',serif;font-size:26px;letter-spacing:2px;margin-bottom:6px;text-shadow:var(--glow)}
+.arr-flavor{font-size:13px;color:var(--muted);font-style:italic;line-height:1.7;max-width:300px;margin:0 auto}
+</style>
+</head>
+<body ontouchstart="">
+
+<canvas id="confetti"></canvas>
+<div id="testOv" class="collapsed">
+  <div class="tov-toggle" onclick="(function(el){el.classList.toggle('collapsed')})(document.getElementById('testOv'))">— TEST —</div>
+  <div class="tov-body">
+    <div id="testOvBody"></div>
+    <button class="tov-btn" onclick="go('s1','back')">← Menu principal</button>
+  </div>
+</div>
+<div class="banner" style="background:var(--danger);color:#fff" id="banOnline">CONNEXION DÉTECTÉE — +30 MIN DE PÉNALITÉ</div>
+<div class="toast" style="background:rgba(192,57,43,.96)" id="toastR"></div>
+<div id="citOv">
+  <div style="font-family:'Cinzel',serif;font-size:16px;color:var(--gold);text-align:center;line-height:1.8;margin-bottom:14px;text-shadow:var(--glow)" id="citT"></div>
+  <div style="font-size:12px;color:var(--muted);font-style:italic;text-align:center;letter-spacing:.3px" id="citS"></div>
+</div>
+
+<!-- S1: ÉQUIPES -->
+<div class="screen" id="s1">
+  <div class="s1-hero">
+    <img src="logo.png" class="s1-logo" alt="Mythologies">
+    <div class="s1-title">MYTHOLOGIES</div>
+    <div class="s1-sub" id="s1sub">Jeu d'orientation · Dosches</div>
+  </div>
+  <div class="scroll">
+    <p style="text-align:center;color:var(--muted);font-size:12px;margin:10px 0 16px;font-style:italic;letter-spacing:.3px">Choisissez votre équipe</p>
+    <div id="teamList"></div>
+    <button class="btn bgh" style="max-width:220px;margin:4px auto 0;font-size:12px;opacity:.55" id="btnMJAccess">Maître de Jeu</button>
+  </div>
+</div>
+
+<!-- S2: MODE AVION -->
+<div class="screen hidden" id="s2" style="justify-content:center;align-items:center;flex-direction:column;padding:36px;text-align:center">
+  <div style="font-size:60px;margin-bottom:22px;opacity:.9">✈️</div>
+  <div style="font-family:'Cinzel',serif;font-size:21px;color:var(--danger);letter-spacing:2px;margin-bottom:14px">Mode Avion Requis</div>
+  <div style="font-size:14px;color:var(--muted);line-height:1.8;max-width:280px;margin:0 auto 30px">Activez le <b style="color:var(--text)">mode avion</b> avant de commencer.<br><br>Toute connexion détectée = <b style="color:var(--danger)">+30 min</b>.</div>
+  <p id="s2err" style="color:var(--danger);font-family:'Cinzel',serif;font-size:13px;min-height:16px;margin-bottom:10px;max-width:280px;text-align:center"></p>
+  <button class="btn bg" style="max-width:260px" id="btnAP">Mode avion activé — vérifier</button>
+</div>
+
+<!-- S3: BRIEFING -->
+<div class="screen hidden" id="s3">
+  <div class="hdr"><div class="ht" id="s3title">—</div><div class="hs" id="s3sub">—</div></div>
+  <div class="scroll">
+    <div class="orn">— ✦ —</div>
+    <div class="card ct2" style="text-align:center;margin-top:8px"><p style="font-size:14px;font-style:italic;line-height:1.9;color:var(--text)" id="s3flavor">—</p></div>
+    <div class="card">
+      <div class="ctit">Règles</div>
+      <p style="font-size:13px;color:var(--muted2);line-height:1.8;margin-bottom:9px">Vous partez d'ici — la <b style="color:var(--text)">Ferme d'Octave</b>. Votre premier indice vous attend sur le prochain écran.</p>
+      <p style="font-size:13px;color:var(--muted2);line-height:1.8;margin-bottom:9px">À chaque lieu, trouvez la <b style="color:var(--text)">cachette</b> contenant un <b style="color:var(--text)">code à 4 lettres</b>. Ce code débloque vos indices vers la suite.</p>
+      <p style="font-size:13px;color:var(--muted2);line-height:1.8">Téléphone en <b style="color:var(--text)">mode avion</b>. Connexion = <b style="color:var(--danger)">+30 min</b>.</p>
+    </div>
+    <div class="card ct2"><div class="ctit">Chrono</div><p style="font-size:13px;color:var(--muted);line-height:1.7">Il démarre au top départ. Que les dieux vous soient favorables.</p></div>
+    <button class="btn bt" id="btnStart">Voir le premier indice</button>
+    <button class="btn bgh" id="btnBackTeam">← Changer d'équipe</button>
+  </div>
+</div>
+
+<!-- S4: COUNTDOWN -->
+<div class="screen hidden" id="s4" style="justify-content:center;align-items:center;flex-direction:column">
+  <div id="cdNum">3</div>
+  <div class="cd-lbl">PRÉPAREZ-VOUS</div>
+</div>
+
+<!-- S5: INDICES DÉPART (Ferme) -->
+<div class="screen hidden" id="s5">
+  <div class="hdr"><div class="ht" id="s5title">—</div><div class="hs" id="s5sub">—</div></div>
+  <div class="cbar"><div><div class="clbl">Chrono</div><div class="ct" id="c5">00:00</div></div><div class="cpen">Pénalités · <b id="p5">+0 min</b></div></div>
+  <div class="steps" id="st5"></div>
+  <div class="scroll">
+    <div class="cph"><div class="cpn">La Ferme d'Octave</div><div class="cpa">Point de départ · 1 rue de la Fontaine des Champs</div></div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:13px;font-style:italic;line-height:1.7">Ces indices révèlent votre premier checkpoint.</p>
+    <div id="hintsStart"></div>
+    <div class="div"></div>
+    <div class="cs">
+      <div class="ctit">Où allez-vous en premier ?</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:11px;line-height:1.7">Tapez le nom du lieu. Mauvaise réponse = +2 min.</p>
+      <input class="din" id="destStart" type="text" placeholder="Votre premier checkpoint…" autocomplete="off" autocorrect="off" spellcheck="false"/>
+      <p id="destStartErr" style="color:var(--danger);font-size:12px;font-family:'Cinzel',serif;min-height:15px;margin-bottom:10px"></p>
+      <button class="btn bt" id="btnGoStart">C'est parti !</button>
+    </div>
+  </div>
+</div>
+
+<!-- S6: EN ROUTE -->
+<div class="screen hidden" id="s6">
+  <div class="hdr"><div class="ht" id="s6title">—</div><div class="hs">En route…</div></div>
+  <div class="cbar"><div><div class="clbl">Chrono</div><div class="ct" id="c6">00:00</div></div><div class="cpen">Pénalités · <b id="p6">+0 min</b></div></div>
+  <div class="steps" id="st6"></div>
+  <div class="er-wrap">
+    <div class="er-icon" id="erIcon">🧭</div>
+    <div class="er-name" id="erName">—</div>
+    <div class="er-addr" id="erAddr">—</div>
+    <div class="orn" style="margin-bottom:28px;opacity:.2">─── ✦ ───</div>
+    <p class="er-tap">Appuyez n'importe où pour continuer</p>
+  </div>
+</div>
+
+<!-- S7b: ENIGME CACHETTE -->
+<div class="screen hidden" id="sEnigme">
+  <div class="hdr"><div class="ht" id="enigTitle">—</div><div class="hs">Où est cachée la clé ?</div></div>
+  <div class="cbar"><div><div class="clbl">Chrono</div><div class="ct" id="cEnigme">00:00</div></div><div class="cpen">Pénalités · <b id="pEnigme">+0 min</b></div></div>
+  <div class="steps" id="stEnigme"></div>
+  <div class="scroll">
+    <div class="cph"><div class="cpn" id="enigCPName">—</div><div class="cpa" id="enigCPAddr">—</div></div>
+    <div class="card ct2">
+      <div class="ctit">Énigme — Trouvez la cachette</div>
+      <p style="font-style:italic;line-height:1.9;font-size:15px;color:var(--text)" id="enigText">—</p>
+    </div>
+    <button class="btn bt" id="btnFoundCache" style="margin-top:8px">J'ai trouvé — entrer le code</button>
+  </div>
+</div>
+
+<!-- S7: CODE -->
+<div class="screen hidden" id="s7">
+  <div class="hdr"><div class="ht" id="s7title">—</div><div class="hs">Entrez le code de la cachette</div></div>
+  <div class="cbar"><div><div class="clbl">Chrono</div><div class="ct" id="c7">00:00</div></div><div class="cpen">Pénalités · <b id="p7">+0 min</b></div></div>
+  <div class="steps" id="st7"></div>
+  <div class="scroll">
+    <div class="cph"><div class="cpn" id="s7cpName">—</div><div class="cpa" id="s7cpAddr">—</div></div>
+    <div style="text-align:center;padding:12px 0 16px">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7">Trouvez la cachette sur ce lieu.<br>Elle contient un <b style="color:var(--text)">code à 4 lettres</b>.</p>
+      <div class="crow" id="codeRow"></div>
+      <button class="btn bt" id="btnCode" style="max-width:260px;margin:0 auto">Valider le code</button>
+      <p id="codeErr" style="color:var(--danger);font-size:13px;margin-top:12px;min-height:16px;font-family:'Cinzel',serif"></p>
+    </div>
+  </div>
+</div>
+
+<!-- S8: INDICES -->
+<div class="screen hidden" id="s8">
+  <div class="hdr"><div class="ht" id="s8title">—</div><div class="hs" id="s8sub">—</div></div>
+  <div class="cbar"><div><div class="clbl">Chrono</div><div class="ct" id="c8">00:00</div></div><div class="cpen">Pénalités · <b id="p8">+0 min</b></div></div>
+  <div class="steps" id="st8"></div>
+  <div class="scroll">
+    <div class="cph"><div class="cpn" id="s8cpName">—</div><div class="cpa" id="s8cpAddr">—</div></div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:13px;font-style:italic;line-height:1.7">Ouvrez les indices pour révéler votre prochaine destination. L'Indice I est gratuit.</p>
+    <div id="hintsList"></div>
+    <div class="div"></div>
+    <div class="cs">
+      <div class="ctit">Où allez-vous ensuite ?</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:11px;line-height:1.7">Tapez le nom. Mauvaise réponse = +2 min.</p>
+      <input class="din" id="destNext" type="text" placeholder="Votre prochaine destination…" autocomplete="off" autocorrect="off" spellcheck="false"/>
+      <p id="destNextErr" style="color:var(--danger);font-size:12px;font-family:'Cinzel',serif;min-height:15px;margin-bottom:10px"></p>
+      <button class="btn bt" id="btnNext">Confirmer et partir</button>
+    </div>
+  </div>
+</div>
+
+<!-- S9: ARRIVÉE -->
+<div class="screen hidden" id="s9">
+  <div class="hdr"><div class="ht">✦ ARRIVÉE ✦</div><div class="hs" id="s9sub">—</div></div>
+  <div class="scroll">
+    <div class="arr-hero">
+      <div class="arr-trophy">🏡</div>
+      <div class="arr-team" id="s9team">—</div>
+      <div class="arr-flavor" id="s9flavor">—</div>
+    </div>
+    <div class="orn" style="margin:10px 0">— ✦ —</div>
+    <div class="card"><div class="ctit">Score détaillé</div><div id="scoreDiv"></div></div>
+    <div class="card ct2" style="text-align:center">
+      <p style="font-size:13px;color:var(--muted);line-height:1.8">Attendez les autres équipes.<br>Le <b style="color:var(--gold)">Maître de Jeu</b> notera vos chronos à votre retour.</p>
+    </div>
+    <button class="btn bgh" id="btnReset">↺ Autre équipe</button>
+  </div>
+</div>
+
+<!-- S10: MJ LOGIN -->
+<div class="screen hidden" id="s10">
+  <div class="hdr" style="--tc:#e05050;--tb:rgba(200,40,40,.1);--tbr:rgba(200,40,40,.3)">
+    <div class="ht" style="color:#e05050">MAÎTRE DE JEU</div><div class="hs">Accès restreint</div>
+  </div>
+  <div class="scroll">
+    <div class="orn" style="color:#e05050;opacity:.3;margin-bottom:16px">— ✦ —</div>
+    <div class="card">
+      <div class="ctit" style="color:#e05050">Code d'accès</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7">Entrez le code secret.</p>
+      <div class="crow" id="mjRow"></div>
+      <p id="mjErr" style="color:var(--danger);font-size:13px;font-family:'Cinzel',serif;text-align:center;min-height:16px;margin-bottom:10px"></p>
+      <button class="btn bred" id="btnMJLogin">Entrer dans le sanctuaire</button>
+    </div>
+    <button class="btn bgh" id="btnMJBack">← Retour</button>
+  </div>
+</div>
+
+<!-- S11: MJ MODE -->
+<div class="screen hidden" id="s11">
+  <div class="hdr" style="--tc:#e05050;--tb:rgba(200,40,40,.1);--tbr:rgba(200,40,40,.3)">
+    <div class="ht" style="color:#e05050">MAÎTRE DE JEU</div><div class="hs">Vue complète</div>
+    <div class="mjpill">MODE MJ</div>
+  </div>
+  <div class="scroll">
+    <div class="mjtab" style="margin-bottom:14px">
+      <button class="mjtb on" id="mjTabLive" style="color:#e05050;border-color:#e05050;background:rgba(200,40,40,.1)" onclick="switchMJTab('live')">Chronos</button>
+      <button class="mjtb" id="mjTabIndices" onclick="switchMJTab('indices')">Indices</button>
+      <button class="mjtb" id="mjTabQuiz" onclick="switchMJTab('quiz')" style="display:none">Quiz</button>
+      <button class="mjtb" id="mjTabLb" onclick="switchMJTab('lb')" style="display:none">Classement</button>
+    </div>
+    <div id="mjPaneLive"><div id="mjLive"></div></div>
+    <div id="mjPaneIndices" style="display:none">
+      <div class="mjtab" id="mjTeamTabs"></div>
+      <div class="mjtab" id="mjCPTabs"></div>
+      <div id="mjContent"></div>
+    </div>
+    <div id="mjPaneQuiz" style="display:none">
+      <div id="quizDiv"></div>
+      <div class="div"></div>
+      <div id="quizBonus"></div>
+    </div>
+    <div id="mjPaneLb" style="display:none">
+      <div id="lbDiv"></div>
+    </div>
+    <div class="div"></div>
+    <button class="btn" style="font-size:12px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.28);color:var(--gold);margin-bottom:8px" id="btnTestMode">Mode Test — navigation libre</button>
+    <button class="btn bgh" style="font-size:12px" id="btnMJHome">← Retour accueil</button>
+  </div>
+</div>
+
+<!-- TEST MODE -->
+<div class="screen hidden" id="sTest">
+  <div class="hdr" style="--tc:#C9A84C;--tb:rgba(201,168,76,.1);--tbr:rgba(201,168,76,.28)">
+    <div class="ht" style="color:var(--gold)">MODE TEST</div>
+    <div class="hs">Navigation libre — accès MJ requis</div>
+  </div>
+  <div class="scroll">
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;font-style:italic;line-height:1.7">Sélectionnez une équipe puis un écran.</p>
+    <div class="ctit" style="margin-bottom:8px">Équipe</div>
+    <div class="mjtab" id="testTeamTabs"></div>
+    <div class="div"></div>
+    <div class="ctit" style="margin-bottom:8px">Naviguer vers</div>
+    <button class="btn bgh" style="text-align:left" onclick="testGo('s1')">Sélection équipe</button>
+    <button class="btn bgh" style="text-align:left" onclick="testGo('s2')">Écran mode avion</button>
+    <button class="btn bgh" style="text-align:left" onclick="testGo('s3')">Briefing</button>
+    <button class="btn bgh" style="text-align:left" onclick="testGo('s4')">Countdown</button>
+    <button class="btn bgh" style="text-align:left" onclick="testGo('s5')">Indices départ (Ferme)</button>
+    <button class="btn bgh" style="text-align:left" onclick="testGo('s6')">En route</button>
+    <button class="btn bgh" style="text-align:left" onclick="testGo('sEnigme')">Énigme cachette</button>
+    <button class="btn bgh" style="text-align:left" onclick="testGo('s7')">Saisie code</button>
+    <button class="btn bgh" style="text-align:left" onclick="testGo('s8')">Indices</button>
+    <button class="btn bgh" style="text-align:left" onclick="testGo('s9')">Arrivée</button>
+    <div class="div"></div>
+    <button class="btn bgh" onclick="go('s11','back')">← Retour MJ</button>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
