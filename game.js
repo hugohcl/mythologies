@@ -173,45 +173,6 @@ function flashSuccess() {
   setTimeout(function(){ el.classList.remove('flash'); }, 600);
 }
 
-var _ambient = {ctx: null, on: false, master: null};
-function toggleAmbient() {
-  var btn = document.getElementById('btnAmbient');
-  _ambient.on = !_ambient.on;
-  if (_ambient.on) {
-    try {
-      _ambient.ctx = new (window.AudioContext || window.webkitAudioContext)();
-      var master = _ambient.ctx.createGain();
-      master.gain.setValueAtTime(0, _ambient.ctx.currentTime);
-      master.gain.linearRampToValueAtTime(0.055, _ambient.ctx.currentTime + 2.5);
-      master.connect(_ambient.ctx.destination);
-      _ambient.master = master;
-      [[55,.5,'sine'],[110,.3,'sine'],[165,.12,'sine'],[220,.06,'triangle'],[330,.04,'sine']].forEach(function(h){
-        var osc = _ambient.ctx.createOscillator();
-        var lfo = _ambient.ctx.createOscillator();
-        var lfoGain = _ambient.ctx.createGain();
-        var g = _ambient.ctx.createGain();
-        osc.type = h[2]; osc.frequency.value = h[0];
-        lfo.type = 'sine'; lfo.frequency.value = 0.07 + Math.random()*0.05;
-        lfoGain.gain.value = h[0] * 0.008;
-        lfo.connect(lfoGain); lfoGain.connect(osc.frequency);
-        g.gain.value = h[1];
-        osc.connect(g); g.connect(master);
-        osc.start(); lfo.start();
-      });
-      if (btn) { btn.textContent = '♪'; btn.style.color = 'var(--gold)'; btn.style.opacity = '1'; }
-    } catch(e) { _ambient.on = false; }
-  } else {
-    try {
-      if (_ambient.ctx) {
-        var m = _ambient.master;
-        if (m) { m.gain.linearRampToValueAtTime(0, _ambient.ctx.currentTime + 1.2); }
-        var ctx = _ambient.ctx; _ambient.ctx = null; _ambient.master = null;
-        setTimeout(function(){ try { ctx.close(); } catch(e){} }, 1400);
-      }
-    } catch(e) {}
-    if (btn) { btn.textContent = '♫'; btn.style.color = ''; btn.style.opacity = ''; }
-  }
-}
 
 function launchConfetti() {
   var canvas = document.getElementById('confetti');
