@@ -242,6 +242,7 @@ html.light .cs{border-color:var(--tbr)}
 </head>
 <body ontouchstart="">
 
+<button id="btnTheme" onclick="toggleTheme()" style="position:fixed;top:calc(8px + env(safe-area-inset-top));left:12px;z-index:1000;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.22);border-radius:9px;color:var(--muted);font-size:13px;padding:5px 9px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px;display:none">☀</button>
 <canvas id="confetti"></canvas>
 <div id="successFlash"></div>
 <div id="testOv" class="collapsed">
@@ -274,7 +275,6 @@ html.light .cs{border-color:var(--tbr)}
     <div class="s1-title">MYTHOLOGIES</div>
     <div class="s1-sub" id="s1sub">Jeu d'orientation · Dosches</div>
     <div style="margin-top:12px;opacity:.3;letter-spacing:6px;color:var(--gold);font-size:13px">✦ ── ✦ ── ✦</div>
-    <button id="btnTheme" onclick="toggleTheme()" style="position:absolute;top:calc(8px + env(safe-area-inset-top));left:12px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.22);border-radius:9px;color:var(--muted);font-size:13px;padding:5px 9px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px">☀</button>
   </div>
   <div class="scroll">
     <p style="text-align:center;color:var(--muted);font-size:12px;margin:10px 0 16px;font-style:italic;letter-spacing:.3px">Choisissez votre équipe</p>

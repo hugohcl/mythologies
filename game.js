@@ -55,6 +55,8 @@ function go(id, dir) {
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.add('hidden'); });
   var el = document.getElementById(id);
   if (el) el.classList.remove('hidden', 'exit-forward');
+  var bt = document.getElementById('btnTheme');
+  if (bt) bt.style.display = (id === 'sSplash') ? 'none' : '';
   // Clean exit class after transition
   setTimeout(function(){
     document.querySelectorAll('.exit-forward').forEach(function(s){ s.classList.remove('exit-forward'); });
