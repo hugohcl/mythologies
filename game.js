@@ -4,7 +4,7 @@
 var S = {
   team:null, idx:0, t0:null, pen:0, oh:{}, iv:null,
   onPen:false, plog:[], mjT:"grec", mjC:"fresque",
-  mjST:{}, mjIv:null, pendingTeam:null, quizAnswers:{},
+  mjST:{}, mjEnd:{}, mjIv:null, pendingTeam:null, quizAnswers:{},
   cpTimes:[]
 };
 
@@ -35,12 +35,12 @@ function loadSaved() {
 }
 function clr() { try { localStorage.removeItem(LS_KEY); } catch(e) {} }
 function saveMJ() {
-  try { localStorage.setItem(LS_KEY+'_mj', JSON.stringify({mjST:S.mjST,quizAnswers:S.quizAnswers})); } catch(e) {}
+  try { localStorage.setItem(LS_KEY+'_mj', JSON.stringify({mjST:S.mjST,mjEnd:S.mjEnd,quizAnswers:S.quizAnswers})); } catch(e) {}
 }
 function loadMJ() {
   try {
     var d = JSON.parse(localStorage.getItem(LS_KEY+'_mj')||'null');
-    if (d) { S.mjST=d.mjST||{}; S.quizAnswers=d.quizAnswers||{}; }
+    if (d) { S.mjST=d.mjST||{}; S.mjEnd=d.mjEnd||{}; S.quizAnswers=d.quizAnswers||{}; }
   } catch(e) {}
 }
 
@@ -513,7 +513,6 @@ function buildCodeRow() {
         e.target.value=v;
         if(v){
           e.target.classList.remove('pop'); void e.target.offsetWidth; e.target.classList.add('pop');
-          playSound('tick');
         }
         if(v&&idx<3){ var next=row.children[idx+1]; if(next) next.focus(); }
         if(v&&idx===3){
@@ -617,9 +616,8 @@ function buildHints(containerId, cpk, tk) {
         if(!isOpen){
           if(!S.oh[hk]){
             S.oh[hk]=true;
-            if(lvl.p>0){ addP(lvl.p,lvl.l+' — '+(CPS[cpk]?CPS[cpk].name:cpk)); toast('+'+lvl.p+' min'); playSound('penalty'); }
-            else { playSound('hint'); }
-          } else { playSound('hint'); }
+            if(lvl.p>0){ addP(lvl.p,lvl.l+' — '+(CPS[cpk]?CPS[cpk].name:cpk)); toast('+'+lvl.p+' min'); }
+          }
           body.classList.add('open'); btn.textContent='Masquer';
           card.style.borderColor=lvl.c+'50'; card.style.background=lvl.c+'0e';
         } else {
@@ -662,7 +660,9 @@ function confirmDest(inputId, errId, nextKey, onSuccess) {
 // ═══════════════════════════════════════════
 function showArrival() {
   stopC(); var t=S.team; th(t);
-  var el=Date.now()-S.t0, tot=el/60000+S.pen;
+  var endTime=Date.now();
+  S.mjEnd[t.key]=endTime; saveMJ();
+  var el=endTime-S.t0, tot=el/60000+S.pen;
   setText('s9team',   t.mascot+' '+t.name); setStyle('s9team','color',t.color);
   setText('s9title',  '✦ ARRIVÉE ✦'); setStyle('s9title','color',t.color);
   setText('s9flavor', t.arrival);
@@ -700,8 +700,8 @@ function showArrival() {
 function resetGame() {
   stopC();
   // Préserver les données MJ entre les équipes
-  var mjST = S.mjST, quizAnswers = S.quizAnswers, mjT = S.mjT, mjC = S.mjC, mjIv = S.mjIv;
-  S={team:null,idx:0,t0:null,pen:0,oh:{},iv:null,onPen:false,plog:[],mjT:mjT,mjC:mjC,mjST:mjST,mjIv:mjIv,pendingTeam:null,quizAnswers:quizAnswers,cpTimes:[]};
+  var mjST = S.mjST, mjEnd = S.mjEnd, quizAnswers = S.quizAnswers, mjT = S.mjT, mjC = S.mjC, mjIv = S.mjIv;
+  S={team:null,idx:0,t0:null,pen:0,oh:{},iv:null,onPen:false,plog:[],mjT:mjT,mjC:mjC,mjST:mjST,mjEnd:mjEnd,mjIv:mjIv,pendingTeam:null,quizAnswers:quizAnswers,cpTimes:[]};
   clr(); saveMJ(); th(null);
   var ov=document.getElementById('testOv'); if(ov) ov.style.display='none';
   go('s1','back');
@@ -795,19 +795,21 @@ function renderLB() {
   var el=document.getElementById('lbDiv'); if(!el) return;
   var now=Date.now();
   var entries=Object.keys(TEAMS).map(function(k){
-    var t=TEAMS[k], st=S.mjST[k];
+    var t=TEAMS[k], st=S.mjST[k], end=S.mjEnd[k];
     var qBonus=QUIZ.filter(function(q,i){return q.t===k&&S.quizAnswers[i]===true;}).length*0.5;
-    var elapsed=st?(now-st):null;
-    return {t:t,elapsed:elapsed,qBonus:qBonus};
+    var elapsed=st?(end?(end-st):(now-st)):null;
+    return {t:t,elapsed:elapsed,qBonus:qBonus,done:!!end};
   });
   entries.sort(function(a,b){
+    if(a.done&&b.done) return a.elapsed-b.elapsed;
+    if(a.done) return -1; if(b.done) return 1;
     if(a.elapsed&&b.elapsed) return a.elapsed-b.elapsed;
     if(a.elapsed) return -1; if(b.elapsed) return 1; return 0;
   });
   var medals=['🥇','🥈','🥉'];
   el.innerHTML=entries.map(function(e,i){
     var ts=e.elapsed?fmt(e.elapsed):'—';
-    var status=e.elapsed?'En cours':'Pas encore parti';
+    var status=e.done?'Terminé':e.elapsed?'En cours':'Pas encore parti';
     return '<div class="lbrow"><div style="font-family:Cinzel,serif;font-size:18px;width:28px;text-align:center;flex-shrink:0">'+(i<3?medals[i]:(i+1)+'.')+'</div>'
       +'<div style="flex:1"><div style="font-family:Cinzel,serif;font-size:13px;margin-bottom:2px;color:'+e.t.color+'">'+e.t.mascot+' '+e.t.name+'</div>'
       +'<div style="font-size:12px;color:var(--muted)">'+status+' · bonus -'+e.qBonus.toFixed(1)+' min</div></div>'
@@ -825,7 +827,9 @@ function openMJ() {
 function renderMJLive() {
   var now=Date.now(), el=document.getElementById('mjLive'); if(!el) return;
   el.innerHTML=Object.keys(TEAMS).map(function(k){
-    var t=TEAMS[k], st=S.mjST[k], elapsed=st?fmt(now-st):'—', stat=st?'En cours':'Pas encore parti';
+    var t=TEAMS[k], st=S.mjST[k], end=S.mjEnd[k];
+    var elapsed=st?(end?fmt(end-st):fmt(now-st)):'—';
+    var stat=end?'Terminé':st?'En cours':'Pas encore parti';
     var resetBtn=st?'<button onclick="resetTeamChrono(\''+k+'\')" style="font-size:10px;padding:3px 8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:var(--muted);border-radius:6px;cursor:pointer;font-family:Cinzel,serif;margin-left:8px;touch-action:manipulation">↺</button>':'';
     return '<div class="mjlr">'
       +'<div style="flex:1"><div style="font-family:Cinzel,serif;font-size:13px;color:'+t.color+'">'+t.mascot+' '+t.name+'</div>'
@@ -837,7 +841,7 @@ function renderMJLive() {
 
 function resetTeamChrono(k) {
   if (!confirm('Réinitialiser le chrono de '+TEAMS[k].name+' ?')) return;
-  delete S.mjST[k];
+  delete S.mjST[k]; delete S.mjEnd[k];
   saveMJ();
   renderMJLive();
 }
