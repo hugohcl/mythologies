@@ -863,6 +863,18 @@ function testGo(screenId) {
 }
 
 // ═══════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════
+function toggleTheme() {
+  var isLight = document.documentElement.classList.toggle('light');
+  try { localStorage.setItem('mythTheme', isLight ? 'light' : 'dark'); } catch(e) {}
+  var mc = document.querySelector('meta[name="theme-color"]');
+  if (mc) mc.setAttribute('content', isLight ? '#f5f0e6' : '#120e0a');
+  var btn = document.getElementById('btnTheme');
+  if (btn) btn.textContent = isLight ? '☽' : '☀';
+}
+
+// ═══════════════════════════════════════════
 // EVENTS
 // ═══════════════════════════════════════════
 document.getElementById('btnAP').onclick = function(){
@@ -920,6 +932,20 @@ if ('serviceWorker' in navigator) {
 })();
 loadMJ();
 renderTeams();
+// Apply saved theme
+(function(){
+  var t = ''; try { t = localStorage.getItem('mythTheme') || ''; } catch(e) {}
+  if (t === 'light') {
+    document.documentElement.classList.add('light');
+    var mc = document.querySelector('meta[name="theme-color"]');
+    if (mc) mc.setAttribute('content', '#f5f0e6');
+    var btn = document.getElementById('btnTheme');
+    if (btn) btn.textContent = '☽';
+  }
+  // Sync splash subtitle
+  var sp = document.getElementById('splSub');
+  if (sp) sp.textContent = 'Jeu d\'orientation · ' + (EVENT_LOCATION || 'Dosches') + ' · ' + (EVENT_DATE || '');
+})();
 var saved = loadSaved();
 if (saved && S.team && S.t0) {
   th(S.team);
@@ -932,5 +958,11 @@ if (saved && S.team && S.t0) {
   else { th(null); go('s1'); }
 } else {
   th(null);
-  go('s1');
+  go('sSplash');
+  var _sT = setTimeout(function(){ go('s1', 'forward'); }, 3000);
+  var _sEl = document.getElementById('sSplash');
+  if (_sEl) {
+    _sEl.addEventListener('click', function(){ clearTimeout(_sT); go('s1', 'forward'); }, {once: true});
+    _sEl.addEventListener('touchstart', function(){ clearTimeout(_sT); go('s1', 'forward'); }, {once: true});
+  }
 }
