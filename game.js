@@ -187,7 +187,7 @@ function launchConfetti() {
   var ctx = canvas.getContext('2d');
   var colors = ['#C9A84C','#5a8fd4','#c080e8','#c8c8c8','#d07030','#27ae60'];
   var particles = [];
-  for (var i = 0; i < 90; i++) {
+  for (var i = 0; i < 140; i++) {
     particles.push({
       x: Math.random() * canvas.width,
       y: -10 - Math.random() * 120,
@@ -217,7 +217,7 @@ function launchConfetti() {
       if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
     });
     frame++;
-    if (frame < 220) {
+    if (frame < 450) {
       requestAnimationFrame(draw);
     } else {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -226,6 +226,21 @@ function launchConfetti() {
   }
   draw();
 }
+
+// ═══════════════════════════════════════════
+// RIPPLE EFFECT
+// ═══════════════════════════════════════════
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.btn');
+  if (!btn) return;
+  var r = btn.getBoundingClientRect();
+  var rip = document.createElement('span');
+  rip.className = 'ripple';
+  rip.style.left = (e.clientX - r.left) + 'px';
+  rip.style.top = (e.clientY - r.top) + 'px';
+  btn.appendChild(rip);
+  setTimeout(function(){ rip.remove(); }, 550);
+});
 
 // ═══════════════════════════════════════════
 // UTILS
@@ -396,14 +411,16 @@ function startGame() {
   var el=document.getElementById('cdNum'), n=3;
   el.textContent=n;
   playSound('tick');
+  var tc=S.team?S.team.color:'var(--gold)';
   var iv=setInterval(function(){
     el.style.transform='scale(1.3)';
     setTimeout(function(){ el.style.transform='scale(1)'; },150);
+    var s4bg=document.getElementById('s4');
+    if(s4bg){s4bg.style.transition='background .12s';s4bg.style.background=tc+'20';setTimeout(function(){s4bg.style.background='';},300);}
     n--;
     if(n===0){
-      el.innerHTML='<span style="font-family:\'Cinzel Decorative\',serif;font-size:46px;letter-spacing:4px;animation:partez .55s cubic-bezier(.2,1.4,.4,1) forwards;display:inline-block;text-shadow:0 0 50px rgba(255,220,100,.9),0 0 100px rgba(201,168,76,.5)">PARTEZ !</span>';
-      var s4bg=document.getElementById('s4');
-      if(s4bg){s4bg.style.transition='background .15s';s4bg.style.background='rgba(201,168,76,.12)';setTimeout(function(){s4bg.style.background='';},400);}
+      el.innerHTML='<span style="font-family:\'Cinzel Decorative\',serif;font-size:46px;letter-spacing:4px;animation:partez .55s cubic-bezier(.2,1.4,.4,1) forwards;display:inline-block;text-shadow:0 0 50px rgba(255,220,100,.9),0 0 100px rgba(201,168,76,.5);color:'+tc+'">PARTEZ !</span>';
+      if(s4bg){s4bg.style.background=tc+'18';setTimeout(function(){s4bg.style.background='';},500);}
       clearInterval(iv);
       setTimeout(function(){ startC(); if(S.team) S.mjST[S.team.key]=S.t0; showS5(); save(); saveMJ(); },800);
     } else {
@@ -433,18 +450,17 @@ function showS5() {
 function showEnRoute(cpk) {
   var cp=CPS[cpk], t=S.team; th(t);
   setText('s6title', t.mascot+' '+t.name);
-  setText('erIcon',  cp.icon);
+  setText('erIcon',  t.mascot);
   setText('erName',  cp.name); setStyle('erName','color',t.color);
   setText('erAddr',  cp.addr);
   mkSteps('st6');
   go('s6','forward');
-  var auto=setTimeout(function(){ showEnigme(cpk); },3500);
   var s6=document.getElementById('s6');
-  s6.onclick=function(e){ if(e.target.id==='btnEnRouteBack') return; clearTimeout(auto); s6.onclick=null; showEnigme(cpk); };
+  s6.onclick=function(e){ if(e.target.id==='btnEnRouteBack') return; s6.onclick=null; showEnigme(cpk); };
   var backBtn=document.getElementById('btnEnRouteBack');
   if(backBtn){
     backBtn.onclick=function(e){
-      e.stopPropagation(); clearTimeout(auto); s6.onclick=null;
+      e.stopPropagation(); s6.onclick=null;
       if(S.idx===0){ showS5(); }
       else{ S.idx--; save(); showHintsScreen(S.team.route[S.idx]); }
     };
@@ -495,8 +511,11 @@ function buildCodeRow() {
       return function(e){
         var v=e.target.value.toUpperCase().replace(/[^A-Z]/g,'');
         e.target.value=v;
+        if(v){
+          e.target.classList.remove('pop'); void e.target.offsetWidth; e.target.classList.add('pop');
+          playSound('tick');
+        }
         if(v&&idx<3){ var next=row.children[idx+1]; if(next) next.focus(); }
-        // Auto-submit quand les 4 cases sont remplies
         if(v&&idx===3){
           var all=''; for(var j=0;j<4;j++) all+=(row.children[j]?row.children[j].value:'');
           if(all.length===4) setTimeout(validateCode, 80);
@@ -520,7 +539,9 @@ function validateCode() {
   for(var i=0;i<4;i++){ entered+=(row.children[i]?row.children[i].value:'').toUpperCase(); }
   if(entered.length<4){ setText('codeErr','Entrez les 4 lettres.'); return; }
   if(entered===exp){
-    for(var i=0;i<4;i++){ if(row.children[i]) row.children[i].classList.add('ok'); }
+    for(var i=0;i<4;i++){
+      (function(el,d){ setTimeout(function(){ el.classList.add('ok'); el.style.animation='codeWave .4s ease'; },d*80); })(row.children[i],i);
+    }
     S.cpTimes.push({cp:cpk, t:Date.now()});
     if(document.activeElement) document.activeElement.blur();
     flashSuccess();
@@ -596,8 +617,9 @@ function buildHints(containerId, cpk, tk) {
         if(!isOpen){
           if(!S.oh[hk]){
             S.oh[hk]=true;
-            if(lvl.p>0){ addP(lvl.p,lvl.l+' — '+(CPS[cpk]?CPS[cpk].name:cpk)); toast('+'+lvl.p+' min'); }
-          }
+            if(lvl.p>0){ addP(lvl.p,lvl.l+' — '+(CPS[cpk]?CPS[cpk].name:cpk)); toast('+'+lvl.p+' min'); playSound('penalty'); }
+            else { playSound('hint'); }
+          } else { playSound('hint'); }
           body.classList.add('open'); btn.textContent='Masquer';
           card.style.borderColor=lvl.c+'50'; card.style.background=lvl.c+'0e';
         } else {
@@ -694,7 +716,7 @@ function buildMJRow() {
   for(var i=0;i<4;i++){
     var inp=document.createElement('input');
     inp.type='text'; inp.maxLength=1;
-    inp.style.cssText='width:48px;height:58px;border-radius:10px;border:2px solid rgba(200,0,0,.35);background:rgba(180,0,0,.08);font-family:Cinzel,serif;font-size:24px;font-weight:700;color:#e05050;text-align:center;text-transform:uppercase;outline:none;margin:0 4px';
+    inp.style.cssText='width:52px;height:62px;border-radius:10px;border:2px solid rgba(220,60,60,.5);background:rgba(200,40,40,.12);font-family:Cinzel,serif;font-size:26px;font-weight:700;color:#e05050;text-align:center;text-transform:uppercase;outline:none;margin:0 4px;box-shadow:inset 0 2px 6px rgba(0,0,0,.3)';
     inp.setAttribute('autocomplete','off');
     inp.setAttribute('autocorrect','off');
     inp.setAttribute('spellcheck','false');
@@ -954,15 +976,17 @@ document.getElementById('btnStart').onclick = function(){
   });
 };
 document.getElementById('btnBackTeam').onclick = function(){ go('s1','back'); };
-document.getElementById('btnGoStart').onclick = function(){
+var _lastTap=0;
+function guardTap(fn){ return function(){ var now=Date.now(); if(now-_lastTap<600) return; _lastTap=now; fn(); }; }
+document.getElementById('btnGoStart').onclick = guardTap(function(){
   confirmDest('destStart','destStartErr',S.team&&S.team.route[0],function(){ showEnRoute(S.team.route[0]); save(); });
-};
-document.getElementById('btnFoundCache').onclick = function(){ showCode(curCP()); };
-document.getElementById('btnCode').onclick   = function(){ validateCode(); };
-document.getElementById('btnNext').onclick   = function(){
+});
+document.getElementById('btnFoundCache').onclick = guardTap(function(){ showCode(curCP()); });
+document.getElementById('btnCode').onclick   = guardTap(function(){ validateCode(); });
+document.getElementById('btnNext').onclick   = guardTap(function(){
   var nk=nextK();
   confirmDest('destNext','destNextErr',nk,function(){ S.idx++; save(); if(nk==='ferme') showArrival(); else showEnRoute(nk); });
-};
+});
 document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
 document.getElementById('btnMJLogin').onclick  = function(){ loginMJ(); };
 document.getElementById('btnMJBack').onclick   = function(){ go('s1','back'); };
@@ -1005,6 +1029,7 @@ renderTeams();
 })();
 var saved = loadSaved();
 if (saved && S.team && S.t0) {
+  // Show recovery toast then restore
   th(S.team);
   S.iv = setInterval(tick, 1000);
   if      (saved==='s9')       showArrival();
@@ -1013,6 +1038,7 @@ if (saved && S.team && S.t0) {
   else if (saved==='sEnigme')  showEnigme(curCP());
   else if (saved==='s5')       showS5();
   else { th(null); go('s1'); }
+  setTimeout(function(){ toast('Partie reprise — '+S.team.mascot+' '+S.team.name); }, 400);
 } else {
   th(null);
   go('sSplash');
