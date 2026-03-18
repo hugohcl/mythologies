@@ -959,10 +959,9 @@ if (saved && S.team && S.t0) {
 } else {
   th(null);
   go('sSplash');
-  var _sT = setTimeout(function(){ go('s1', 'forward'); }, 3000);
   var _sEl = document.getElementById('sSplash');
   if (_sEl) {
-    _sEl.addEventListener('click', function(){ clearTimeout(_sT); go('s1', 'forward'); }, {once: true});
-    _sEl.addEventListener('touchstart', function(){ clearTimeout(_sT); go('s1', 'forward'); }, {once: true});
+    _sEl.addEventListener('click', function(){ go('s1', 'forward'); }, {once: true});
+    _sEl.addEventListener('touchstart', function(){ go('s1', 'forward'); }, {once: true});
   }
 }
