@@ -94,8 +94,8 @@ html,body{height:100%;height:100dvh;background:var(--bg);background-image:radial
 .hdiff{font-size:12px;color:var(--muted)}
 .hpill{font-size:11px;padding:2px 8px;border-radius:8px;font-weight:600}
 .hbtn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:var(--muted);padding:7px 13px;border-radius:8px;font-family:'Cinzel',serif;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0;touch-action:manipulation;letter-spacing:.5px}
-.hbody{padding:12px 15px 14px;border-top:1px solid rgba(255,255,255,.06);font-style:italic;line-height:1.9;font-size:16px;color:var(--text);display:none;background:rgba(0,0,0,.15)}
-.hbody.open{display:block}
+.hbody{padding:0 15px;border-top:1px solid rgba(255,255,255,.06);font-style:italic;line-height:1.9;font-size:16px;color:var(--text);background:rgba(0,0,0,.15);max-height:0;overflow:hidden;opacity:0;transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .35s ease,padding .35s ease}
+.hbody.open{max-height:220px;opacity:1;padding:12px 15px 14px}
 
 /* ── CP HEADER ── */
 .cph{background:var(--tb);border:1px solid var(--tbr);border-radius:13px;padding:12px 16px;margin-bottom:14px}
@@ -168,6 +168,10 @@ html,body{height:100%;height:100dvh;background:var(--bg);background-image:radial
 .s1-title{font-family:'Cinzel Decorative',serif;font-weight:700;font-size:28px;color:var(--gold);letter-spacing:5px;text-align:center;text-shadow:0 0 32px rgba(201,168,76,.5),0 2px 4px rgba(0,0,0,.6);margin-bottom:7px}
 .s1-sub{font-size:12px;color:var(--muted);font-style:italic;text-align:center;letter-spacing:.4px}
 
+/* ── CHRONO URGENCY ── */
+@keyframes chronoPulse{0%,100%{opacity:1}50%{opacity:.55}}
+.chrono-urgent{animation:chronoPulse 1.2s ease-in-out infinite;text-shadow:0 0 14px rgba(192,57,43,.5)!important}
+
 /* ── COUNTDOWN ── */
 #cdNum{font-family:'Cinzel Decorative',serif;font-size:130px;color:var(--gold);line-height:1;transition:transform .15s;text-shadow:0 0 60px rgba(201,168,76,.45)}
 @keyframes partez{0%{transform:scale(.05);opacity:0}65%{transform:scale(1.18);opacity:1}85%{transform:scale(.95)}100%{transform:scale(1)}}
@@ -238,6 +242,40 @@ html.light .div{background:linear-gradient(90deg,transparent,rgba(138,96,16,.2),
 html.light .toast{color:#fff}
 html.light .mjpill{background:rgba(180,30,30,.85)}
 html.light .cs{border-color:var(--tbr)}
+
+/* ── HIGH CONTRAST (outdoor / sunlight) ── */
+html.hc{
+  --bg:#ffffff;--bg2:#f0f0f0;--bg3:#e0e0e0;
+  --text:#000000;--muted:#333333;--muted2:#222222;
+  --gold:#6a4000;--gold2:#8a5500;
+  --gd:rgba(106,64,0,.12);--gb:rgba(106,64,0,.35);
+  --glow:none;--shadow-gold:none;
+}
+html.hc body{background:#fff;background-image:none}
+html.hc .hdr{background:#f0f0f0;border-bottom-color:#bbb}
+html.hc .cbar{background:#f0f0f0;border-bottom-color:#ccc}
+html.hc .steps{background:#f0f0f0}
+html.hc .sd{background:#ccc}
+html.hc .sd.done,.hc .sd.active{background:#6a4000}
+html.hc .card,.hc .hcard{background:#f5f5f5;border-color:#aaa}
+html.hc .hbody{background:#eee;border-top-color:#bbb;font-style:normal;color:#000}
+html.hc .hbtn{background:#e0e0e0;border-color:#999;color:#000}
+html.hc .tcard{background:#f5f5f5;border-color:#999}
+html.hc .btn.bt{background:rgba(106,64,0,.15);border-color:rgba(106,64,0,.5);color:#4a2800;font-weight:700}
+html.hc .btn.bgh{border-color:#999;color:#333}
+html.hc .din{background:#fff;border-color:#888;color:#000}
+html.hc .din:focus{border-color:#6a4000}
+html.hc .cc{background:#fff;border-color:#888;color:#000}
+html.hc .cc:focus{border-color:#6a4000;background:#fff8e0}
+html.hc .ct{font-weight:700}
+html.hc .s1-hero{background:linear-gradient(180deg,rgba(106,64,0,.08) 0%,transparent 100%);border-bottom-color:#bbb}
+html.hc .srow{border-bottom-color:#ccc}
+html.hc .mjtb{background:#eee;border-color:#999;color:#333}
+html.hc .mjlr,.hc .lbrow{background:#f5f5f5;border-color:#aaa}
+html.hc #citOv{background:rgba(255,255,255,.98)}
+html.hc #testOv{background:rgba(245,245,245,.98);border-color:#888}
+html.hc .hlbl{font-weight:700}
+html.hc .er-name{font-weight:700}
 </style>
 </head>
 <body ontouchstart="">

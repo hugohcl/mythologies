@@ -5,24 +5,25 @@ Week-end entre collègues le **29 mars 2025** à **La Ferme d'Octave, 1 rue de l
 Thème : **Mythologies**. Jeu du samedi après-midi : course d'orientation dans le village.
 
 ## Fichier principal
-`index.html` — PWA mobile single-file, tout en un seul fichier HTML/CSS/JS.
+`index.html` + `data.js` + `game.js` + `sw.js` — PWA mobile multi-fichiers.
 
 ## Équipes
 | Équipe | Mascotte | Membres | Couleur | Route |
 |--------|----------|---------|---------|-------|
-| Grecque 🦉 | Antoine, Bastien, Matthieu, Thomas | #5a8fd4 | moulin → eglise → mairie → lavoir |
-| Nordique 🐦‍⬛ | Alex, Livia, Raphaël, Victor | #c8c8c8 | mairie → moulin → lavoir → eglise |
-| Hindoue 🐯 | Axel, Jade, LG, Patrick | #c080e8 | lavoir → mairie → eglise → moulin |
+| Grecque 🦉 | Antoine, Bastien, Matthieu, Thomas | #5a8fd4 | fresque → eglise → lavoir → salle |
+| Nordique 🐦‍⬛ | Alex, Livia, Raphaël, Victor | #c8c8c8 | mairie → salle → fresque → lavoir |
+| Hindoue 🐯 | Axel, Jade, LG, Patrick | #c080e8 | lavoir → mairie → eglise → fresque |
 
 Toutes les équipes partent et arrivent à la **Ferme d'Octave**.
 
 ## Checkpoints
 | ID | Nom | Code cachette |
 |----|-----|---------------|
-| moulin | Moulin de Dosches | VENT |
+| fresque | La Fresque du portail | NORD |
 | eglise | Église Saint-Jean-Baptiste | JEAN |
-| mairie | La Mairie | LOIS |
 | lavoir | Le Lavoir | ONDE |
+| salle | Salle Polyvalente de la Rose | ROSE |
+| mairie | La Mairie | LOIS |
 | ferme | La Ferme d'Octave | (arrivée) |
 
 ## Mécanique de jeu
@@ -37,10 +38,11 @@ Toutes les équipes partent et arrivent à la **Ferme d'Octave**.
 ## Code MJ
 `ZEUS`
 
-## Netlify
-- URL : https://lucky-kulfi-504f8c.netlify.app (peut avoir changé)
-- Token : `nfp_MHzEV3wYpfArpCcC8egyvvzPyYVR1Yhr8b51`
-- Pour déployer : `netlify deploy --prod --dir .`
+## GitHub Pages
+- Repo : `hugohcl/mythologies` (branche `master`)
+- URL : https://hugohcl.github.io/mythologies/
+- Déploiement : push sur `master` → GitHub Pages sert automatiquement la racine du repo
+- Service worker : chemins relatifs (`./sw.js`, `./data.js`, etc.) pour compatibilité sous-chemin
 
 ## Architecture du fichier index.html
 Screens (divs avec class `screen hidden`) :
@@ -54,13 +56,14 @@ Screens (divs avec class `screen hidden`) :
 - `s7` — Saisie code 4 lettres
 - `s8` — Indices vers prochaine destination
 - `s9` — Arrivée + score
-- `s11` — MJ Login (code ZEUS)
-- `s12` — Mode MJ (4 onglets : Live / Indices / Quiz / Classement)
+- `sSplash` — Splash screen (toucher pour commencer)
+- `s10` — MJ Login (code ZEUS)
+- `s11` — Mode MJ (4 onglets : Live / Indices / Quiz / Classement)
 - `sTest` — Mode Test (navigation libre, accessible depuis MJ)
 
 ## Variables JS clés
 ```js
-S = { team, idx, t0, pen, oh, iv, onPen, plog, mjST, mjIv, pendingTeam, quizAnswers }
+S = { team, idx, t0, pen, oh, iv, onPen, plog, mjST, mjIv, pendingTeam, quizAnswers, cpTimes }
 TEAMS, CPS, HINTS, ENIGMES, QUIZ, LVL, ACC, CITS
 ```
 
@@ -76,7 +79,8 @@ TEAMS, CPS, HINTS, ENIGMES, QUIZ, LVL, ACC, CITS
 - `switchMJTab(tab)` — navigation onglets MJ (live/indices/quiz/lb)
 - `renderQuiz()`, `renderLB()` — quiz et classement MJ
 - `openTestMode()`, `testGo(screenId)` — mode test
-- `playBeep(ok)` — son succès/erreur
+- `playSound(type)` — sons (success/error/penalty/hint/tick/fanfare)
+- `toggleTheme()` — cycle dark → light → high-contrast
 - `save()`, `loadSaved()` — persistance localStorage
 
 ## ENIGMES (placeholders à remplacer vendredi après repérage)
@@ -120,5 +124,7 @@ Hindou : 10 bras Durga, Matsya, Ganesh, Nandi
 - [ ] Remplacer les énigmes cachettes par les vraies (vendredi repérage)
 - [ ] Vérifier que le son fonctionne sur iOS (AudioContext user gesture)
 - [ ] Tester le mode avion sur vrais téléphones
-- [ ] Préparer les 4 cachettes physiques avec les codes (VENT/JEAN/LOIS/ONDE)
+- [ ] Préparer les 5 cachettes physiques avec les codes (NORD/JEAN/ONDE/ROSE/LOIS)
 - [ ] Départ échelonné : 10 min entre équipes
+- [ ] Passer `TEST_MODE = false` dans data.js avant le jour J
+- [ ] Corriger Quiz Q1 (tagué "grec" mais question nordique — doublon avec Q8)

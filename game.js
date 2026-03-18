@@ -4,7 +4,8 @@
 var S = {
   team:null, idx:0, t0:null, pen:0, oh:{}, iv:null,
   onPen:false, plog:[], mjT:"grec", mjC:"fresque",
-  mjST:{}, mjIv:null, pendingTeam:null, quizAnswers:{}
+  mjST:{}, mjIv:null, pendingTeam:null, quizAnswers:{},
+  cpTimes:[]
 };
 
 // ═══════════════════════════════════════════
@@ -16,7 +17,7 @@ function save() {
     localStorage.setItem(LS_KEY, JSON.stringify({
       tk:S.team&&S.team.key, idx:S.idx, t0:S.t0, pen:S.pen,
       oh:S.oh, onPen:S.onPen, plog:S.plog, mjST:S.mjST, quizAnswers:S.quizAnswers,
-      scr:cur&&cur.id
+      cpTimes:S.cpTimes, scr:cur&&cur.id
     }));
   } catch(e) {}
 }
@@ -28,6 +29,7 @@ function loadSaved() {
     S.idx=d.idx||0; S.t0=d.t0; S.pen=d.pen||0;
     S.oh=d.oh||{}; S.onPen=d.onPen||false;
     S.plog=d.plog||[]; S.mjST=d.mjST||{}; S.quizAnswers=d.quizAnswers||{};
+    S.cpTimes=d.cpTimes||[];
     return d.scr;
   } catch(e) { return null; }
 }
@@ -247,8 +249,15 @@ function toast(msg) {
 
 function tick() {
   if (!S.t0) return;
-  var t = fmt(Date.now()-S.t0), p = '+'+S.pen+' min';
-  ['c5','c6','cEnigme','c7','c8'].forEach(function(id){ var e=document.getElementById(id); if(e) e.textContent=t; });
+  var elapsed = Date.now()-S.t0;
+  var t = fmt(elapsed), p = '+'+S.pen+' min';
+  var urgent = elapsed > 45*60*1000;
+  ['c5','c6','cEnigme','c7','c8'].forEach(function(id){
+    var e=document.getElementById(id); if(!e) return;
+    e.textContent=t;
+    if(urgent){ e.style.color='var(--danger)'; e.classList.add('chrono-urgent'); }
+    else { e.style.color=''; e.classList.remove('chrono-urgent'); }
+  });
   ['p5','p6','pEnigme','p7','p8'].forEach(function(id){ var e=document.getElementById(id); if(e) e.textContent=p; });
 }
 function startC() { S.t0=Date.now(); S.iv=setInterval(tick,1000); acquireWakeLock(); }
@@ -330,16 +339,36 @@ function setupPWA() {
 // ═══════════════════════════════════════════
 function renderTeams() {
   var c=document.getElementById('teamList'); if(!c) return;
-  c.innerHTML = Object.keys(TEAMS).map(function(k){
+  c.innerHTML='';
+  Object.keys(TEAMS).forEach(function(k){
     var t=TEAMS[k];
-    return '<div class="tcard" style="border-color:'+t.border+';background:'+t.bg+';--team-color:'+t.color+'" onclick="selTeam(\''+k+'\')" onmouseenter="this.style.boxShadow=\'0 0 0 1px '+t.border+'\'" onmouseleave="this.style.boxShadow=\'\'">'
-      +'<div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:'+t.color+';border-radius:2px 0 0 2px;opacity:.8"></div>'
-      +'<div class="tn" style="color:'+t.color+'">'+t.mascot+' '+t.name+'</div>'
-      +'<div style="font-size:12px;font-style:italic;color:'+t.color+';opacity:.75;margin-bottom:6px">'+t.tagline+'</div>'
-      +'<div class="tm">'+t.members.join(' · ')+'</div>'
-      +'<div class="tbg" style="border-color:'+t.border+';color:'+t.color+'">Départ — La Ferme d\'Octave</div>'
-      +'</div>';
-  }).join('');
+    var card=document.createElement('div');
+    card.className='tcard';
+    card.style.borderColor=t.border; card.style.background=t.bg;
+
+    var bar=document.createElement('div');
+    bar.style.cssText='position:absolute;left:0;top:0;bottom:0;width:3px;background:'+t.color+';border-radius:2px 0 0 2px;opacity:.8';
+
+    var nm=document.createElement('div'); nm.className='tn'; nm.style.color=t.color; nm.textContent=t.mascot+' '+t.name;
+
+    var tag=document.createElement('div');
+    tag.style.cssText='font-size:12px;font-style:italic;color:'+t.color+';opacity:.75;margin-bottom:6px';
+    tag.textContent=t.tagline;
+
+    var mem=document.createElement('div'); mem.className='tm'; mem.textContent=t.members.join(' · ');
+
+    var dep=document.createElement('div'); dep.className='tbg';
+    dep.style.borderColor=t.border; dep.style.color=t.color;
+    dep.textContent="Départ — La Ferme d'Octave";
+
+    card.appendChild(bar); card.appendChild(nm); card.appendChild(tag); card.appendChild(mem); card.appendChild(dep);
+
+    card.addEventListener('click', function(){ selTeam(k); });
+    card.addEventListener('mouseenter', function(){ card.style.boxShadow='0 0 0 1px '+t.border; });
+    card.addEventListener('mouseleave', function(){ card.style.boxShadow=''; });
+
+    c.appendChild(card);
+  });
 }
 
 function selTeam(k) {
@@ -351,7 +380,7 @@ function selTeam(k) {
 
 function doSelTeam(k) {
   var t=TEAMS[k];
-  S.team=t; S.idx=0; S.pen=0; S.oh={}; S.onPen=false; S.t0=null; S.plog=[]; S.quizAnswers={};
+  S.team=t; S.idx=0; S.pen=0; S.oh={}; S.onPen=false; S.t0=null; S.plog=[]; S.quizAnswers={}; S.cpTimes=[];
   th(t);
   setText('s3title', t.mascot+' '+t.name);
   setText('s3sub',   t.members.join(' · '));
@@ -492,6 +521,7 @@ function validateCode() {
   if(entered.length<4){ setText('codeErr','Entrez les 4 lettres.'); return; }
   if(entered===exp){
     for(var i=0;i<4;i++){ if(row.children[i]) row.children[i].classList.add('ok'); }
+    S.cpTimes.push({cp:cpk, t:Date.now()});
     if(document.activeElement) document.activeElement.blur();
     flashSuccess();
     playSound('success');
@@ -618,8 +648,23 @@ function showArrival() {
     return '<div class="srow"><span class="sl" style="padding-left:12px;font-size:12px">↳ '+p.reason+'</span><span class="sv" style="color:#e74c3c;font-size:13px">+'+p.min+' min</span></div>';
   }).join('');
   var bd=document.getElementById('scoreDiv');
+  // Build per-checkpoint timeline
+  var cpRows='';
+  if(S.cpTimes&&S.cpTimes.length){
+    var prev=S.t0;
+    S.cpTimes.forEach(function(ct){
+      var cp=CPS[ct.cp];
+      var leg=ct.t-prev;
+      prev=ct.t;
+      cpRows+='<div class="srow"><span class="sl" style="padding-left:12px;font-size:12px">'+(cp?cp.icon+' '+cp.name:ct.cp)+'</span><span class="sv" style="font-size:13px">'+fmt(leg)+'</span></div>';
+    });
+    // Last leg to ferme
+    var lastLeg=Date.now()-S.t0-(S.cpTimes.length?S.cpTimes[S.cpTimes.length-1].t-S.t0:0);
+    cpRows+='<div class="srow"><span class="sl" style="padding-left:12px;font-size:12px">🏡 Retour Ferme</span><span class="sv" style="font-size:13px">'+fmt(lastLeg)+'</span></div>';
+  }
   if(bd) bd.innerHTML=''
     +'<div class="srow"><span class="sl">Temps de parcours</span><span class="sv">'+fmt(el)+'</span></div>'
+    +(cpRows?'<div style="font-family:Cinzel,serif;font-size:10px;color:var(--muted);letter-spacing:1px;margin:8px 0 4px;text-transform:uppercase">Détail par étape</div>'+cpRows:'')
     +(S.plog.length
       ?'<div class="srow"><span class="sl">Pénalités totales</span><span class="sv" style="color:#e74c3c">+'+S.pen+' min</span></div>'+rows
       :'<div class="srow"><span class="sl">Pénalités</span><span class="sv" style="color:var(--ok)">Aucune</span></div>')
@@ -634,7 +679,7 @@ function resetGame() {
   stopC();
   // Préserver les données MJ entre les équipes
   var mjST = S.mjST, quizAnswers = S.quizAnswers, mjT = S.mjT, mjC = S.mjC, mjIv = S.mjIv;
-  S={team:null,idx:0,t0:null,pen:0,oh:{},iv:null,onPen:false,plog:[],mjT:mjT,mjC:mjC,mjST:mjST,mjIv:mjIv,pendingTeam:null,quizAnswers:quizAnswers};
+  S={team:null,idx:0,t0:null,pen:0,oh:{},iv:null,onPen:false,plog:[],mjT:mjT,mjC:mjC,mjST:mjST,mjIv:mjIv,pendingTeam:null,quizAnswers:quizAnswers,cpTimes:[]};
   clr(); saveMJ(); th(null);
   var ov=document.getElementById('testOv'); if(ov) ov.style.display='none';
   go('s1','back');
@@ -868,12 +913,18 @@ function testGo(screenId) {
 // THEME
 // ═══════════════════════════════════════════
 function toggleTheme() {
-  var isLight = document.documentElement.classList.toggle('light');
-  try { localStorage.setItem('mythTheme', isLight ? 'light' : 'dark'); } catch(e) {}
-  var mc = document.querySelector('meta[name="theme-color"]');
-  if (mc) mc.setAttribute('content', isLight ? '#f5f0e6' : '#120e0a');
-  var btn = document.getElementById('btnTheme');
-  if (btn) btn.textContent = isLight ? '☽' : '☀';
+  var h=document.documentElement;
+  var cur=h.classList.contains('hc')?'hc':h.classList.contains('light')?'light':'dark';
+  var next=cur==='dark'?'light':cur==='light'?'hc':'dark';
+  h.classList.remove('light','hc');
+  if(next!=='dark') h.classList.add(next);
+  try{localStorage.setItem('mythTheme',next);}catch(e){}
+  var mc=document.querySelector('meta[name="theme-color"]');
+  var colors={dark:'#120e0a',light:'#f5f0e6',hc:'#ffffff'};
+  if(mc) mc.setAttribute('content',colors[next]);
+  var btn=document.getElementById('btnTheme');
+  var icons={dark:'☀',light:'◐',hc:'☽'};
+  if(btn) btn.textContent=icons[next];
 }
 
 // ═══════════════════════════════════════════
@@ -925,7 +976,14 @@ document.getElementById('btnTestMode').onclick = function(){ renderTestTeamTabs(
 setupPWA();
 // Service Worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(function(){});
+  navigator.serviceWorker.register('./sw.js').then(function(reg) {
+    reg.addEventListener('updatefound', function() {
+      var nw = reg.installing;
+      if (nw) nw.addEventListener('statechange', function() {
+        if (nw.state === 'activated') location.reload();
+      });
+    });
+  }).catch(function(){});
 }
 // Date depuis data.js
 (function(){
@@ -937,12 +995,14 @@ renderTeams();
 // Apply saved theme
 (function(){
   var t = ''; try { t = localStorage.getItem('mythTheme') || ''; } catch(e) {}
-  if (t === 'light') {
-    document.documentElement.classList.add('light');
+  if (t === 'light' || t === 'hc') {
+    document.documentElement.classList.add(t);
     var mc = document.querySelector('meta[name="theme-color"]');
-    if (mc) mc.setAttribute('content', '#f5f0e6');
+    var colors = {light:'#f5f0e6', hc:'#ffffff'};
+    if (mc) mc.setAttribute('content', colors[t]);
     var btn = document.getElementById('btnTheme');
-    if (btn) btn.textContent = '☽';
+    var icons = {light:'◐', hc:'☽'};
+    if (btn) btn.textContent = icons[t];
   }
   // Sync splash subtitle
   var sp = document.getElementById('splSub');

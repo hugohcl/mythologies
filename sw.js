@@ -1,8 +1,8 @@
 // ═══════════════════════════════════════════
 // SERVICE WORKER — Mythologies PWA
 // ═══════════════════════════════════════════
-var CACHE = 'mythologies-v4';
-var PRECACHE = ['/', '/index.html', '/data.js', '/game.js', '/logo.png'];
+var CACHE = 'mythologies-v5';
+var PRECACHE = ['./', './index.html', './data.js', './game.js', './logo.png'];
 
 self.addEventListener('install', function(e) {
   self.skipWaiting();
@@ -22,7 +22,7 @@ self.addEventListener('activate', function(e) {
 
 self.addEventListener('fetch', function(e) {
   var url = e.request.url;
-  // Google Fonts : cache au premier chargement
+  // Google Fonts : cache-first
   if (url.indexOf('fonts.googleapis.com') > -1 || url.indexOf('fonts.gstatic.com') > -1) {
     e.respondWith(
       caches.open(CACHE).then(function(c) {
@@ -34,10 +34,9 @@ self.addEventListener('fetch', function(e) {
     );
     return;
   }
-  // App assets : réseau en priorité, cache en fallback (offline)
+  // App assets : network-first, cache fallback
   e.respondWith(
     fetch(e.request).then(function(res) {
-      // Mettre à jour le cache à chaque chargement réseau réussi
       var clone = res.clone();
       caches.open(CACHE).then(function(c) { c.put(e.request, clone); });
       return res;
@@ -45,4 +44,9 @@ self.addEventListener('fetch', function(e) {
       return caches.match(e.request);
     })
   );
+});
+
+// Notify clients when a new version is available
+self.addEventListener('message', function(e) {
+  if (e.data === 'skipWaiting') self.skipWaiting();
 });
