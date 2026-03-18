@@ -985,11 +985,6 @@ if ('serviceWorker' in navigator) {
     });
   }).catch(function(){});
 }
-// Date depuis data.js
-(function(){
-  var el=document.getElementById('s1sub');
-  if(el) el.textContent='Jeu d\'orientation · '+(EVENT_LOCATION||'Dosches')+' · '+(EVENT_DATE||'');
-})();
 loadMJ();
 renderTeams();
 // Apply saved theme

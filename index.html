@@ -163,11 +163,9 @@ html,body{height:100%;height:100dvh;background:var(--bg);background-image:radial
 .lbrow{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:11px;margin-bottom:8px}
 
 /* ── HOME SCREEN HERO ── */
-.s1-hero{display:flex;align-items:center;padding:calc(4px + env(safe-area-inset-top)) 18px 8px;background:linear-gradient(180deg,rgba(201,168,76,.07) 0%,transparent 100%);border-bottom:1px solid rgba(201,168,76,.14);flex-shrink:0;gap:12px}
-.s1-logo{width:38px;height:38px;object-fit:contain;flex-shrink:0}
-.s1-info{flex:1;min-width:0}
+.s1-hero{display:flex;align-items:center;justify-content:center;padding:calc(4px + env(safe-area-inset-top)) 18px 8px;background:linear-gradient(180deg,rgba(201,168,76,.07) 0%,transparent 100%);border-bottom:1px solid rgba(201,168,76,.14);flex-shrink:0;gap:10px}
+.s1-logo{width:32px;height:32px;object-fit:contain;flex-shrink:0}
 .s1-title{font-family:'Cinzel Decorative',serif;font-weight:700;font-size:20px;color:var(--gold);letter-spacing:3px;text-shadow:0 0 32px rgba(201,168,76,.5),0 2px 4px rgba(0,0,0,.6)}
-.s1-sub{font-size:12px;color:var(--muted);font-style:italic;letter-spacing:.3px;margin-top:1px}
 
 /* ── CHRONO URGENCY ── */
 @keyframes chronoPulse{0%,100%{opacity:1}50%{opacity:.55}}
@@ -311,10 +309,7 @@ html.hc .er-name{font-weight:700}
 <div class="screen hidden" id="s1">
   <div class="s1-hero">
     <img src="logo.png" class="s1-logo" alt="Mythologies">
-    <div class="s1-info">
-      <div class="s1-title">MYTHOLOGIES</div>
-      <div class="s1-sub" id="s1sub">Jeu d'orientation · Dosches</div>
-    </div>
+    <div class="s1-title">MYTHOLOGIES</div>
   </div>
   <div class="scroll">
     <p style="text-align:center;color:var(--muted);font-size:14px;margin:6px 0 10px;font-style:italic;letter-spacing:.3px">Choisissez votre équipe</p>
