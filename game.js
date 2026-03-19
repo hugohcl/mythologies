@@ -181,6 +181,16 @@ function playSound(type) {
 function vibrate(pattern) {
   try { if (navigator.vibrate) navigator.vibrate(pattern); } catch(e) {}
 }
+// Distinct vibration patterns per event type
+var VIB = {
+  success:   [60, 40, 60, 40, 120],     // ··—  (double tap + long)
+  error:     [250],                       // — (single long buzz)
+  penalty:   [120, 60, 120, 60, 120],    // —·—·— (morse-like warning)
+  hint:      [40, 30, 40],               // ·· (gentle double tap)
+  arrival:   [80, 40, 80, 40, 200, 80, 300], // ··—·——— (fanfare)
+  map:       [200, 80, 200],             // —·— (alert)
+  countdown: [50]                        // · (tick)
+};
 
 // ═══════════════════════════════════════════
 // CONNECTIVITY CHECK (fiable sur iOS)
@@ -256,6 +266,83 @@ function launchConfetti() {
     }
   }
   draw();
+}
+
+// ═══════════════════════════════════════════
+// PARCHMENT TRANSITION (feature 6)
+// ═══════════════════════════════════════════
+var PARCH_MSGS = {
+  grec: [
+    {icon:'📜', title:'Le Parchemin se déploie…', body:'Les Moires tissent la suite de votre quête.'},
+    {icon:'⚡', title:'Zeus approuve !', body:'Un nouveau chapitre de votre odyssée commence.'},
+    {icon:'🏛️', title:'L\'Oracle parle…', body:'Votre prochain défi se dévoile.'}
+  ],
+  nordique: [
+    {icon:'📜', title:'Les Runes s\'illuminent…', body:'Odin dévoile la suite de votre saga.'},
+    {icon:'🐦‍⬛', title:'Huginn murmure…', body:'Le corbeau porte un nouveau secret.'},
+    {icon:'⚔️', title:'Le Skald chante !', body:'Un nouveau verset s\'inscrit dans votre saga.'}
+  ],
+  hindou: [
+    {icon:'📜', title:'Le Véda s\'ouvre…', body:'Le dharma révèle votre prochaine étape.'},
+    {icon:'🔥', title:'Agni éclaire le chemin…', body:'Le feu sacré guide vos pas.'},
+    {icon:'🪷', title:'Le Lotus s\'épanouit…', body:'Une nouvelle page de votre yatra commence.'}
+  ]
+};
+
+function showParchment(teamKey, cb) {
+  var ov = document.getElementById('parchOv');
+  if (!ov) { if (cb) cb(); return; }
+  var msgs = PARCH_MSGS[teamKey] || PARCH_MSGS.grec;
+  var msg = msgs[Math.floor(Math.random() * msgs.length)];
+  ov.innerHTML = '<div class="parch-scroll">'
+    + '<div class="parch-icon">' + msg.icon + '</div>'
+    + '<div class="parch-title">' + msg.title + '</div>'
+    + '<div class="parch-body">' + msg.body + '</div>'
+    + '</div>';
+  ov.style.display = 'flex';
+  setTimeout(function() {
+    ov.style.animation = 'parchFade .4s ease forwards';
+    setTimeout(function() {
+      ov.style.display = 'none';
+      ov.style.animation = '';
+      if (cb) cb();
+    }, 420);
+  }, 1600);
+}
+
+// ═══════════════════════════════════════════
+// BADGES (feature 9)
+// ═══════════════════════════════════════════
+var BADGES = {
+  grec: [
+    {max:25, icon:'⚡', title:'Foudre de Zeus', desc:'Vitesse divine — les dieux sont impressionnés.'},
+    {max:35, icon:'🏛️', title:'Héros de l\'Olympe', desc:'Un exploit digne des plus grands mythes.'},
+    {max:45, icon:'🦉', title:'Protégé d\'Athéna', desc:'La sagesse vous a guidés avec brio.'},
+    {max:60, icon:'🏺', title:'Voyageur d\'Ithaque', desc:'Comme Ulysse, le chemin compte autant que la destination.'},
+    {max:Infinity, icon:'🐢', title:'Tortue de Zénon', desc:'Lent mais philosophique — Zénon serait fier.'}
+  ],
+  nordique: [
+    {max:25, icon:'⚡', title:'Éclair de Mjölnir', desc:'Thor lui-même applaudit votre rapidité.'},
+    {max:35, icon:'⚔️', title:'Berserker légendaire', desc:'Une charge digne du Valhalla.'},
+    {max:45, icon:'🐦‍⬛', title:'Favori d\'Odin', desc:'Les corbeaux ont chanté vos louanges.'},
+    {max:60, icon:'🛡️', title:'Gardien du Bifröst', desc:'Solide et déterminé, comme Heimdall.'},
+    {max:Infinity, icon:'🐌', title:'Escargot d\'Yggdrasil', desc:'Même le Serpent-Monde avance plus vite… mais bravo.'}
+  ],
+  hindou: [
+    {max:25, icon:'🔥', title:'Flamme d\'Agni', desc:'Une célérité digne des dieux védiques.'},
+    {max:35, icon:'🐯', title:'Rugissement de Durga', desc:'La force et la grâce, en un seul parcours.'},
+    {max:45, icon:'🪷', title:'Lotus d\'or', desc:'L\'éveil est proche — parcours exemplaire.'},
+    {max:60, icon:'🙏', title:'Pèlerin du Dharma', desc:'Chaque pas était une prière — beau voyage.'},
+    {max:Infinity, icon:'🐘', title:'Patience de Ganesh', desc:'Ganesh approuve la lenteur contemplative.'}
+  ]
+};
+
+function getBadge(teamKey, totalMin) {
+  var list = BADGES[teamKey] || BADGES.grec;
+  for (var i = 0; i < list.length; i++) {
+    if (totalMin <= list[i].max) return list[i];
+  }
+  return list[list.length - 1];
 }
 
 // ═══════════════════════════════════════════
@@ -355,7 +442,7 @@ function updateTestOverlay(showNext) {
 // ═══════════════════════════════════════════
 window.addEventListener('online', function() {
   if (!S.t0 || S.onPen) return;
-  S.onPen=true; addP(30,'Connexion internet détectée'); /* sound removed */ vibrate([200, 80, 200]);
+  S.onPen=true; addP(30,'Connexion internet détectée'); vibrate(VIB.penalty);
   var b=document.getElementById('banOnline'); b.classList.add('show');
   setTimeout(function(){ b.classList.remove('show'); }, 6000);
 });
@@ -575,19 +662,20 @@ function validateCode() {
     S.cpTimes.push({cp:cpk, t:Date.now()});
     if(document.activeElement) document.activeElement.blur();
     flashSuccess();
-    /* sound removed */
-    vibrate([80,50,80]);
+    vibrate(VIB.success);
     setTimeout(function(){ showCit(S.team.key); },50);
     // Si c'est le dernier CP, aller directement au retour ferme (pas d'indices)
     var isLast = (S.idx >= S.team.route.length - 1);
-    setTimeout(function(){ if(isLast){ S.idx++; save(); showReturnHome(); } else { showHintsScreen(cpk); } },700);
+    setTimeout(function(){
+      if(isLast){ S.idx++; save(); showReturnHome(); }
+      else { showParchment(S.team.key, function(){ showHintsScreen(cpk); }); }
+    },700);
   } else {
     for(var i=0;i<4;i++){
       (function(el){ el.classList.add('err'); setTimeout(function(){ el.classList.remove('err'); },300); })(row.children[i]);
     }
     setText('codeErr','Code incorrect — cherchez encore…');
-    /* sound removed */
-    vibrate([250]);
+    vibrate(VIB.error);
   }
 }
 
@@ -683,7 +771,7 @@ function confirmDest(inputId, errId, nextKey, onSuccess) {
   else {
     addP(1,'Mauvaise destination');
     if(err) err.textContent='Mauvaise destination — +1 min';
-    /* sound removed */ vibrate([120, 60, 120]);
+    vibrate(VIB.penalty);
     inp.value='';
   }
 }
@@ -723,28 +811,44 @@ function showArrival() {
   var el=endTime-S.t0, tot=el/60000+S.pen;
   setText('s9team',   t.mascot+' '+t.name); setStyle('s9team','color',t.color);
   setText('s9title',  '✦ ARRIVÉE ✦'); setStyle('s9title','color',t.color);
-  setText('s9flavor', t.arrival);
+  // Badge based on score
+  var badge = getBadge(t.key, tot);
+  setText('s9flavor', '');
+  var flavorEl = document.getElementById('s9flavor');
+  if (flavorEl) flavorEl.innerHTML = '<div class="badge-wrap"><div class="badge-icon">' + badge.icon + '</div>'
+    + '<div class="badge-title" style="color:' + t.color + '">' + badge.title + '</div>'
+    + '<div class="badge-desc">' + badge.desc + '</div></div>';
   var rows=S.plog.map(function(p){
     return '<div class="srow"><span class="sl" style="padding-left:12px;font-size:12px">↳ '+p.reason+'</span><span class="sv" style="color:#e74c3c;font-size:13px">+'+p.min+' min</span></div>';
   }).join('');
   var bd=document.getElementById('scoreDiv');
-  // Build per-checkpoint timeline
-  var cpRows='';
+  // Build visual timeline (feature 8)
+  var tlHtml='';
   if(S.cpTimes&&S.cpTimes.length){
+    tlHtml='<div class="tl-wrap"><div class="tl-line"></div>';
     var prev=S.t0;
+    // Départ
+    tlHtml+='<div class="tl-item"><div class="tl-dot done" style="border-color:'+t.color+';background:'+t.color+'"></div>'
+      +'<div class="tl-name" style="color:'+t.color+'">'+CPS.ferme.icon+' Départ — La Ferme</div>'
+      +'<div class="tl-time">00:00</div></div>';
     S.cpTimes.forEach(function(ct){
       var cp=CPS[ct.cp];
       var leg=ct.t-prev;
       prev=ct.t;
-      cpRows+='<div class="srow"><span class="sl" style="padding-left:12px;font-size:12px">'+(cp?cp.icon+' '+cp.name:ct.cp)+'</span><span class="sv" style="font-size:13px">'+fmt(leg)+'</span></div>';
+      tlHtml+='<div class="tl-item"><div class="tl-dot done" style="border-color:'+t.color+';background:'+t.color+'"></div>'
+        +'<div class="tl-name" style="color:'+t.color+'">'+(cp?cp.icon+' '+cp.name:ct.cp)+'</div>'
+        +'<div class="tl-time">+'+fmt(leg)+' (à '+fmt(ct.t-S.t0)+')</div></div>';
     });
-    // Last leg to ferme
-    var lastLeg=Date.now()-S.t0-(S.cpTimes.length?S.cpTimes[S.cpTimes.length-1].t-S.t0:0);
-    cpRows+='<div class="srow"><span class="sl" style="padding-left:12px;font-size:12px">Retour Ferme</span><span class="sv" style="font-size:13px">'+fmt(lastLeg)+'</span></div>';
+    // Retour ferme
+    var lastLeg=endTime-S.t0-(S.cpTimes.length?S.cpTimes[S.cpTimes.length-1].t-S.t0:0);
+    tlHtml+='<div class="tl-item"><div class="tl-dot done" style="border-color:var(--gold);background:var(--gold)"></div>'
+      +'<div class="tl-name" style="color:var(--gold)">🏁 Arrivée — La Ferme</div>'
+      +'<div class="tl-time">+'+fmt(lastLeg)+' (total '+fmt(el)+')</div></div>';
+    tlHtml+='</div>';
   }
   if(bd) bd.innerHTML=''
     +'<div class="srow"><span class="sl">Temps de parcours</span><span class="sv">'+fmt(el)+'</span></div>'
-    +(cpRows?'<div style="font-family:Cinzel,serif;font-size:10px;color:var(--muted);letter-spacing:1px;margin:8px 0 4px;text-transform:uppercase">Détail par étape</div>'+cpRows:'')
+    +(tlHtml?'<div style="font-family:Cinzel,serif;font-size:10px;color:var(--muted);letter-spacing:1px;margin:10px 0 4px;text-transform:uppercase">Parcours</div>'+tlHtml:'')
     +(S.plog.length
       ?'<div class="srow"><span class="sl">Pénalités totales</span><span class="sv" style="color:#e74c3c">+'+S.pen+' min</span></div>'+rows
       :'<div class="srow"><span class="sl">Pénalités</span><span class="sv" style="color:var(--ok)">Aucune</span></div>')
@@ -758,7 +862,7 @@ function showArrival() {
   var mjBtns=document.getElementById('s9MJBtns');
   if(mjBtns) mjBtns.style.display=_mjMode?'':'none';
   clr(); go('s9','forward');
-  setTimeout(function(){ /* sound removed */ vibrate([80,40,80,40,200]); launchConfetti(); }, 200);
+  setTimeout(function(){ vibrate(VIB.arrival); launchConfetti(); }, 200);
 }
 
 function resetGame() {
@@ -1060,7 +1164,7 @@ function openMap() {
   _mapUsed = true;
   addP(15, 'Carte consultée');
   toast('+15 min — Carte');
-  vibrate([200, 80, 200]);
+  vibrate(VIB.map);
   // Griser le bouton
   var btn = document.getElementById('btnMap');
   if (btn) { btn.style.opacity = '.35'; btn.style.pointerEvents = 'none'; }
@@ -1086,7 +1190,7 @@ function openPhoto() {
     _photoUsed[cpk] = true;
     addP(15, 'Photo indice — ' + (CPS[cpk] ? CPS[cpk].name : cpk));
     toast('+15 min — Photo indice');
-    vibrate([200, 80, 200]);
+    vibrate(VIB.map);
   }
   var ov = document.getElementById('photoOverlay');
   var img = document.getElementById('photoImg');
