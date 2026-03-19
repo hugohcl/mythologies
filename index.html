@@ -275,10 +275,12 @@ html.light .cs{border-color:var(--tbr)}
 <canvas id="confetti"></canvas>
 <div id="successFlash"></div>
 <div id="testOv" class="collapsed">
-  <div class="tov-toggle" onclick="(function(el){el.classList.toggle('collapsed')})(document.getElementById('testOv'))">— TEST —</div>
+  <div class="tov-toggle" onclick="(function(el){el.classList.toggle('collapsed')})(document.getElementById('testOv'))">— MJ —</div>
   <div class="tov-body">
     <div id="testOvBody"></div>
+    <button class="tov-btn" onclick="openMJ()" style="border-color:rgba(220,60,60,.4);color:#e05050">Dashboard MJ</button>
     <button class="tov-btn" onclick="resetGame()">← Menu d'accueil</button>
+    <button class="tov-btn" onclick="deactivateMJ()" style="margin-top:4px;opacity:.6;font-size:9px">Désactiver MJ</button>
   </div>
 </div>
 <div class="banner" style="background:var(--danger);color:#fff" id="banOnline">CONNEXION DÉTECTÉE — +30 MIN DE PÉNALITÉ</div>

@@ -1,7 +1,6 @@
 // ═══════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════
-const TEST_MODE = true; // Mettre false pour le vrai jeu
 const MJ_CODE = "ZEUS";
 const LS_KEY  = "myth_v5";
 const EVENT_DATE     = '29 mars 2025';

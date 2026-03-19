@@ -1,4 +1,25 @@
 // ═══════════════════════════════════════════
+// MJ MODE (remplace TEST_MODE)
+// ═══════════════════════════════════════════
+var _mjMode = false;
+function isMJ() { return _mjMode; }
+function activateMJ() {
+  _mjMode = true;
+  try { localStorage.setItem('myth_mj_mode', '1'); } catch(e) {}
+  syncMJOverlay();
+}
+function deactivateMJ() {
+  _mjMode = false;
+  try { localStorage.removeItem('myth_mj_mode'); } catch(e) {}
+  var ov = document.getElementById('testOv'); if (ov) ov.style.display = 'none';
+}
+function syncMJOverlay() {
+  var ov = document.getElementById('testOv'); if (!ov) return;
+  if (!_mjMode) { ov.style.display = 'none'; return; }
+  ov.style.display = 'block';
+}
+
+// ═══════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════
 var S = {
@@ -314,7 +335,7 @@ function setStyle(id, prop, val) { var e=document.getElementById(id); if(e) e.st
 
 function updateTestOverlay(showNext) {
   var ov = document.getElementById('testOv'); if (!ov) return;
-  if (!TEST_MODE) { ov.style.display='none'; return; }
+  if (!_mjMode) { ov.style.display='none'; return; }
   ov.style.display = 'block';
   var body = document.getElementById('testOvBody'); if (!body) return;
   if (!S.team || !S.t0) { body.innerHTML = '<div class="tov-row" style="font-style:italic">Pas de session active</div>'; return; }
@@ -728,7 +749,7 @@ function showArrival() {
     +'<p style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px;font-style:italic">Score final = ce score − (bonnes réponses quiz × 0,5 min)</p>';
   // Keep test overlay visible on arrival for testing
   var ov=document.getElementById('testOv');
-  if(ov && TEST_MODE) ov.style.display='block';
+  if(ov && _mjMode) ov.style.display='block';
   else if(ov) ov.style.display='none';
   clr(); go('s9','forward');
   setTimeout(function(){ /* sound removed */ vibrate([80,40,80,40,200]); launchConfetti(); }, 200);
@@ -741,7 +762,7 @@ function resetGame() {
   S={team:null,idx:0,t0:null,pen:0,oh:{},iv:null,onPen:false,plog:[],mjT:mjT,mjC:mjC,mjST:mjST,mjEnd:mjEnd,mjIv:mjIv,pendingTeam:null,quizAnswers:quizAnswers,cpTimes:[]};
   clr(); saveMJ(); th(null);
   _mapUsed = false; _photoUsed = {};
-  var ov=document.getElementById('testOv'); if(ov) ov.style.display='none';
+  syncMJOverlay();
   go('sSplash','back');
   var _sEl = document.getElementById('sSplash');
   if (_sEl) {
@@ -782,7 +803,7 @@ function buildMJRow() {
 function loginMJ() {
   var row=document.getElementById('mjRow'); if(!row) return;
   var e=''; for(var i=0;i<4;i++) e+=(row.children[i]?row.children[i].value:'').toUpperCase();
-  if(e===MJ_CODE){ setText('mjErr',''); openMJ(); }
+  if(e===MJ_CODE){ setText('mjErr',''); activateMJ(); openMJ(); }
   else {
     setText('mjErr','Code incorrect.');
     for(var i=0;i<4;i++){
@@ -1143,6 +1164,8 @@ if ('serviceWorker' in navigator) {
   }).catch(function(){});
 }
 loadMJ();
+// Restore MJ mode from localStorage
+try { if (localStorage.getItem('myth_mj_mode') === '1') _mjMode = true; } catch(e) {}
 renderTeams();
 // Apply saved theme
 (function(){
@@ -1179,3 +1202,5 @@ if (saved && S.team && S.t0) {
     _sEl.addEventListener('touchstart', function(){ go('s1', 'forward'); }, {once: true});
   }
 }
+// Sync MJ overlay at startup
+syncMJOverlay();
