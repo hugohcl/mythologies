@@ -677,6 +677,7 @@ function validateCode() {
   for(var i=0;i<4;i++){ entered+=(row.children[i]?row.children[i].value:'').toUpperCase(); }
   if(entered.length<4){ setText('codeErr','Entrez les 4 lettres.'); return; }
   if(entered===exp){
+    playSound('success');
     for(var i=0;i<4;i++){
       (function(el,d){ setTimeout(function(){ el.classList.add('ok'); el.style.animation='codeWave .4s ease'; },d*80); })(row.children[i],i);
     }
@@ -696,6 +697,7 @@ function validateCode() {
       (function(el){ el.classList.add('err'); setTimeout(function(){ el.classList.remove('err'); },300); })(row.children[i]);
     }
     setText('codeErr','Code incorrect — cherchez encore…');
+    playSound('error');
     vibrate(VIB.error);
   }
 }
@@ -761,6 +763,7 @@ function buildHints(containerId, cpk, tk) {
             if(lvl.p>0){ addP(lvl.p,lvl.l+' — '+(CPS[cpk]?CPS[cpk].name:cpk)); toast('+'+lvl.p+' min'); }
           }
           body.classList.add('open'); btn.textContent='Masquer';
+          playSound('hint');
           card.style.borderColor=lvl.c+'50'; card.style.background=lvl.c+'0e';
         } else {
           body.classList.remove('open'); btn.textContent='Révéler';
@@ -887,7 +890,7 @@ function showArrival() {
   var mjBtns=document.getElementById('s9MJBtns');
   if(mjBtns) mjBtns.style.display=_mjMode?'':'none';
   clr(); createParticles('s9', 18); go('s9','forward');
-  setTimeout(function(){ vibrate(VIB.arrival); launchConfetti(); }, 200);
+  setTimeout(function(){ playSound('fanfare'); vibrate(VIB.arrival); launchConfetti(); }, 200);
 }
 
 function resetGame() {
