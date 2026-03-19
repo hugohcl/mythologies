@@ -814,7 +814,11 @@ function showReturnHome() {
   mkSteps('st6');
   // Mark all steps as done
   var steps = document.getElementById('st6');
-  if (steps) { var dots = steps.querySelectorAll('.sd'); dots.forEach(function(d){ d.className = 'sd done'; }); dots[dots.length-1].className = 'sd active'; }
+  if (steps) {
+    var fill = steps.querySelector('.steps-fill'); if (fill) fill.style.width = '100%';
+    steps.querySelectorAll('.steps-mk').forEach(function(d){ d.className = 'steps-mk done'; });
+    var last = steps.querySelector('.steps-mk:last-of-type'); if (last) last.className = 'steps-mk now';
+  }
   go('s6', 'forward');
   var s6 = document.getElementById('s6');
   var backBtn = document.getElementById('btnEnRouteBack');
