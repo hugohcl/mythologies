@@ -67,21 +67,21 @@ const HINTS = {
   // ── FERME → 1er checkpoint de chaque équipe ──────────────────
   ferme: {
     grec: [  // Ferme → Fresque
-      "Sisyphe gravissait sa colline éternellement. Vous n'aurez qu'à la gravir une fois — là où Borée et Euros se rencontrent, un artiste anonyme a peint le monde qu'il aimait.",
-      "L'aiguille de fer pointe vers le quart nord-est. Suivez-la jusqu'à la montée, puis jusqu'au portail peint.",
-      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur les champs.",
+      "Sisyphe gravissait sa colline éternellement. Vous n'aurez qu'à la gravir là où Borée et Euros se rencontrent pour voir son éclat.",
+      "J'impose au regard un récit, je nais là où je demeure, et le temps m'écaille parfois mais c'est ainsi qu'il me consacre.",
+      "Dans le quart nord-est, des aiguilles de fer pointent vers le ciel, ornées d'une entrée peinte.",
       "La fresque peinte sur le portail, en montant vers le nord-est du village."
     ],
     nordique: [  // Ferme → Mairie
-      "Odin lisait les runes des destins ; la République lit ses lois. Elle les affiche sur un bâtiment gardé par une femme de pierre dont le prénom fleurit au printemps.",
+      "Odin lisait les runes du destin, mais celui des hommes de Midgard s'écrit sans divinité.",
+      "Je garde moins de secrets que de preuves, et bien des instants décisifs passent par moi.",
       "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
-      "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
       "La mairie."
     ],
     hindou: [  // Ferme → Lavoir
-      "Le Gange descend du ciel pour purifier. Une source plus modeste accomplit le même office depuis des siècles, sous un toit de pierre.",
+      "Brahma l'a créé humblement, dans l'ordre discret des nécessités humaines.",
+      "La répétition est ma seule musique, je crée des souvenirs tout en les effaçant.",
       "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
-      "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
       "Le lavoir."
     ]
   },
@@ -91,16 +91,16 @@ const HINTS = {
   //   Nordique : Fresque → Lavoir
   //   Hindou : Fresque → Ferme (arrivée)
   fresque: {
-    grec: [
-      "Chaque polis avait son temenos — dédié à l'éclaireur qui précédait un plus grand et accomplissait dans les eaux d'un fleuve oriental le rite qui porte son prénom.",
-      "Un trésor de bois sculpté classé par l'État se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
-      "La vieille bâtisse de pierre avec un clocher, au cœur du village.",
+    grec: [  // → Église
+      "Chaque polis avait son temenos, mais la fin du « poly » olympien a engendré un héritier du monde qu'il a renversé.",
+      "On ne m'habite pas, mais on vient me voir pour être habité, j'abrite sans loger et j'élève sans enfanter.",
+      "Un trésor de bois sculpté se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
       "L'église du village."
     ],
-    nordique: [
-      "Mimir gardait le puits de sagesse sous les racines d'Yggdrasil. L'eau qui jaillit ici ne donne pas la sagesse — mais elle a longtemps blanchi les draps des femmes du village.",
+    nordique: [  // → Lavoir
+      "Mimir l'honore de sa sagesse, mais sans saga, sans rune et sans épée, il a pourtant gardé mille voix.",
+      "La répétition est ma seule musique, je crée des souvenirs tout en les effaçant.",
       "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
-      "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
       "Le lavoir."
     ],
     hindou: [  // Dernier CP → retour à la Ferme
@@ -115,17 +115,17 @@ const HINTS = {
   //   Grec : Église → Lavoir
   //   Hindou : Église → Fresque
   eglise: {
-    grec: [
-      "Les Naïades habitaient chaque source. Elles ne sont plus là, mais l'eau coule encore — et la rue où elles vivaient dit dans son propre nom ce qu'elles ont toujours fait.",
+    grec: [  // → Lavoir
+      "Les Naïades ne chantent aucune épopée héroïque, mais mille vies anonymes.",
+      "La répétition est ma seule musique, je crée des souvenirs tout en les effaçant.",
       "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
-      "Un petit bassin couvert d'où sort encore de l'eau, dans la partie basse du village.",
       "Le lavoir."
     ],
     nordique: ["—","—","—","—"],  // Nordique ne passe pas par l'Église
-    hindou: [
-      "Là où Vayu rencontre Indra — entre le vent du nord et le souffle de l'est — un pèlerin a tracé son mandala sur un portail au bout d'une montée.",
-      "L'aiguille de fer pointe vers le quart nord-est. Suivez-la jusqu'à la montée, puis jusqu'au portail peint.",
-      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur les champs.",
+    hindou: [  // → Fresque
+      "Là où la route montagneuse de Kubera penche vers l'aube d'Indra, les nuances éclairent le monde.",
+      "J'impose au regard un récit, je nais là où je demeure, et le temps m'écaille parfois mais c'est ainsi qu'il me consacre.",
+      "Dans le quart nord-est, des aiguilles de fer pointent vers le ciel, ornées d'une entrée peinte.",
       "La fresque peinte sur le portail, en montant vers le nord-est du village."
     ]
   },
@@ -135,10 +135,10 @@ const HINTS = {
   //   Nordique : Lavoir → Ferme (arrivée)
   //   Hindou : Lavoir → Mairie
   lavoir: {
-    grec: [
-      "L'Agora réunissait les citoyens libres sous le ciel d'Athènes. Ce lieu porte le nom d'une fleur liée à Aphrodite elle-même.",
+    grec: [  // → Salle
+      "Un lieu qui réunissait les citoyens libres sous le ciel d'Athènes. Ce lieu porte le nom d'une fleur liée à Aphrodite elle-même.",
+      "Je ne suis spécialisée en rien, ce qui me rend utile à tous. Je réunis sans distinguer, j'abrite sans imposer.",
       "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
-      "La grande halle de charpente avec un jardin devant, sur la pente sud du village.",
       "La salle polyvalente."
     ],
     nordique: [  // Dernier CP → retour à la Ferme
@@ -147,10 +147,10 @@ const HINTS = {
       "Retournez à la ferme par la rue de la Fontaine des Champs.",
       "La Ferme d'Octave — 1 rue de la Fontaine des Champs."
     ],
-    hindou: [
-      "Brahma instaura les lois du cosmos ; la République instaure les lois des hommes. Son temple terrestre est gardé par une femme-fleur de pierre.",
+    hindou: [  // → Mairie
+      "Ce que Dharma exigeait d'ordonner, ce que le temps dispersait sans traces, les hommes l'ont consacré sans dieu.",
+      "Je garde moins de secrets que de preuves, et bien des instants décisifs passent par moi.",
       "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
-      "Le seul bâtiment du village avec un drapeau tricolore et un panneau d'affichage officiel.",
       "La mairie."
     ]
   },
@@ -165,10 +165,10 @@ const HINTS = {
       "Retournez à la ferme par la rue de la Fontaine des Champs.",
       "La Ferme d'Octave — 1 rue de la Fontaine des Champs."
     ],
-    nordique: [
-      "Entre Niflheim au nord et les terres de l'aurore à l'est, les Ases gravaient des runes sur les rochers. Ici, un mortel a dessiné son village sur une paroi.",
-      "L'aiguille de fer pointe vers le quart nord-est. Suivez-la jusqu'à la montée, puis jusqu'au portail peint.",
-      "Une fresque naïve représentant le village, peinte sur le portail d'une propriété en haut d'une côte, avec vue sur les champs.",
+    nordique: [  // → Fresque
+      "Entre le pays glacé du Niflheim et les terres de l'aurore, les Nains illuminaient les rochers.",
+      "J'impose au regard un récit, je nais là où je demeure, et le temps m'écaille parfois mais c'est ainsi qu'il me consacre.",
+      "Dans le quart nord-est, des aiguilles de fer pointent vers le ciel, ornées d'une entrée peinte.",
       "La fresque peinte sur le portail, en montant vers le nord-est du village."
     ],
     hindou: ["—","—","—","—"]  // Hindou ne passe pas par la Salle
@@ -179,26 +179,26 @@ const HINTS = {
   //   Hindou : Mairie → Église
   mairie: {
     grec: ["—","—","—","—"],  // Grec ne passe pas par la Mairie
-    nordique: [
-      "Valhöll accueillait tous les guerriers sans distinction. Ce hall communal porte le nom d'une fleur que les scaldes offraient à leur muse.",
+    nordique: [  // → Salle
+      "Valhöll accueillait tous les guerriers sans distinction. Ce hall porte le nom d'une fleur que les scaldes offraient à leur muse.",
+      "Je ne suis spécialisée en rien, ce qui me rend utile à tous. Je réunis sans distinguer, j'abrite sans imposer.",
       "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
-      "La grande halle de charpente avec un jardin devant, sur la pente sud du village.",
       "La salle polyvalente."
     ],
-    hindou: [
-      "Chaque mandir est un axis mundi. Ce lieu de pierre abrite un trésor classé — son saint pratiquait la purification dans les eaux d'un fleuve d'Orient.",
-      "Un trésor de bois sculpté classé par l'État se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
-      "La vieille bâtisse de pierre avec un clocher, au cœur du village.",
+    hindou: [  // → Église
+      "Aucun Brahmane n'y porte le feu d'Agni, car un seul homme a verticalisé son karma.",
+      "On ne m'habite pas, mais on vient me voir pour être habité, j'abrite sans loger et j'élève sans enfanter.",
+      "Un trésor de bois sculpté se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
       "L'église du village."
     ]
   }
 };
 
 const LVL = [
-  {l:"Indice I",   p:0, d:"Coriace",       c:"#2a9d6a"},
-  {l:"Indice II",  p:2, d:"Intermédiaire", c:"#d4a017"},
-  {l:"Indice III", p:5, d:"Facile",        c:"#d07030"},
-  {l:"Indice IV",  p:8, d:"Très facile",   c:"#b83030"}
+  {l:"Indice I",   p:0,  d:"Coriace",       c:"#2a9d6a"},
+  {l:"Indice II",  p:3,  d:"Intermédiaire", c:"#d4a017"},
+  {l:"Indice III", p:6,  d:"Facile",        c:"#d07030"},
+  {l:"Indice IV",  p:10, d:"Très facile",   c:"#b83030"}
 ];
 
 const ACC = {

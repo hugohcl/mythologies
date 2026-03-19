@@ -59,6 +59,13 @@ function go(id, dir) {
   if (el) el.classList.remove('hidden', 'exit-forward');
   var bt = document.getElementById('btnTheme');
   if (bt) bt.style.display = (id === 'sSplash') ? 'none' : '';
+  // Show MAP button on game screens only
+  var gameScreens = ['s5','s6','sEnigme','s7','s8'];
+  var isGame = gameScreens.indexOf(id) >= 0;
+  showMapBtn(isGame);
+  // Show PHOTO button only on enigme/code screens
+  var photoScreens = ['sEnigme','s7'];
+  showPhotoBtn(photoScreens.indexOf(id) >= 0);
   // Clean exit class after transition
   setTimeout(function(){
     document.querySelectorAll('.exit-forward').forEach(function(s){ s.classList.remove('exit-forward'); });
@@ -324,7 +331,7 @@ function updateTestOverlay(showNext) {
 // ═══════════════════════════════════════════
 window.addEventListener('online', function() {
   if (!S.t0 || S.onPen) return;
-  S.onPen=true; addP(30,'Connexion internet détectée'); playSound('penalty'); vibrate([200, 80, 200]);
+  S.onPen=true; addP(30,'Connexion internet détectée'); /* sound removed */ vibrate([200, 80, 200]);
   var b=document.getElementById('banOnline'); b.classList.add('show');
   setTimeout(function(){ b.classList.remove('show'); }, 6000);
 });
@@ -410,7 +417,7 @@ function startGame() {
   go('s4','forward');
   var el=document.getElementById('cdNum'), n=3;
   el.textContent=n;
-  playSound('tick');
+  /* sound removed */
   var tc=S.team?S.team.color:'var(--gold)';
   var iv=setInterval(function(){
     el.style.transform='scale(1.3)';
@@ -424,7 +431,7 @@ function startGame() {
       clearInterval(iv);
       setTimeout(function(){ startC(); if(S.team) S.mjST[S.team.key]=S.t0; showS5(); save(); saveMJ(); },800);
     } else {
-      playSound('tick');
+      /* sound removed */
       el.textContent=n;
     }
   },900);
@@ -544,7 +551,7 @@ function validateCode() {
     S.cpTimes.push({cp:cpk, t:Date.now()});
     if(document.activeElement) document.activeElement.blur();
     flashSuccess();
-    playSound('success');
+    /* sound removed */
     vibrate([80,50,80]);
     setTimeout(function(){ showCit(S.team.key); },50);
     setTimeout(function(){ showHintsScreen(cpk); },700);
@@ -553,7 +560,7 @@ function validateCode() {
       (function(el){ el.classList.add('err'); setTimeout(function(){ el.classList.remove('err'); },300); })(row.children[i]);
     }
     setText('codeErr','Code incorrect — cherchez encore…');
-    playSound('error');
+    /* sound removed */
     vibrate([250]);
   }
 }
@@ -648,11 +655,36 @@ function confirmDest(inputId, errId, nextKey, onSuccess) {
   var ok=(ACC[nextKey]||[]).some(function(a){ return v.indexOf(a)>=0||(a.indexOf(v)>=0&&v.length>3); });
   if(ok){ if(err) err.textContent=''; inp.blur(); onSuccess(); }
   else {
-    addP(2,'Mauvaise destination');
-    if(err) err.textContent='Mauvaise destination — +2 min';
-    playSound('penalty'); vibrate([120, 60, 120]);
+    addP(1,'Mauvaise destination');
+    if(err) err.textContent='Mauvaise destination — +1 min';
+    /* sound removed */ vibrate([120, 60, 120]);
     inp.value='';
   }
+}
+
+// ═══════════════════════════════════════════
+// RETOUR À LA FERME (écran thématisé)
+// ═══════════════════════════════════════════
+function showReturnHome() {
+  var t = S.team; th(t);
+  var returnTexts = {
+    grec: "Comme Ulysse apercevant enfin les rivages d'Ithaque, votre odyssée touche à sa fin. Les dieux vous attendent à la Ferme d'Octave.",
+    nordique: "Le Bifröst s'illumine une dernière fois. Votre saga s'achève — le mead-hall de la Ferme d'Octave vous attend, guerriers.",
+    hindou: "Le dharma vous a guidés jusqu'ici. Votre yatra s'achève — le repos du moksha vous attend à la Ferme d'Octave."
+  };
+  setText('s6title', t.mascot + ' ' + t.name);
+  setText('erIcon', '🏠');
+  setText('erName', 'Retour à la Ferme'); setStyle('erName', 'color', t.color);
+  setText('erAddr', returnTexts[t.key] || 'Retournez à la Ferme d\'Octave — 1 rue de la Fontaine des Champs');
+  mkSteps('st6');
+  // Mark all steps as done
+  var steps = document.getElementById('st6');
+  if (steps) { var dots = steps.querySelectorAll('.sd'); dots.forEach(function(d){ d.className = 'sd done'; }); dots[dots.length-1].className = 'sd active'; }
+  go('s6', 'forward');
+  var s6 = document.getElementById('s6');
+  var backBtn = document.getElementById('btnEnRouteBack');
+  if (backBtn) backBtn.style.display = 'none';
+  s6.onclick = function(e) { s6.onclick = null; if (backBtn) backBtn.style.display = ''; showArrival(); };
 }
 
 // ═══════════════════════════════════════════
@@ -682,7 +714,7 @@ function showArrival() {
     });
     // Last leg to ferme
     var lastLeg=Date.now()-S.t0-(S.cpTimes.length?S.cpTimes[S.cpTimes.length-1].t-S.t0:0);
-    cpRows+='<div class="srow"><span class="sl" style="padding-left:12px;font-size:12px">🏡 Retour Ferme</span><span class="sv" style="font-size:13px">'+fmt(lastLeg)+'</span></div>';
+    cpRows+='<div class="srow"><span class="sl" style="padding-left:12px;font-size:12px">Retour Ferme</span><span class="sv" style="font-size:13px">'+fmt(lastLeg)+'</span></div>';
   }
   if(bd) bd.innerHTML=''
     +'<div class="srow"><span class="sl">Temps de parcours</span><span class="sv">'+fmt(el)+'</span></div>'
@@ -694,7 +726,7 @@ function showArrival() {
     +'<p style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px;font-style:italic">Score final = ce score − (bonnes réponses quiz × 0,5 min)</p>';
   var ov=document.getElementById('testOv'); if(ov) ov.style.display='none';
   clr(); go('s9','forward');
-  setTimeout(function(){ playSound('fanfare'); vibrate([80,40,80,40,200]); launchConfetti(); }, 200);
+  setTimeout(function(){ /* sound removed */ vibrate([80,40,80,40,200]); launchConfetti(); }, 200);
 }
 
 function resetGame() {
@@ -703,8 +735,15 @@ function resetGame() {
   var mjST = S.mjST, mjEnd = S.mjEnd, quizAnswers = S.quizAnswers, mjT = S.mjT, mjC = S.mjC, mjIv = S.mjIv;
   S={team:null,idx:0,t0:null,pen:0,oh:{},iv:null,onPen:false,plog:[],mjT:mjT,mjC:mjC,mjST:mjST,mjEnd:mjEnd,mjIv:mjIv,pendingTeam:null,quizAnswers:quizAnswers,cpTimes:[]};
   clr(); saveMJ(); th(null);
+  _mapUsed = false; _photoUsed = {};
   var ov=document.getElementById('testOv'); if(ov) ov.style.display='none';
-  go('s1','back');
+  go('sSplash','back');
+  var _sEl = document.getElementById('sSplash');
+  if (_sEl) {
+    var _goS1 = function(){ go('s1', 'forward'); };
+    _sEl.addEventListener('click', _goS1, {once: true});
+    _sEl.addEventListener('touchstart', _goS1, {once: true});
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -954,6 +993,80 @@ function toggleTheme() {
 }
 
 // ═══════════════════════════════════════════
+// MAP + PHOTO HINT BUTTONS
+// ═══════════════════════════════════════════
+var _mapUsed = false;
+var _photoUsed = {};
+
+// Placeholder photos par lieu (remplacer par les vrais fichiers plus tard)
+var PHOTO_HINTS = {
+  fresque: "photo-fresque.png",
+  eglise:  "photo-eglise.png",
+  lavoir:  "photo-lavoir.png",
+  salle:   "photo-salle.png",
+  mairie:  "photo-mairie.png"
+};
+
+function showMapBtn(show) {
+  var btn = document.getElementById('btnMap');
+  if (btn) btn.style.display = show ? '' : 'none';
+}
+
+function showPhotoBtn(show) {
+  var btn = document.getElementById('btnPhoto');
+  if (btn) btn.style.display = show ? '' : 'none';
+}
+
+function openMap() {
+  if (!_mapUsed) {
+    _mapUsed = true;
+    addP(15, 'Carte consultée');
+    toast('+15 min — Carte');
+    vibrate([200, 80, 200]);
+  }
+  var ov = document.getElementById('mapOverlay');
+  if (!ov) return;
+  ov.style.display = 'flex';
+  var timer = document.getElementById('mapTimer');
+  var sec = 5;
+  if (timer) timer.textContent = sec;
+  var iv = setInterval(function() {
+    sec--;
+    if (timer) timer.textContent = sec;
+    if (sec <= 0) {
+      clearInterval(iv);
+      ov.style.display = 'none';
+    }
+  }, 1000);
+}
+
+function openPhoto() {
+  var cpk = curCP();
+  if (!_photoUsed[cpk]) {
+    _photoUsed[cpk] = true;
+    addP(15, 'Photo indice — ' + (CPS[cpk] ? CPS[cpk].name : cpk));
+    toast('+15 min — Photo indice');
+    vibrate([200, 80, 200]);
+  }
+  var ov = document.getElementById('photoOverlay');
+  var img = document.getElementById('photoImg');
+  if (img) {
+    img.src = PHOTO_HINTS[cpk] || 'photo-placeholder.png';
+    img.onerror = function() {
+      img.style.display = 'none';
+      var wrap = document.getElementById('photoImgWrap');
+      if (wrap) wrap.innerHTML = '<div style="text-align:center;color:var(--muted);font-style:italic;padding:40px">Photo non disponible<br><span style=font-size:12px>(' + (PHOTO_HINTS[cpk] || 'photo-placeholder.png') + ')</span></div>';
+    };
+  }
+  if (ov) ov.style.display = 'flex';
+}
+
+function closePhoto() {
+  var ov = document.getElementById('photoOverlay');
+  if (ov) ov.style.display = 'none';
+}
+
+// ═══════════════════════════════════════════
 // EVENTS
 // ═══════════════════════════════════════════
 document.getElementById('btnAP').onclick = function(){
@@ -989,13 +1102,16 @@ document.getElementById('btnFoundCache').onclick = guardTap(function(){ showCode
 document.getElementById('btnCode').onclick   = guardTap(function(){ validateCode(); });
 document.getElementById('btnNext').onclick   = guardTap(function(){
   var nk=nextK();
-  confirmDest('destNext','destNextErr',nk,function(){ S.idx++; save(); if(nk==='ferme') showArrival(); else showEnRoute(nk); });
+  confirmDest('destNext','destNextErr',nk,function(){ S.idx++; save(); if(nk==='ferme') showReturnHome(); else showEnRoute(nk); });
 });
+document.getElementById('btnMap').onclick = function(){ openMap(); };
+document.getElementById('btnPhoto').onclick = function(){ openPhoto(); };
+document.getElementById('btnClosePhoto').onclick = function(){ closePhoto(); };
 document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
 document.getElementById('btnMJLogin').onclick  = function(){ loginMJ(); };
 document.getElementById('btnMJBack').onclick   = function(){ go('s1','back'); };
 document.getElementById('btnMJHome').onclick   = function(){ go('s1','back'); };
-document.getElementById('btnReset').onclick    = function(){ resetGame(); };
+// btnReset removed — teams cannot change after finishing
 document.getElementById('btnTestMode').onclick = function(){ renderTestTeamTabs(); go('sTest','forward'); };
 
 // ═══════════════════════════════════════════
