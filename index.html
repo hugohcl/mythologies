@@ -24,10 +24,10 @@ html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;oversc
   --shadow-gold:0 0 28px rgba(201,168,76,0.22);
   --glow:0 0 18px rgba(201,168,76,0.35);
 }
-html,body{height:100%;height:100dvh;background:var(--bg);background-image:radial-gradient(ellipse at 25% 15%,rgba(201,168,76,.055) 0%,transparent 55%),radial-gradient(ellipse at 75% 85%,rgba(80,40,10,.07) 0%,transparent 45%);color:var(--text);font-family:'IM Fell English',Georgia,serif;overflow:hidden;position:fixed;width:100%;overscroll-behavior:none}
+html,body{height:100%;height:100dvh;background:var(--bg);background-image:radial-gradient(ellipse at 25% 15%,rgba(201,168,76,.055) 0%,transparent 55%),radial-gradient(ellipse at 75% 85%,rgba(80,40,10,.07) 0%,transparent 45%);color:var(--text);font-family:'IM Fell English',Georgia,serif;overflow:hidden;position:fixed;width:100%;top:0;left:0;bottom:0;right:0;overscroll-behavior:none}
 
 /* ── SCREEN TRANSITIONS ── */
-.screen{position:absolute;inset:0;display:flex;flex-direction:column;transition:opacity .28s,transform .28s}
+.screen{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;transition:opacity .28s,transform .28s}
 .screen.hidden{opacity:0;pointer-events:none;transform:translateX(28px)}
 .screen.hidden.exit-forward{transform:translateX(-28px)}
 
@@ -38,7 +38,7 @@ html,body{height:100%;height:100dvh;background:var(--bg);background-image:radial
 .mjpill{position:absolute;top:calc(10px + env(safe-area-inset-top));right:14px;background:rgba(180,30,30,.9);color:#fff;font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;padding:3px 9px;border-radius:10px}
 
 /* ── SCROLL ── */
-.scroll{flex:1;overflow-y:auto;padding:14px 16px 0;-webkit-overflow-scrolling:touch;position:relative;padding-bottom:0}
+.scroll{flex:1;overflow-y:auto;padding:14px 16px 0;-webkit-overflow-scrolling:touch;position:relative;padding-bottom:0;display:flex;flex-direction:column}
 .scroll::-webkit-scrollbar{display:none}
 
 /* ── CHRONO BAR ── */
@@ -169,6 +169,10 @@ html,body{height:100%;height:100dvh;background:var(--bg);background-image:radial
 .badge-icon{font-size:42px;margin-bottom:4px}
 .badge-title{font-family:'Cinzel Decorative',serif;font-size:16px;letter-spacing:1.5px;text-shadow:var(--glow)}
 .badge-desc{font-size:12px;color:var(--muted);font-style:italic;margin-top:4px}
+
+/* ── SCROLL FILL: push last items to bottom on short screens ── */
+#s1 #btnMJAccess{margin-top:auto}
+#s11 #btnTestMode{margin-top:auto}
 
 /* ── SAFE AREA (non-scroll centered screens) ── */
 #s2,#s4,#s6{padding-top:env(safe-area-inset-top);padding-bottom:0}
@@ -323,7 +327,7 @@ html.light .cs{border-color:var(--tbr)}
   <div class="scroll">
     <p style="text-align:center;color:var(--muted);font-size:14px;margin:6px 0 10px;font-style:italic;letter-spacing:.3px">Choisissez votre équipe</p>
     <div id="teamList"></div>
-    <button class="btn bgh" style="max-width:220px;margin:4px auto 0;font-size:13px;opacity:.55" id="btnMJAccess">Maître de Jeu</button>
+    <button class="btn bgh" style="max-width:220px;margin:auto auto 0;font-size:13px;opacity:.55" id="btnMJAccess">Maître de Jeu</button>
   </div>
 </div>
 
