@@ -269,48 +269,6 @@ function launchConfetti() {
 }
 
 // ═══════════════════════════════════════════
-// PARCHMENT TRANSITION (feature 6)
-// ═══════════════════════════════════════════
-var PARCH_MSGS = {
-  grec: [
-    {icon:'📜', title:'Le Parchemin se déploie…', body:'Les Moires tissent la suite de votre quête.'},
-    {icon:'⚡', title:'Zeus approuve !', body:'Un nouveau chapitre de votre odyssée commence.'},
-    {icon:'🏛️', title:'L\'Oracle parle…', body:'Votre prochain défi se dévoile.'}
-  ],
-  nordique: [
-    {icon:'📜', title:'Les Runes s\'illuminent…', body:'Odin dévoile la suite de votre saga.'},
-    {icon:'🐦‍⬛', title:'Huginn murmure…', body:'Le corbeau porte un nouveau secret.'},
-    {icon:'⚔️', title:'Le Skald chante !', body:'Un nouveau verset s\'inscrit dans votre saga.'}
-  ],
-  hindou: [
-    {icon:'📜', title:'Le Véda s\'ouvre…', body:'Le dharma révèle votre prochaine étape.'},
-    {icon:'🔥', title:'Agni éclaire le chemin…', body:'Le feu sacré guide vos pas.'},
-    {icon:'🪷', title:'Le Lotus s\'épanouit…', body:'Une nouvelle page de votre yatra commence.'}
-  ]
-};
-
-function showParchment(teamKey, cb) {
-  var ov = document.getElementById('parchOv');
-  if (!ov) { if (cb) cb(); return; }
-  var msgs = PARCH_MSGS[teamKey] || PARCH_MSGS.grec;
-  var msg = msgs[Math.floor(Math.random() * msgs.length)];
-  ov.innerHTML = '<div class="parch-scroll">'
-    + '<div class="parch-icon">' + msg.icon + '</div>'
-    + '<div class="parch-title">' + msg.title + '</div>'
-    + '<div class="parch-body">' + msg.body + '</div>'
-    + '</div>';
-  ov.style.display = 'flex';
-  setTimeout(function() {
-    ov.style.animation = 'parchFade .4s ease forwards';
-    setTimeout(function() {
-      ov.style.display = 'none';
-      ov.style.animation = '';
-      if (cb) cb();
-    }, 420);
-  }, 1600);
-}
-
-// ═══════════════════════════════════════════
 // BADGES (feature 9)
 // ═══════════════════════════════════════════
 var BADGES = {
@@ -668,7 +626,7 @@ function validateCode() {
     var isLast = (S.idx >= S.team.route.length - 1);
     setTimeout(function(){
       if(isLast){ S.idx++; save(); showReturnHome(); }
-      else { showParchment(S.team.key, function(){ showHintsScreen(cpk); }); }
+      else { showHintsScreen(cpk); }
     },700);
   } else {
     for(var i=0;i<4;i++){
