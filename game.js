@@ -1264,14 +1264,29 @@ document.getElementById('btnS9Home').onclick = function(){ resetGame(); };
 // INIT
 // ═══════════════════════════════════════════
 setupPWA();
-// Service Worker
+// Service Worker — aggressive update for Safari
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').then(function(reg) {
+    // Force check for update on every page load
+    reg.update().catch(function(){});
+    // Also check every 30 seconds (Safari can be lazy)
+    setInterval(function(){ reg.update().catch(function(){}); }, 30000);
+    // When new SW is found, auto-activate + reload
     reg.addEventListener('updatefound', function() {
       var nw = reg.installing;
       if (nw) nw.addEventListener('statechange', function() {
-        if (nw.state === 'activated') location.reload();
+        if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+          // New version ready — tell it to activate immediately
+          nw.postMessage('skipWaiting');
+        }
       });
+    });
+    // When new SW takes control, reload page
+    var refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+      if (refreshing) return;
+      refreshing = true;
+      location.reload();
     });
   }).catch(function(){});
 }
@@ -1289,9 +1304,11 @@ renderTeams();
     var icon = document.getElementById('themeIcon');
     if (icon) icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
   }
-  // Sync splash subtitle
+  // Sync splash subtitle + version
   var sp = document.getElementById('splSub');
   if (sp) sp.textContent = 'Jeu d\'orientation · ' + (EVENT_LOCATION || 'Dosches') + ' · ' + (EVENT_DATE || '');
+  var ver = document.getElementById('appVersion');
+  if (ver) ver.textContent = 'v' + (APP_VERSION || '?');
 })();
 var saved = loadSaved();
 if (saved && S.team && S.t0) {
