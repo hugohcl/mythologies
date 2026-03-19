@@ -71,16 +71,21 @@ function loadMJ() {
 // ═══════════════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════════════
+var _TR={sSplash:'tr-fade',s4:'tr-zoom',s9:'tr-fade',sEnigme:'tr-up',s7:'tr-up'};
 function go(id, dir) {
+  var trClass=_TR[id]||'';
   // Mark visible screen for directional exit before hiding
   if (dir === 'forward') {
     document.querySelectorAll('.screen:not(.hidden)').forEach(function(s){
       s.classList.add('exit-forward');
     });
   }
-  document.querySelectorAll('.screen').forEach(function(s){ s.classList.add('hidden'); });
+  document.querySelectorAll('.screen').forEach(function(s){
+    s.classList.add('hidden');
+    s.classList.remove('tr-up','tr-zoom','tr-fade');
+  });
   var el = document.getElementById(id);
-  if (el) el.classList.remove('hidden', 'exit-forward');
+  if (el) { if(trClass) el.classList.add(trClass); el.classList.remove('hidden', 'exit-forward'); }
   var bt = document.getElementById('btnTheme');
   if (bt) bt.style.display = (id === 'sSplash') ? 'none' : '';
   // Show MAP button on game screens only
@@ -93,7 +98,7 @@ function go(id, dir) {
   // Clean exit class after transition
   setTimeout(function(){
     document.querySelectorAll('.exit-forward').forEach(function(s){ s.classList.remove('exit-forward'); });
-  }, 350);
+  }, 500);
 }
 
 // ═══════════════════════════════════════════
@@ -319,12 +324,49 @@ document.addEventListener('click', function(e) {
 });
 
 // ═══════════════════════════════════════════
+// GOLD PARTICLES
+// ═══════════════════════════════════════════
+function createParticles(parentId, count) {
+  var parent = document.getElementById(parentId);
+  if (!parent || parent.querySelector('.gold-particles')) return;
+  var wrap = document.createElement('div');
+  wrap.className = 'gold-particles';
+  for (var i = 0; i < (count || 18); i++) {
+    var p = document.createElement('div');
+    p.className = 'gp';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (6 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    var sz = (2 + Math.random() * 3) + 'px';
+    p.style.width = sz; p.style.height = sz;
+    wrap.appendChild(p);
+  }
+  parent.insertBefore(wrap, parent.firstChild);
+}
+
+// ═══════════════════════════════════════════
 // UTILS
 // ═══════════════════════════════════════════
+var TEAM_SVG = {
+  grec:'<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="10" width="4" height="26" rx="1"/><rect x="28" y="10" width="4" height="26" rx="1"/><rect x="6" y="6" width="28" height="5" rx="1.5"/><rect x="6" y="35" width="28" height="3" rx="1"/><line x1="14" y1="10" x2="14" y2="36"/><line x1="20" y1="10" x2="20" y2="36"/><line x1="26" y1="10" x2="26" y2="36"/></svg>',
+  nordique:'<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="20" y1="4" x2="20" y2="36"/><line x1="12" y1="10" x2="28" y2="10"/><line x1="14" y1="18" x2="26" y2="18"/><line x1="12" y1="10" x2="8" y2="18"/><line x1="28" y1="10" x2="32" y2="18"/><line x1="14" y1="18" x2="10" y2="26"/><line x1="26" y1="18" x2="30" y2="26"/></svg>',
+  hindou:'<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="20" cy="20" r="16"/><circle cx="20" cy="20" r="10"/><circle cx="20" cy="20" r="4"/><line x1="20" y1="4" x2="20" y2="36"/><line x1="4" y1="20" x2="36" y2="20"/><line x1="8.7" y1="8.7" x2="31.3" y2="31.3"/><line x1="31.3" y1="8.7" x2="8.7" y2="31.3"/></svg>'
+};
 function th(t) {
   var r = document.documentElement.style;
-  if (!t) { r.setProperty('--tc','var(--gold)'); r.setProperty('--tb','var(--gd)'); r.setProperty('--tbr','var(--gb)'); return; }
-  r.setProperty('--tc', t.color); r.setProperty('--tb', t.bg); r.setProperty('--tbr', t.border);
+  if (!t) { r.setProperty('--tc','var(--gold)'); r.setProperty('--tb','var(--gd)'); r.setProperty('--tbr','var(--gb)'); }
+  else { r.setProperty('--tc', t.color); r.setProperty('--tb', t.bg); r.setProperty('--tbr', t.border); }
+  // Watermark
+  document.querySelectorAll('.hdr-wm').forEach(function(el){ el.remove(); });
+  var k = t && t.key ? t.key : null;
+  if (k && TEAM_SVG[k]) {
+    document.querySelectorAll('.hdr').forEach(function(hdr){
+      var wm = document.createElement('div');
+      wm.className = 'hdr-wm';
+      wm.innerHTML = TEAM_SVG[k];
+      hdr.appendChild(wm);
+    });
+  }
 }
 
 function fmt(ms) {
@@ -359,10 +401,25 @@ function nextK()  { return S.idx>=S.team.route.length-1 ? 'ferme' : S.team.route
 function mkSteps(id) {
   var el=document.getElementById(id); if(!el) return;
   var r = S.team.route.concat(['ferme']);
-  el.innerHTML = r.map(function(_,i){
-    var c='sd'; if(i<S.idx) c+=' done'; if(i===S.idx) c+=' active';
-    return '<div class="'+c+'"></div>';
-  }).join('');
+  var total = r.length;
+  var pct = total > 1 ? (S.idx / (total - 1)) * 100 : 0;
+  el.innerHTML = '';
+  var track = document.createElement('div');
+  track.className = 'steps-track';
+  var fill = document.createElement('div');
+  fill.className = 'steps-fill';
+  fill.style.width = '0%';
+  track.appendChild(fill);
+  for (var i = 0; i < total; i++) {
+    var mk = document.createElement('div');
+    mk.className = 'steps-mk';
+    if (i < S.idx) mk.classList.add('done');
+    if (i === S.idx) mk.classList.add('now');
+    mk.style.left = (total > 1 ? (i / (total - 1)) * 100 : 0) + '%';
+    track.appendChild(mk);
+  }
+  el.appendChild(track);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ fill.style.width = pct + '%'; }); });
 }
 
 function showCit(tk) {
@@ -814,7 +871,7 @@ function showArrival() {
   // Show MJ buttons on final screen
   var mjBtns=document.getElementById('s9MJBtns');
   if(mjBtns) mjBtns.style.display=_mjMode?'':'none';
-  clr(); go('s9','forward');
+  clr(); createParticles('s9', 18); go('s9','forward');
   setTimeout(function(){ vibrate(VIB.arrival); launchConfetti(); }, 200);
 }
 
@@ -1278,6 +1335,7 @@ if (saved && S.team && S.t0) {
 } else {
   th(null);
   go('sSplash');
+  createParticles('sSplash', 22);
   var _sEl = document.getElementById('sSplash');
   if (_sEl) {
     _sEl.addEventListener('click', function(){ go('s1', 'forward'); }, {once: true});

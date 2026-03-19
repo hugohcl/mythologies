@@ -31,11 +31,24 @@ body{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%}
 .screen{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;transition:opacity .28s,transform .28s}
 .screen.hidden{opacity:0;pointer-events:none;transform:translateX(28px)}
 .screen.hidden.exit-forward{transform:translateX(-28px)}
+/* Slide-up for checkpoint screens */
+.screen.tr-up{transition:opacity .32s,transform .32s cubic-bezier(.4,0,.2,1)}
+.screen.hidden.tr-up{transform:translateY(40px)}
+.screen.hidden.exit-forward.tr-up{transform:translateY(-40px)}
+/* Zoom for countdown */
+.screen.tr-zoom{transition:opacity .4s,transform .4s cubic-bezier(.4,0,.2,1)}
+.screen.hidden.tr-zoom{transform:scale(.85)}
+.screen.hidden.exit-forward.tr-zoom{transform:scale(1.15)}
+/* Fade-only for splash/arrival */
+.screen.tr-fade{transition:opacity .5s ease}
+.screen.hidden.tr-fade{transform:none}
+.screen.hidden.exit-forward.tr-fade{transform:none}
 
 /* ── HEADER ── */
 .hdr{background:linear-gradient(180deg,var(--bg3) 0%,var(--bg2) 100%);border-bottom:1px solid rgba(201,168,76,0.18);padding:calc(3px + env(safe-area-inset-top)) 20px 8px;flex-shrink:0;position:relative}
 .ht{font-family:'Cinzel Decorative',serif;font-size:17px;color:var(--gold);letter-spacing:2px;text-align:center;text-shadow:var(--glow)}
 .hs{font-size:13px;color:var(--muted);text-align:center;margin-top:3px;font-style:italic;letter-spacing:.3px}
+.hdr-wm{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:32px;height:32px;opacity:.1;pointer-events:none;color:var(--tc)}
 .mjpill{position:absolute;top:calc(10px + env(safe-area-inset-top));right:14px;background:rgba(180,30,30,.9);color:#fff;font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;padding:3px 9px;border-radius:10px}
 
 /* ── SCROLL ── */
@@ -49,11 +62,14 @@ body{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%}
 .cpen{font-size:13px;color:var(--muted);text-align:right}
 .cpen b{color:var(--danger);font-family:'Cinzel',serif}
 
-/* ── PROGRESS STEPS ── */
-.steps{display:flex;gap:5px;padding:7px 20px;justify-content:center;flex-shrink:0;background:var(--bg2)}
-.sd{flex:1;max-width:44px;height:3px;border-radius:2px;background:rgba(255,255,255,.07);transition:background .4s,opacity .4s}
-.sd.done{background:var(--gold);opacity:.35}
-.sd.active{background:var(--gold);box-shadow:0 0 6px rgba(201,168,76,.5)}
+/* ── PROGRESS BAR ── */
+.steps{padding:0 20px;flex-shrink:0;background:var(--bg2);height:26px;display:flex;align-items:center}
+.steps-track{width:100%;height:4px;background:rgba(255,255,255,.07);border-radius:2px;position:relative}
+.steps-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--tc),var(--gold));transition:width .7s cubic-bezier(.4,0,.2,1);box-shadow:0 0 8px rgba(201,168,76,.3);position:relative}
+.steps-fill::after{content:'';position:absolute;right:0;top:-3px;width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px rgba(201,168,76,.45)}
+.steps-mk{position:absolute;top:-2px;width:8px;height:8px;border-radius:50%;border:2px solid rgba(255,255,255,.12);background:var(--bg2);transform:translateX(-50%);transition:border-color .4s,background .4s;z-index:1}
+.steps-mk.done{border-color:var(--gold);background:var(--gold)}
+.steps-mk.now{border-color:var(--tc);background:var(--tc);box-shadow:0 0 8px rgba(201,168,76,.4)}
 
 /* ── CARDS ── */
 .card{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:15px 16px;margin-bottom:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
@@ -228,6 +244,11 @@ body{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%}
 .spl-orn{color:var(--gold);opacity:.25;letter-spacing:8px;font-size:14px;margin:16px 0 0;animation:splashFade 1s ease 1s both}
 .spl-tap{position:absolute;bottom:calc(36px + env(safe-area-inset-bottom));font-size:11px;color:var(--muted);font-family:'Cinzel',serif;letter-spacing:2.5px;text-transform:uppercase;animation:splashTap 2.4s ease 1.8s infinite}
 
+/* ── GOLD PARTICLES ── */
+.gold-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.gold-particles .gp{position:absolute;border-radius:50%;background:var(--gold);opacity:0;animation:gpFloat linear infinite}
+@keyframes gpFloat{0%{opacity:0;transform:translateY(100vh) scale(.5)}10%{opacity:.4}90%{opacity:.25}100%{opacity:0;transform:translateY(-20px) scale(.8)}}
+
 /* ── LIGHT MODE ── */
 html.light{
   background:#f5f0e6;
@@ -241,8 +262,9 @@ html.light body{background:var(--bg);background-image:radial-gradient(ellipse at
 html.light .hdr{background:linear-gradient(180deg,var(--bg3) 0%,var(--bg2) 100%);border-bottom-color:rgba(138,96,16,.2)}
 html.light .cbar{background:var(--bg2);border-bottom-color:rgba(0,0,0,.07)}
 html.light .steps{background:var(--bg2)}
-html.light .sd{background:rgba(0,0,0,.1)}
-html.light .sd.done{background:var(--gold)}
+html.light .steps-track{background:rgba(0,0,0,.08)}
+html.light .steps-mk{background:var(--bg2);border-color:rgba(0,0,0,.12)}
+html.light .steps-mk.done{border-color:var(--gold);background:var(--gold)}
 html.light .card{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.09)}
 html.light .hcard{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.08)}
 html.light .hbody{background:rgba(0,0,0,.04);border-top-color:rgba(0,0,0,.07)}
