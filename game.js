@@ -398,17 +398,26 @@ function stopC()  { if(S.iv) clearInterval(S.iv); }
 function curCP()  { return S.team.route[S.idx]; }
 function nextK()  { return S.idx>=S.team.route.length-1 ? 'ferme' : S.team.route[S.idx+1]; }
 
+var _lastStepIdx = -1;
 function mkSteps(id) {
   var el=document.getElementById(id); if(!el) return;
   var r = S.team.route.concat(['ferme']);
   var total = r.length;
   var pct = total > 1 ? (S.idx / (total - 1)) * 100 : 0;
+  var advanced = S.idx !== _lastStepIdx;
+  _lastStepIdx = S.idx;
   el.innerHTML = '';
   var track = document.createElement('div');
   track.className = 'steps-track';
   var fill = document.createElement('div');
   fill.className = 'steps-fill';
-  fill.style.width = '0%';
+  if (advanced) {
+    // Animate only when checkpoint changes
+    var prevPct = total > 1 ? (Math.max(0, S.idx - 1) / (total - 1)) * 100 : 0;
+    fill.style.width = prevPct + '%';
+  } else {
+    fill.style.width = pct + '%';
+  }
   track.appendChild(fill);
   for (var i = 0; i < total; i++) {
     var mk = document.createElement('div');
@@ -419,7 +428,9 @@ function mkSteps(id) {
     track.appendChild(mk);
   }
   el.appendChild(track);
-  requestAnimationFrame(function(){ requestAnimationFrame(function(){ fill.style.width = pct + '%'; }); });
+  if (advanced) {
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ fill.style.width = pct + '%'; }); });
+  }
 }
 
 function showCit(tk) {
