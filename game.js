@@ -554,7 +554,9 @@ function validateCode() {
     /* sound removed */
     vibrate([80,50,80]);
     setTimeout(function(){ showCit(S.team.key); },50);
-    setTimeout(function(){ showHintsScreen(cpk); },700);
+    // Si c'est le dernier CP, aller directement au retour ferme (pas d'indices)
+    var isLast = (S.idx >= S.team.route.length - 1);
+    setTimeout(function(){ if(isLast){ S.idx++; save(); showReturnHome(); } else { showHintsScreen(cpk); } },700);
   } else {
     for(var i=0;i<4;i++){
       (function(el){ el.classList.add('err'); setTimeout(function(){ el.classList.remove('err'); },300); })(row.children[i]);
@@ -724,7 +726,10 @@ function showArrival() {
       :'<div class="srow"><span class="sl">Pénalités</span><span class="sv" style="color:var(--ok)">Aucune</span></div>')
     +'<div class="srow" style="padding-top:12px;margin-top:6px;border-top:1px solid var(--tbr)"><span class="sl" style="font-family:\'Cinzel\',serif;color:var(--text)">SCORE PROVISOIRE</span><span class="sv" style="font-size:22px">'+tot.toFixed(1)+' min</span></div>'
     +'<p style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px;font-style:italic">Score final = ce score − (bonnes réponses quiz × 0,5 min)</p>';
-  var ov=document.getElementById('testOv'); if(ov) ov.style.display='none';
+  // Keep test overlay visible on arrival for testing
+  var ov=document.getElementById('testOv');
+  if(ov && TEST_MODE) ov.style.display='block';
+  else if(ov) ov.style.display='none';
   clr(); go('s9','forward');
   setTimeout(function(){ /* sound removed */ vibrate([80,40,80,40,200]); launchConfetti(); }, 200);
 }
@@ -979,17 +984,18 @@ function testGo(screenId) {
 // ═══════════════════════════════════════════
 function toggleTheme() {
   var h=document.documentElement;
-  var cur=h.classList.contains('hc')?'hc':h.classList.contains('light')?'light':'dark';
-  var next=cur==='dark'?'light':cur==='light'?'hc':'dark';
-  h.classList.remove('light','hc');
-  if(next!=='dark') h.classList.add(next);
+  var cur=h.classList.contains('light')?'light':'dark';
+  var next=cur==='dark'?'light':'dark';
+  h.classList.remove('light');
+  if(next==='light') h.classList.add('light');
   try{localStorage.setItem('mythTheme',next);}catch(e){}
   var mc=document.querySelector('meta[name="theme-color"]');
-  var colors={dark:'#120e0a',light:'#f5f0e6',hc:'#ffffff'};
+  var colors={dark:'#120e0a',light:'#f5f0e6'};
   if(mc) mc.setAttribute('content',colors[next]);
-  var btn=document.getElementById('btnTheme');
-  var icons={dark:'☀',light:'◐',hc:'☽'};
-  if(btn) btn.textContent=icons[next];
+  var icon=document.getElementById('themeIcon');
+  if(icon) icon.innerHTML = next==='dark'
+    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+    : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
 }
 
 // ═══════════════════════════════════════════
@@ -1141,14 +1147,12 @@ renderTeams();
 // Apply saved theme
 (function(){
   var t = ''; try { t = localStorage.getItem('mythTheme') || ''; } catch(e) {}
-  if (t === 'light' || t === 'hc') {
-    document.documentElement.classList.add(t);
+  if (t === 'light') {
+    document.documentElement.classList.add('light');
     var mc = document.querySelector('meta[name="theme-color"]');
-    var colors = {light:'#f5f0e6', hc:'#ffffff'};
-    if (mc) mc.setAttribute('content', colors[t]);
-    var btn = document.getElementById('btnTheme');
-    var icons = {light:'◐', hc:'☽'};
-    if (btn) btn.textContent = icons[t];
+    if (mc) mc.setAttribute('content', '#f5f0e6');
+    var icon = document.getElementById('themeIcon');
+    if (icon) icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
   }
   // Sync splash subtitle
   var sp = document.getElementById('splSub');

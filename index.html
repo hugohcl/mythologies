@@ -249,49 +249,16 @@ html.light .toast{color:#fff}
 html.light .mjpill{background:rgba(180,30,30,.85)}
 html.light .cs{border-color:var(--tbr)}
 
-/* ── HIGH CONTRAST (outdoor / sunlight) ── */
-html.hc{
-  --bg:#ffffff;--bg2:#f0f0f0;--bg3:#e0e0e0;
-  --text:#000000;--muted:#333333;--muted2:#222222;
-  --gold:#6a4000;--gold2:#8a5500;
-  --gd:rgba(106,64,0,.12);--gb:rgba(106,64,0,.35);
-  --glow:none;--shadow-gold:none;
-}
-html.hc body{background:#fff;background-image:none}
-html.hc .hdr{background:#f0f0f0;border-bottom-color:#bbb}
-html.hc .cbar{background:#f0f0f0;border-bottom-color:#ccc}
-html.hc .steps{background:#f0f0f0}
-html.hc .sd{background:#ccc}
-html.hc .sd.done,.hc .sd.active{background:#6a4000}
-html.hc .card,.hc .hcard{background:#f5f5f5;border-color:#aaa}
-html.hc .hbody{background:#eee;border-top-color:#bbb;font-style:normal;color:#000}
-html.hc .hbtn{background:#e0e0e0;border-color:#999;color:#000}
-html.hc .tcard{background:#f5f5f5;border-color:#999}
-html.hc .btn.bt{background:rgba(106,64,0,.15);border-color:rgba(106,64,0,.5);color:#4a2800;font-weight:700}
-html.hc .btn.bgh{border-color:#999;color:#333}
-html.hc .din{background:#fff;border-color:#888;color:#000}
-html.hc .din:focus{border-color:#6a4000}
-html.hc .cc{background:#fff;border-color:#888;color:#000}
-html.hc .cc:focus{border-color:#6a4000;background:#fff8e0}
-html.hc .ct{font-weight:700}
-html.hc .s1-hero{background:linear-gradient(180deg,rgba(106,64,0,.08) 0%,transparent 100%);border-bottom-color:#bbb}
-html.hc .srow{border-bottom-color:#ccc}
-html.hc .mjtb{background:#eee;border-color:#999;color:#333}
-html.hc .mjlr,.hc .lbrow{background:#f5f5f5;border-color:#aaa}
-html.hc #citOv{background:rgba(255,255,255,.98)}
-html.hc #testOv{background:rgba(245,245,245,.98);border-color:#888}
-html.hc .hlbl{font-weight:700}
-html.hc .er-name{font-weight:700}
 </style>
 </head>
 <body ontouchstart="">
 
-<button id="btnTheme" onclick="toggleTheme()" style="position:fixed;top:calc(8px + env(safe-area-inset-top));left:12px;z-index:1000;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.22);border-radius:9px;color:var(--muted);font-size:13px;padding:5px 9px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px;display:none">☀</button>
-<button id="btnMap" style="position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));right:12px;z-index:1000;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);border-radius:12px;color:var(--gold);font-size:12px;padding:8px 12px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px;display:none;box-shadow:0 2px 12px rgba(0,0,0,.3)">🗺️ Carte</button>
-<button id="btnPhoto" style="position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));right:90px;z-index:1000;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:12px;color:var(--danger);font-size:12px;padding:8px 12px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px;display:none;box-shadow:0 2px 12px rgba(0,0,0,.3)">📸 Photo</button>
+<button id="btnTheme" onclick="toggleTheme()" style="position:fixed;top:calc(8px + env(safe-area-inset-top));left:12px;z-index:1000;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.22);border-radius:9px;color:var(--muted);font-size:13px;padding:6px 10px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px;display:none;line-height:0"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+<button id="btnMap" style="position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));right:12px;z-index:1000;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);border-radius:12px;color:var(--gold);font-size:12px;padding:8px 13px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px;display:none;box-shadow:0 2px 12px rgba(0,0,0,.3);line-height:1;display:none;gap:5px;align-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Carte</button>
+<button id="btnPhoto" style="position:fixed;bottom:calc(56px + env(safe-area-inset-bottom));right:12px;z-index:1000;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:12px;color:var(--danger);font-size:12px;padding:8px 13px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px;display:none;box-shadow:0 2px 12px rgba(0,0,0,.3);line-height:1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Photo</button>
 <!-- MAP OVERLAY -->
 <div id="mapOverlay" style="position:fixed;inset:0;z-index:5000;background:rgba(6,4,2,.97);display:none;flex-direction:column;justify-content:center;align-items:center;padding:20px">
-  <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--danger);letter-spacing:2px;margin-bottom:12px;text-transform:uppercase">🗺️ Carte — Pénalité active</div>
+  <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--danger);letter-spacing:2px;margin-bottom:12px;text-transform:uppercase"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Carte — Pénalité active</div>
   <div id="mapImgWrap" style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;max-height:80vh;overflow:hidden">
     <img id="mapImg" src="map-placeholder.png" alt="Carte du village" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;border:2px solid rgba(201,168,76,.3)" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\'text-align:center;color:var(--muted);font-style:italic;padding:40px\'>Carte non disponible<br><span style=font-size:12px>(map-placeholder.png)</span></div>'">
   </div>
@@ -299,7 +266,7 @@ html.hc .er-name{font-weight:700}
 </div>
 <!-- PHOTO HINT OVERLAY -->
 <div id="photoOverlay" style="position:fixed;inset:0;z-index:5000;background:rgba(6,4,2,.97);display:none;flex-direction:column;justify-content:center;align-items:center;padding:20px">
-  <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--danger);letter-spacing:2px;margin-bottom:12px;text-transform:uppercase">📸 Photo indice — Pénalité active</div>
+  <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--danger);letter-spacing:2px;margin-bottom:12px;text-transform:uppercase"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Photo indice — Pénalité active</div>
   <div id="photoImgWrap" style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;max-height:80vh;overflow:hidden">
     <img id="photoImg" src="" alt="Photo indice" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;border:2px solid rgba(201,168,76,.3)">
   </div>
