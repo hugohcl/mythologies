@@ -115,6 +115,10 @@ function getAudioCtx() {
   } catch(e) { return null; }
 }
 
+// Unlock audio on any user tap (iOS requires user gesture)
+document.addEventListener('touchstart', function(){ getAudioCtx(); }, {once: true});
+document.addEventListener('click', function(){ getAudioCtx(); }, {once: true});
+
 function playSound(type) {
   try {
     var ctx = getAudioCtx(); if (!ctx) return;
@@ -1356,8 +1360,13 @@ if (saved && S.team && S.t0) {
   createParticles('sSplash', 22);
   var _sEl = document.getElementById('sSplash');
   if (_sEl) {
-    _sEl.addEventListener('click', function(){ go('s1', 'forward'); }, {once: true});
-    _sEl.addEventListener('touchstart', function(){ go('s1', 'forward'); }, {once: true});
+    var _splashGo = function(){
+      // Unlock AudioContext on first user gesture (required by iOS)
+      getAudioCtx();
+      go('s1', 'forward');
+    };
+    _sEl.addEventListener('click', _splashGo, {once: true});
+    _sEl.addEventListener('touchstart', _splashGo, {once: true});
   }
 }
 // Sync MJ overlay at startup
