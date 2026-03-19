@@ -1,0 +1,16 @@
+{
+  "name": "Mythologies",
+  "short_name": "Mythologies",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f0c09",
+  "theme_color": "#0f0c09",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

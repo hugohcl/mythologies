@@ -418,11 +418,6 @@ document.addEventListener('visibilitychange',function(){ if(document.visibilityS
 function setupPWA() {
   var u='logo.png';
   var ai=document.getElementById('appleIcon'); if(ai) ai.href=u;
-  var m={name:"Mythologies",short_name:"Mythologies",start_url:"./",display:"standalone",background_color:"#120e0a",theme_color:"#120e0a",icons:[{src:u,sizes:"512x512",type:"image/png"}]};
-  try {
-    var b=new Blob([JSON.stringify(m)],{type:'application/manifest+json'});
-    var ml=document.getElementById('manifestLink'); if(ml) ml.href=URL.createObjectURL(b);
-  } catch(e){}
 }
 
 // ═══════════════════════════════════════════

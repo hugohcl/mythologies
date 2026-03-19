@@ -1,8 +1,8 @@
 // ═══════════════════════════════════════════
 // SERVICE WORKER — Mythologies PWA
 // ═══════════════════════════════════════════
-var CACHE = 'mythologies-v14';
-var PRECACHE = ['./', './index.html', './data.js', './game.js', './logo.png'];
+var CACHE = 'mythologies-v15';
+var PRECACHE = ['./', './index.html', './data.js', './game.js', './logo.png', './manifest.json'];
 
 self.addEventListener('install', function(e) {
   self.skipWaiting();
