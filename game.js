@@ -38,7 +38,8 @@ function save() {
     localStorage.setItem(LS_KEY, JSON.stringify({
       tk:S.team&&S.team.key, idx:S.idx, t0:S.t0, pen:S.pen,
       oh:S.oh, onPen:S.onPen, plog:S.plog, mjST:S.mjST, quizAnswers:S.quizAnswers,
-      cpTimes:S.cpTimes, scr:cur&&cur.id
+      cpTimes:S.cpTimes, scr:cur&&cur.id,
+      mapUsed:_mapUsed, photoUsed:_photoUsed
     }));
   } catch(e) {}
 }
@@ -51,6 +52,8 @@ function loadSaved() {
     S.oh=d.oh||{}; S.onPen=d.onPen||false;
     S.plog=d.plog||[]; S.mjST=d.mjST||{}; S.quizAnswers=d.quizAnswers||{};
     S.cpTimes=d.cpTimes||[];
+    if(d.mapUsed) _mapUsed=true;
+    if(d.photoUsed) _photoUsed=d.photoUsed;
     return d.scr;
   } catch(e) { return null; }
 }
@@ -751,6 +754,9 @@ function showArrival() {
   var ov=document.getElementById('testOv');
   if(ov && _mjMode) ov.style.display='block';
   else if(ov) ov.style.display='none';
+  // Show MJ buttons on final screen
+  var mjBtns=document.getElementById('s9MJBtns');
+  if(mjBtns) mjBtns.style.display=_mjMode?'':'none';
   clr(); go('s9','forward');
   setTimeout(function(){ /* sound removed */ vibrate([80,40,80,40,200]); launchConfetti(); }, 200);
 }
@@ -1147,6 +1153,8 @@ document.getElementById('btnMJBack').onclick   = function(){ go('s1','back'); };
 document.getElementById('btnMJHome').onclick   = function(){ go('s1','back'); };
 // btnReset removed — teams cannot change after finishing
 document.getElementById('btnTestMode').onclick = function(){ renderTestTeamTabs(); go('sTest','forward'); };
+document.getElementById('btnS9Test').onclick = function(){ renderTestTeamTabs(); go('sTest','forward'); };
+document.getElementById('btnS9Home').onclick = function(){ resetGame(); };
 
 // ═══════════════════════════════════════════
 // INIT
