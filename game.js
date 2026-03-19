@@ -1009,7 +1009,9 @@ var PHOTO_HINTS = {
 
 function showMapBtn(show) {
   var btn = document.getElementById('btnMap');
-  if (btn) btn.style.display = show ? '' : 'none';
+  if (!btn) return;
+  btn.style.display = show ? '' : 'none';
+  if (_mapUsed) { btn.style.opacity = '.35'; btn.style.pointerEvents = 'none'; }
 }
 
 function showPhotoBtn(show) {
@@ -1018,12 +1020,17 @@ function showPhotoBtn(show) {
 }
 
 function openMap() {
-  if (!_mapUsed) {
-    _mapUsed = true;
-    addP(15, 'Carte consultée');
-    toast('+15 min — Carte');
-    vibrate([200, 80, 200]);
+  if (_mapUsed) {
+    toast('Carte déjà consultée — usage unique');
+    return;
   }
+  _mapUsed = true;
+  addP(15, 'Carte consultée');
+  toast('+15 min — Carte');
+  vibrate([200, 80, 200]);
+  // Griser le bouton
+  var btn = document.getElementById('btnMap');
+  if (btn) { btn.style.opacity = '.35'; btn.style.pointerEvents = 'none'; }
   var ov = document.getElementById('mapOverlay');
   if (!ov) return;
   ov.style.display = 'flex';
