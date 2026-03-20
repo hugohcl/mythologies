@@ -1217,19 +1217,37 @@ function toggleHelpPanel() {
   if (tab) tab.style.display = open ? '' : 'none';
 }
 
+var MAP_WARN = {
+  grec: "Athéna vous offre un regard depuis l'Olympe — mais toute aide divine a un prix.",
+  nordique: "Odin a sacrifié un œil pour la sagesse. Ce savoir aussi a un coût.",
+  hindou: "Ganesh, guide des voyageurs, accepte de vous montrer le chemin — mais le karma n'oublie rien."
+};
+
 function openMap() {
   if (_mapUsed) {
     toast('Carte déjà consultée — usage unique');
     return;
   }
+  // Show confirmation first
+  var tk = S.team ? S.team.key : 'grec';
+  var ov = document.getElementById('mapConfirm');
+  if (ov) {
+    document.getElementById('mapWarnLore').textContent = MAP_WARN[tk] || MAP_WARN.grec;
+    ov.style.display = 'flex';
+    toggleHelpPanel();
+    return;
+  }
+  doOpenMap();
+}
+
+function doOpenMap() {
   _mapUsed = true;
   addP(15, 'Carte consultée');
   toast('+15 min — Carte');
   vibrate(VIB.map);
-  // Griser le bouton + fermer le panel
+  // Griser le bouton
   var btn = document.getElementById('btnMap');
   if (btn) btn.classList.add('used');
-  toggleHelpPanel();
   var ov = document.getElementById('mapOverlay');
   if (!ov) return;
   ov.style.display = 'flex';
@@ -1313,6 +1331,13 @@ document.getElementById('btnNext').onclick   = guardTap(function(){
 document.getElementById('helpTab').onclick = function(){ toggleHelpPanel(); };
 document.getElementById('btnMap').onclick = function(){ openMap(); };
 document.getElementById('btnPhoto').onclick = function(){ openPhoto(); toggleHelpPanel(); };
+document.getElementById('btnMapCancel').onclick = function(){
+  document.getElementById('mapConfirm').style.display = 'none';
+};
+document.getElementById('btnMapConfirm').onclick = function(){
+  document.getElementById('mapConfirm').style.display = 'none';
+  doOpenMap();
+};
 document.getElementById('btnClosePhoto').onclick = function(){ closePhoto(); };
 document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
 document.getElementById('btnMJLogin').onclick  = function(){ loginMJ(); };
