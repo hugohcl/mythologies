@@ -208,7 +208,8 @@ body{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%}
 #helpDrawer{position:fixed;bottom:0;right:0;z-index:1100;display:none;font-family:'Cinzel',serif}
 #helpTab{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 0px);right:0;background:var(--bg2);border:1px solid rgba(201,168,76,.25);border-right:none;border-radius:8px 0 0 8px;padding:10px 6px;cursor:pointer;touch-action:manipulation;writing-mode:vertical-rl;text-orientation:mixed;font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;box-shadow:-2px 2px 12px rgba(0,0,0,.25)}
 #helpPanel{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 0px);right:0;background:var(--bg2);border:1px solid rgba(201,168,76,.2);border-right:none;border-radius:12px 0 0 12px;padding:14px 16px;display:none;flex-direction:column;gap:10px;box-shadow:-4px 0 20px rgba(0,0,0,.3);min-width:200px}
-#helpPanel .help-title{font-size:12px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px}
+#helpPanel .help-title{font-size:12px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;display:flex;align-items:center;justify-content:space-between}
+#helpPanel .help-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 0 0 12px;line-height:1}
 #helpPanel .help-btn{display:flex;align-items:center;gap:8px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:10px 14px;cursor:pointer;touch-action:manipulation;color:var(--text);font-size:13px;font-family:'IM Fell English',serif}
 #helpPanel .help-btn svg{flex-shrink:0;color:var(--gold)}
 #helpPanel .help-btn .help-pen{font-size:10px;color:var(--danger);margin-left:auto;white-space:nowrap}
@@ -279,6 +280,7 @@ html.light .card{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.09)}
 html.light .hcard{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.08)}
 html.light .hbody{background:rgba(0,0,0,.04);border-top-color:rgba(0,0,0,.07)}
 html.light .hbtn{background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.11);color:var(--muted)}
+html.light .cph{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.12)}
 html.light .tcard{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.09)}
 html.light .tbg{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.11);color:var(--muted)}
 html.light .btn.bgh{border-color:rgba(0,0,0,.14);color:var(--muted)}
@@ -309,7 +311,7 @@ html.light .cs{border-color:var(--tbr)}
 <div id="helpDrawer">
   <div id="helpTab">Aide</div>
   <div id="helpPanel">
-    <div class="help-title">Besoin d'aide ?</div>
+    <div class="help-title"><span>Besoin d'aide ?</span><button class="help-close" id="helpClose">✕</button></div>
     <div class="help-btn" id="btnMap">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       <span>Carte du village</span>

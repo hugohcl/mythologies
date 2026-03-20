@@ -1276,7 +1276,7 @@ function toggleHelpPanel() {
   if (!panel) return;
   var open = panel.style.display === 'flex';
   panel.style.display = open ? 'none' : 'flex';
-  if (tab) tab.textContent = open ? 'Aide' : '✕';
+  if (tab) tab.style.display = open ? '' : 'none';
 }
 
 var MAP_WARN = {
@@ -1415,6 +1415,7 @@ document.getElementById('btnNext').onclick   = guardTap(function(){
   confirmDest('destNext','destNextErr',nk,function(){ S.idx++; save(); if(nk==='ferme') showReturnHome(); else showEnRoute(nk); });
 });
 document.getElementById('helpTab').onclick = function(){ toggleHelpPanel(); };
+document.getElementById('helpClose').onclick = function(){ toggleHelpPanel(); };
 document.getElementById('btnMap').onclick = function(){ openMap(); };
 document.getElementById('btnPhoto').onclick = function(){ openPhoto(); toggleHelpPanel(); };
 document.getElementById('btnMapCancel').onclick = function(){
