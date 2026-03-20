@@ -87,7 +87,7 @@ function go(id, dir) {
   var el = document.getElementById(id);
   if (el) { if(trClass) el.classList.add(trClass); el.classList.remove('hidden', 'exit-forward'); }
   var bt = document.getElementById('btnTheme');
-  if (bt) bt.style.display = '';
+  if (bt) bt.style.display = 'flex';
   // Show help drawer on game screens only
   var gameScreens = ['s5','s6','sEnigme','s7','s8'];
   var isGame = gameScreens.indexOf(id) >= 0;
