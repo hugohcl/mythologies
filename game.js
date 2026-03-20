@@ -87,7 +87,7 @@ function go(id, dir) {
   var el = document.getElementById(id);
   if (el) { if(trClass) el.classList.add(trClass); el.classList.remove('hidden', 'exit-forward'); }
   var bt = document.getElementById('btnTheme');
-  if (bt) bt.style.display = (id === 'sSplash') ? 'none' : '';
+  if (bt) bt.style.display = '';
   // Show help drawer on game screens only
   var gameScreens = ['s5','s6','sEnigme','s7','s8'];
   var isGame = gameScreens.indexOf(id) >= 0;
@@ -1169,8 +1169,9 @@ function hardPass() {
     // Skip first destination input → go to first checkpoint
     showEnRoute(S.team.route[0]);
   } else if (id === 's6') {
-    // Skip en-route → show enigme
-    showEnigme(curCP());
+    // If returning to ferme (last stage), go to arrival
+    if (S.idx >= S.team.route.length) { showArrival(); }
+    else { showEnigme(curCP()); }
   } else if (id === 'sEnigme') {
     // Skip enigme → show code entry
     showCode(curCP());
