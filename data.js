@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════
 const MJ_CODE = "ZEUS";
 const LS_KEY  = "myth_v5";
-const APP_VERSION = '3.0.10';
+const APP_VERSION = '3.1.0';
 const EVENT_DATE     = '29 mars 2025';
 const EVENT_LOCATION = 'Dosches';
 

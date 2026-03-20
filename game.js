@@ -250,24 +250,38 @@ function launchConfetti() {
     });
   }
   var frame = 0;
+  var STOP_SPAWN = 900; // ~15s: stop recycling confetti to top
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var fadePhase = frame > STOP_SPAWN;
+    var alive = 0;
     particles.forEach(function(p) {
+      if (p.dead) return;
+      var alpha = 1;
+      if (fadePhase) { alpha = Math.max(0, 1 - (p.y / canvas.height)); }
+      if (alpha <= 0) { p.dead = true; return; }
+      ctx.globalAlpha = alpha;
       ctx.beginPath();
       ctx.lineWidth = p.r * 0.6;
       ctx.strokeStyle = p.color;
       ctx.moveTo(p.x + p.tilt, p.y);
       ctx.lineTo(p.x + p.tilt + p.r, p.y + p.r * 1.2);
       ctx.stroke();
+      alive++;
     });
+    ctx.globalAlpha = 1;
     particles.forEach(function(p) {
+      if (p.dead) return;
       p.tiltAngle += p.tiltSpeed;
       p.y += p.d;
       p.tilt = Math.sin(p.tiltAngle) * 14;
-      if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+      if (p.y > canvas.height) {
+        if (fadePhase) { p.dead = true; }
+        else { p.y = -10; p.x = Math.random() * canvas.width; }
+      }
     });
     frame++;
-    if (frame < 1800) {
+    if (alive > 0) {
       requestAnimationFrame(draw);
     } else {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -328,7 +342,7 @@ document.addEventListener('click', function(e) {
 });
 
 // ═══════════════════════════════════════════
-// GOLD PARTICLES
+// GOLD PARTICLES (splash)
 // ═══════════════════════════════════════════
 function createParticles(parentId, count) {
   var parent = document.getElementById(parentId);
@@ -346,6 +360,37 @@ function createParticles(parentId, count) {
     wrap.appendChild(p);
   }
   parent.insertBefore(wrap, parent.firstChild);
+}
+
+// ═══════════════════════════════════════════
+// TEAM PARTICLES (game screens)
+// ═══════════════════════════════════════════
+function createTeamParticles(parentId, teamKey, count) {
+  var parent = document.getElementById(parentId);
+  if (!parent || parent.querySelector('.team-particles')) return;
+  var wrap = document.createElement('div');
+  wrap.className = 'team-particles ' + (teamKey || 'grec');
+  var n = count || 14;
+  var sizes = {grec:[3,6], nordique:[6,12], hindou:[2,5]};
+  var range = sizes[teamKey] || sizes.grec;
+  for (var i = 0; i < n; i++) {
+    var p = document.createElement('div');
+    p.className = 'tp';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (8 + Math.random() * 10) + 's';
+    p.style.animationDelay = (Math.random() * 12) + 's';
+    var sz = (range[0] + Math.random() * (range[1] - range[0])) + 'px';
+    p.style.width = sz; p.style.height = sz;
+    wrap.appendChild(p);
+  }
+  parent.insertBefore(wrap, parent.firstChild);
+}
+
+function clearTeamParticles(parentId) {
+  var parent = document.getElementById(parentId);
+  if (!parent) return;
+  var existing = parent.querySelectorAll('.team-particles');
+  existing.forEach(function(el) { el.remove(); });
 }
 
 // ═══════════════════════════════════════════
@@ -598,6 +643,7 @@ function doSelTeam(k) {
   setText('s3sub',   t.members.join(' · '));
   setText('s3flavor',t.flavor);
   go('s3','forward');
+  createTeamParticles('s3', t.key, 12);
 }
 
 // ═══════════════════════════════════════════
@@ -639,6 +685,7 @@ function showS5() {
   var di=document.getElementById('destStart'); if(di) di.value='';
   setText('destStartErr','');
   go('s5','forward'); updateTestOverlay();
+  createTeamParticles('s5', t.key, 12);
 }
 
 // ═══════════════════════════════════════════
@@ -653,6 +700,7 @@ function showEnRoute(cpk) {
   setText('erAddr',  cp.addr);
   mkSteps('st6');
   go('s6','forward');
+  createTeamParticles('s6', t.key, 10);
   var s6=document.getElementById('s6');
   s6.onclick=function(e){ if(e.target.id==='btnEnRouteBack') return; s6.onclick=null; showEnigme(cpk); };
   var backBtn=document.getElementById('btnEnRouteBack');
@@ -677,6 +725,7 @@ function showEnigme(cpk) {
   document.getElementById('enigText').textContent=ENIGMES[cpk]||'Cherchez la cachette sur ce lieu.';
   mkSteps('stEnigme');
   go('sEnigme','forward'); updateTestOverlay();
+  createTeamParticles('sEnigme', t.key, 10);
 }
 
 // ═══════════════════════════════════════════
@@ -692,6 +741,7 @@ function showCode(cpk) {
   mkSteps('st7');
   buildCodeRow();
   go('s7','forward'); updateTestOverlay();
+  createTeamParticles('s7', t.key, 10);
 }
 
 function buildCodeRow() {
@@ -775,6 +825,7 @@ function showHintsScreen(cpk) {
   var di=document.getElementById('destNext'); if(di) di.value='';
   setText('destNextErr','');
   go('s8','forward'); updateTestOverlay(true);
+  createTeamParticles('s8', t.key, 12);
 }
 
 function buildHints(containerId, cpk, tk) {
@@ -949,7 +1000,7 @@ function showArrival() {
   // Show MJ buttons on final screen
   var mjBtns=document.getElementById('s9MJBtns');
   if(mjBtns) mjBtns.style.display=_mjMode?'':'none';
-  clr(); createParticles('s9', 18); go('s9','forward');
+  clr(); createTeamParticles('s9', t.key, 16); go('s9','forward');
   setTimeout(function(){ playSound('fanfare'); vibrate(VIB.arrival); launchConfetti(); }, 200);
 }
 

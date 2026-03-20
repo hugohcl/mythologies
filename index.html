@@ -30,21 +30,47 @@ body::before{content:'';position:fixed;inset:0;background:var(--team-bg,none) ce
 body>*{position:relative;z-index:1}
 
 /* ── SCREEN TRANSITIONS ── */
-.screen{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;transition:opacity .28s,transform .28s}
+.screen{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;transition:opacity .32s cubic-bezier(.4,0,.2,1),transform .32s cubic-bezier(.4,0,.2,1)}
 .screen.hidden{opacity:0;pointer-events:none;transform:translateX(28px)}
 .screen.hidden.exit-forward{transform:translateX(-28px)}
 /* Slide-up for checkpoint screens */
-.screen.tr-up{transition:opacity .32s,transform .32s cubic-bezier(.4,0,.2,1)}
+.screen.tr-up{transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .35s cubic-bezier(.4,0,.2,1)}
 .screen.hidden.tr-up{transform:translateY(40px)}
 .screen.hidden.exit-forward.tr-up{transform:translateY(-40px)}
 /* Zoom for countdown */
-.screen.tr-zoom{transition:opacity .4s,transform .4s cubic-bezier(.4,0,.2,1)}
+.screen.tr-zoom{transition:opacity .4s cubic-bezier(.4,0,.2,1),transform .4s cubic-bezier(.4,0,.2,1)}
 .screen.hidden.tr-zoom{transform:scale(.85)}
 .screen.hidden.exit-forward.tr-zoom{transform:scale(1.15)}
 /* Fade-only for splash/arrival */
 .screen.tr-fade{transition:opacity .5s ease}
 .screen.hidden.tr-fade{transform:none}
 .screen.hidden.exit-forward.tr-fade{transform:none}
+/* ── MICRO-ANIMATIONS ── */
+@keyframes fadeSlideUp{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+.card{animation:fadeSlideUp .4s ease both}
+.card:nth-child(2){animation-delay:.06s}
+.card:nth-child(3){animation-delay:.12s}
+.card:nth-child(4){animation-delay:.18s}
+.cph{animation:fadeSlideUp .35s ease both}
+.hcard{animation:fadeSlideUp .35s ease both}
+.hcard:nth-child(2){animation-delay:.05s}
+.hcard:nth-child(3){animation-delay:.1s}
+.hcard:nth-child(4){animation-delay:.15s}
+.tcard{animation:fadeSlideUp .35s ease both}
+.tcard:nth-child(2){animation-delay:.08s}
+.tcard:nth-child(3){animation-delay:.16s}
+.btn{transition:transform .12s cubic-bezier(.4,0,.2,1),opacity .12s,box-shadow .2s}
+.btn:hover:not(:active){box-shadow:0 2px 12px rgba(201,168,76,.15)}
+.hbtn{transition:background .15s,transform .1s}
+.hbtn:active{transform:scale(.95)}
+.er-name{animation:fadeSlideUp .5s cubic-bezier(.2,1,.4,1) both}
+.er-addr{animation:fadeIn .6s ease .15s both}
+.arr-hero{animation:fadeSlideUp .5s ease both}
+.badge-wrap{animation:fadeSlideUp .5s ease .2s both}
+.steps-fill::after{transition:left .7s cubic-bezier(.4,0,.2,1)}
+.din{transition:border-color .2s,box-shadow .2s,transform .15s}
+.din:focus{transform:scale(1.01)}
 
 /* ── HEADER ── */
 .hdr{background:linear-gradient(180deg,var(--bg3) 0%,var(--bg2) 100%);border-bottom:1px solid rgba(201,168,76,0.18);padding:calc(3px + env(safe-area-inset-top)) 20px 8px;flex-shrink:0;position:relative}
@@ -257,7 +283,19 @@ body>*{position:relative;z-index:1}
 .spl-orn{color:var(--gold);opacity:.25;letter-spacing:8px;font-size:14px;margin:16px 0 0;animation:splashFade 1s ease 1s both}
 .spl-tap{position:absolute;bottom:calc(36px + env(safe-area-inset-bottom));font-size:11px;color:var(--muted);font-family:'Cinzel',serif;letter-spacing:2.5px;text-transform:uppercase;animation:splashTap 2.4s ease 1.8s infinite}
 
-/* ── GOLD PARTICLES ── */
+/* ── TEAM PARTICLES ── */
+.team-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.team-particles .tp{position:absolute;opacity:0;animation:tpFloat linear infinite}
+/* Greek: golden stars that drift up gently */
+.team-particles.grec .tp{background:radial-gradient(circle,rgba(201,168,76,.6),rgba(201,168,76,0));border-radius:50%}
+/* Nordic: silver mist wisps that drift sideways */
+.team-particles.nordique .tp{background:radial-gradient(ellipse,rgba(200,200,200,.35),rgba(200,200,200,0));border-radius:40%}
+/* Hindu: purple sparks with glow */
+.team-particles.hindou .tp{background:radial-gradient(circle,rgba(192,128,232,.55),rgba(192,128,232,0));border-radius:50%;box-shadow:0 0 4px rgba(192,128,232,.2)}
+@keyframes tpFloat{0%{opacity:0;transform:translateY(100vh) scale(.5) rotate(0deg)}10%{opacity:.35}50%{opacity:.3}90%{opacity:.15}100%{opacity:0;transform:translateY(-20px) scale(.9) rotate(180deg)}}
+@keyframes tpDrift{0%{opacity:0;transform:translate(0,100vh) scale(.6)}10%{opacity:.25}50%{opacity:.2;transform:translate(30px,50vh) scale(.8)}90%{opacity:.1}100%{opacity:0;transform:translate(-20px,-20px) scale(.7)}}
+.team-particles.nordique .tp{animation-name:tpDrift}
+/* Legacy gold particles for splash */
 .gold-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
 .gold-particles .gp{position:absolute;border-radius:50%;background:var(--gold);opacity:0;animation:gpFloat linear infinite}
 @keyframes gpFloat{0%{opacity:0;transform:translateY(100vh) scale(.5)}10%{opacity:.4}90%{opacity:.25}100%{opacity:0;transform:translateY(-20px) scale(.8)}}
@@ -306,6 +344,38 @@ html.light .div{background:linear-gradient(90deg,transparent,rgba(138,96,16,.2),
 html.light .toast{color:#fff}
 html.light .mjpill{background:rgba(180,30,30,.85)}
 html.light .cs{border-color:var(--tbr)}
+
+/* ── RESPONSIVE 320px ── */
+@media (max-width:360px){
+  .s1-title{font-size:16px;letter-spacing:2px}
+  .ht{font-size:14px}
+  .hs{font-size:11px}
+  .tn{font-size:16px}
+  .tcard{padding:12px 14px 12px 18px}
+  .emblem-wrap{width:60px;height:60px}
+  .emblem-wrap.lg{width:90px;height:90px}
+  .emblem-wrap.xl{width:120px;height:120px}
+  .spl-logo-new{width:150px;height:150px}
+  .spl-title{font-size:26px;letter-spacing:4px}
+  .btn{padding:12px;font-size:13px}
+  .cc{width:52px;height:62px;font-size:24px}
+  .crow{gap:8px}
+  .ct{font-size:22px}
+  .er-name{font-size:20px}
+  .er-wrap{padding:20px}
+  .cpn{font-size:15px}
+  .scroll{padding:10px 12px 16px}
+  .card{padding:12px 13px}
+  .hdr{padding:calc(3px + env(safe-area-inset-top)) 14px 6px}
+  .cbar{padding:7px 14px}
+  .victory-wrap{width:120px;height:120px}
+  .arr-team{font-size:20px}
+  #cdNum{font-size:90px}
+  .hcard .hhdr{padding:10px 12px}
+  .hlbl{font-size:12px}
+  .hbtn{padding:6px 10px;font-size:11px}
+  .hbody.open{font-size:14px}
+}
 
 /* ── EMBLEMS ── */
 .emblem-wrap{width:80px;height:80px;flex-shrink:0}
