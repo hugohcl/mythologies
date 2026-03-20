@@ -402,26 +402,35 @@ function stopC()  { if(S.iv) clearInterval(S.iv); }
 function curCP()  { return S.team.route[S.idx]; }
 function nextK()  { return S.idx>=S.team.route.length-1 ? 'ferme' : S.team.route[S.idx+1]; }
 
-var _lastStepIdx = -1;
 function mkSteps(id) {
   var el=document.getElementById(id); if(!el) return;
   var r = S.team.route.concat(['ferme']);
   var total = r.length;
   var pct = total > 1 ? (S.idx / (total - 1)) * 100 : 0;
-  var advanced = S.idx !== _lastStepIdx;
-  _lastStepIdx = S.idx;
-  el.innerHTML = '';
-  var track = document.createElement('div');
-  track.className = 'steps-track';
-  var fill = document.createElement('div');
-  fill.className = 'steps-fill';
-  if (advanced) {
-    // Animate only when checkpoint changes
-    var prevPct = total > 1 ? (Math.max(0, S.idx - 1) / (total - 1)) * 100 : 0;
-    fill.style.width = prevPct + '%';
-  } else {
+  // Reuse existing track if present, otherwise create
+  var track = el.querySelector('.steps-track');
+  var fill;
+  if (track) {
+    fill = track.querySelector('.steps-fill');
+    // Update fill width — CSS transition handles smooth animation
     fill.style.width = pct + '%';
+    // Update markers
+    var mks = track.querySelectorAll('.steps-mk');
+    for (var i = 0; i < mks.length; i++) {
+      mks[i].classList.remove('done','now');
+      if (i < S.idx) mks[i].classList.add('done');
+      if (i === S.idx) mks[i].classList.add('now');
+    }
+    return;
   }
+  // First render: create DOM without transition to avoid animate-from-0
+  el.innerHTML = '';
+  track = document.createElement('div');
+  track.className = 'steps-track';
+  fill = document.createElement('div');
+  fill.className = 'steps-fill';
+  fill.style.transition = 'none';
+  fill.style.width = pct + '%';
   track.appendChild(fill);
   for (var i = 0; i < total; i++) {
     var mk = document.createElement('div');
@@ -432,9 +441,10 @@ function mkSteps(id) {
     track.appendChild(mk);
   }
   el.appendChild(track);
-  if (advanced) {
-    requestAnimationFrame(function(){ requestAnimationFrame(function(){ fill.style.width = pct + '%'; }); });
-  }
+  // Re-enable transition after first paint
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    fill.style.transition = '';
+  }); });
 }
 
 function showCit(tk) {
@@ -767,7 +777,6 @@ function buildHints(containerId, cpk, tk) {
             if(lvl.p>0){ addP(lvl.p,lvl.l+' — '+(CPS[cpk]?CPS[cpk].name:cpk)); toast('+'+lvl.p+' min'); }
           }
           body.classList.add('open'); btn.textContent='Masquer';
-          playSound('hint');
           card.style.borderColor=lvl.c+'50'; card.style.background=lvl.c+'0e';
         } else {
           body.classList.remove('open'); btn.textContent='Révéler';
