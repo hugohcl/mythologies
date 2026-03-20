@@ -88,11 +88,11 @@ function go(id, dir) {
   if (el) { if(trClass) el.classList.add(trClass); el.classList.remove('hidden', 'exit-forward'); }
   var bt = document.getElementById('btnTheme');
   if (bt) bt.style.display = (id === 'sSplash') ? 'none' : '';
-  // Show MAP button on game screens only
+  // Show help drawer on game screens only
   var gameScreens = ['s5','s6','sEnigme','s7','s8'];
   var isGame = gameScreens.indexOf(id) >= 0;
-  showMapBtn(isGame);
-  // Show PHOTO button only on enigme/code screens
+  showHelpDrawer(isGame);
+  // Show photo button only on enigme/code screens
   var photoScreens = ['sEnigme','s7'];
   showPhotoBtn(photoScreens.indexOf(id) >= 0);
   // Clean exit class after transition
@@ -1186,16 +1186,35 @@ var PHOTO_HINTS = {
   mairie:  "photo-mairie.png"
 };
 
-function showMapBtn(show) {
-  var btn = document.getElementById('btnMap');
-  if (!btn) return;
-  btn.style.display = show ? '' : 'none';
-  if (_mapUsed) { btn.style.opacity = '.35'; btn.style.pointerEvents = 'none'; }
+function showHelpDrawer(show) {
+  var drawer = document.getElementById('helpDrawer');
+  if (!drawer) return;
+  drawer.style.display = show ? 'block' : 'none';
+  // Always close panel when switching screens
+  var panel = document.getElementById('helpPanel');
+  var tab = document.getElementById('helpTab');
+  if (panel) panel.style.display = 'none';
+  if (tab) tab.style.display = '';
+  // Update map button state
+  var mapBtn = document.getElementById('btnMap');
+  if (mapBtn) {
+    if (_mapUsed) mapBtn.classList.add('used');
+    else mapBtn.classList.remove('used');
+  }
 }
 
 function showPhotoBtn(show) {
   var btn = document.getElementById('btnPhoto');
   if (btn) btn.style.display = show ? '' : 'none';
+}
+
+function toggleHelpPanel() {
+  var panel = document.getElementById('helpPanel');
+  var tab = document.getElementById('helpTab');
+  if (!panel) return;
+  var open = panel.style.display === 'flex';
+  panel.style.display = open ? 'none' : 'flex';
+  if (tab) tab.style.display = open ? '' : 'none';
 }
 
 function openMap() {
@@ -1207,9 +1226,10 @@ function openMap() {
   addP(15, 'Carte consultée');
   toast('+15 min — Carte');
   vibrate(VIB.map);
-  // Griser le bouton
+  // Griser le bouton + fermer le panel
   var btn = document.getElementById('btnMap');
-  if (btn) { btn.style.opacity = '.35'; btn.style.pointerEvents = 'none'; }
+  if (btn) btn.classList.add('used');
+  toggleHelpPanel();
   var ov = document.getElementById('mapOverlay');
   if (!ov) return;
   ov.style.display = 'flex';
@@ -1290,8 +1310,9 @@ document.getElementById('btnNext').onclick   = guardTap(function(){
   var nk=nextK();
   confirmDest('destNext','destNextErr',nk,function(){ S.idx++; save(); if(nk==='ferme') showReturnHome(); else showEnRoute(nk); });
 });
+document.getElementById('helpTab').onclick = function(){ toggleHelpPanel(); };
 document.getElementById('btnMap').onclick = function(){ openMap(); };
-document.getElementById('btnPhoto').onclick = function(){ openPhoto(); };
+document.getElementById('btnPhoto').onclick = function(){ openPhoto(); toggleHelpPanel(); };
 document.getElementById('btnClosePhoto').onclick = function(){ closePhoto(); };
 document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
 document.getElementById('btnMJLogin').onclick  = function(){ loginMJ(); };
