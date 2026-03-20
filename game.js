@@ -363,8 +363,8 @@ function teamColor(t) {
 function th(t) {
   var r = document.documentElement.style;
   var isLight = document.documentElement.classList.contains('light');
-  if (!t) { r.setProperty('--tc','var(--gold)'); r.setProperty('--tb','var(--gd)'); r.setProperty('--tbr','var(--gb)'); }
-  else { r.setProperty('--tc', (isLight && t.colorLight) ? t.colorLight : t.color); r.setProperty('--tb', t.bg); r.setProperty('--tbr', t.border); }
+  if (!t) { r.setProperty('--tc','var(--gold)'); r.setProperty('--tb','var(--gd)'); r.setProperty('--tbr','var(--gb)'); r.setProperty('--team-bg','none'); }
+  else { r.setProperty('--tc', (isLight && t.colorLight) ? t.colorLight : t.color); r.setProperty('--tb', t.bg); r.setProperty('--tbr', t.border); r.setProperty('--team-bg', t.bgTexture ? 'url('+t.bgTexture+')' : 'none'); }
   // Watermark
   document.querySelectorAll('.hdr-wm').forEach(function(el){ el.remove(); });
   var k = t && t.key ? t.key : null;

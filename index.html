@@ -26,6 +26,8 @@ html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;oversc
 }
 html,body{margin:0;padding:0;height:100%;height:-webkit-fill-available;background-color:var(--bg);color:var(--text);font-family:'IM Fell English',Georgia,serif;overflow:hidden;overscroll-behavior:none}
 body{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%}
+body::before{content:'';position:fixed;inset:0;background:var(--team-bg,none) center/cover no-repeat;opacity:.08;pointer-events:none;z-index:0;transition:opacity .5s}
+body>*{position:relative;z-index:1}
 
 /* ── SCREEN TRANSITIONS ── */
 .screen{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;transition:opacity .28s,transform .28s}
@@ -316,10 +318,10 @@ html.light .cs{border-color:var(--tbr)}
 /* Victory emblem */
 .victory-wrap{width:160px;height:160px;margin:0 auto 12px}
 .victory-wrap img{width:100%;height:100%;object-fit:contain}
-/* Briefing parchment */
-.briefing-bg{position:absolute;inset:0;background:url('./bg-parchment.webp') center/cover no-repeat;opacity:.15;pointer-events:none;z-index:0}
-#s3 .scroll{position:relative}
-#s3 .scroll>*{position:relative;z-index:1}
+/* Briefing parchment — now handled by .parchment-scroll */
+.parchment-scroll{position:relative}
+.parchment-scroll::before{content:'';position:absolute;inset:0;background:url('./bg-parchment.webp') center/cover no-repeat;opacity:.12;pointer-events:none;z-index:0}
+.parchment-scroll>*{position:relative;z-index:1}
 </style>
 </head>
 <body ontouchstart="">
@@ -442,8 +444,7 @@ html.light .cs{border-color:var(--tbr)}
 <!-- S3: BRIEFING -->
 <div class="screen hidden" id="s3">
   <div class="hdr"><div class="ht" id="s3title">—</div><div class="hs" id="s3sub">—</div></div>
-  <div class="scroll">
-    <div class="briefing-bg"></div>
+  <div class="scroll parchment-scroll">
     <div style="text-align:center"><div class="emblem-wrap lg" style="display:inline-block"><img id="s3emblem" src="" alt=""></div></div>
     <div class="orn">— ✦ —</div>
     <div class="card ct2" style="text-align:center;margin-top:8px"><p style="font-size:15px;font-style:italic;line-height:1.9;color:var(--text)" id="s3flavor">—</p></div>
@@ -470,7 +471,7 @@ html.light .cs{border-color:var(--tbr)}
   <div class="hdr"><div class="ht" id="s5title">—</div><div class="hs" id="s5sub">—</div></div>
   <div class="cbar"><div><div class="clbl">Chrono</div><div class="ct" id="c5">00:00</div></div><div class="cpen">Pénalités · <b id="p5">+0 min</b></div></div>
   <div class="steps" id="st5"></div>
-  <div class="scroll">
+  <div class="scroll parchment-scroll">
     <div class="cph"><div class="cpn">La Ferme d'Octave</div><div class="cpa">Point de départ · 1 rue de la Fontaine des Champs</div></div>
     <p style="font-size:14px;color:var(--muted);margin-bottom:13px;font-style:italic;line-height:1.7">Ces indices révèlent votre premier checkpoint.</p>
     <div id="hintsStart"></div>
@@ -505,7 +506,7 @@ html.light .cs{border-color:var(--tbr)}
   <div class="hdr"><div class="ht" id="enigTitle">—</div><div class="hs">Où est cachée la clé ?</div></div>
   <div class="cbar"><div><div class="clbl">Chrono</div><div class="ct" id="cEnigme">00:00</div></div><div class="cpen">Pénalités · <b id="pEnigme">+0 min</b></div></div>
   <div class="steps" id="stEnigme"></div>
-  <div class="scroll">
+  <div class="scroll parchment-scroll">
     <div class="cph"><div class="cpn" id="enigCPName">—</div><div class="cpa" id="enigCPAddr">—</div></div>
     <div class="card ct2">
       <div class="ctit">Énigme — Trouvez la cachette</div>
@@ -520,7 +521,7 @@ html.light .cs{border-color:var(--tbr)}
   <div class="hdr"><div class="ht" id="s7title">—</div><div class="hs">Entrez le code de la cachette</div></div>
   <div class="cbar"><div><div class="clbl">Chrono</div><div class="ct" id="c7">00:00</div></div><div class="cpen">Pénalités · <b id="p7">+0 min</b></div></div>
   <div class="steps" id="st7"></div>
-  <div class="scroll">
+  <div class="scroll parchment-scroll">
     <div class="cph"><div class="cpn" id="s7cpName">—</div><div class="cpa" id="s7cpAddr">—</div></div>
     <div style="text-align:center;padding:12px 0 16px">
       <p style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.7">Trouvez la cachette sur ce lieu.<br>Elle contient un <b style="color:var(--text)">code à 4 lettres</b>.</p>
@@ -536,7 +537,7 @@ html.light .cs{border-color:var(--tbr)}
   <div class="hdr"><div class="ht" id="s8title">—</div><div class="hs" id="s8sub">—</div></div>
   <div class="cbar"><div><div class="clbl">Chrono</div><div class="ct" id="c8">00:00</div></div><div class="cpen">Pénalités · <b id="p8">+0 min</b></div></div>
   <div class="steps" id="st8"></div>
-  <div class="scroll">
+  <div class="scroll parchment-scroll">
     <div class="cph"><div class="cpn" id="s8cpName">—</div><div class="cpa" id="s8cpAddr">—</div></div>
     <p style="font-size:14px;color:var(--muted);margin-bottom:13px;font-style:italic;line-height:1.7">Ouvrez les indices pour révéler votre prochaine destination. L'Indice I est gratuit.</p>
     <div id="hintsList"></div>
