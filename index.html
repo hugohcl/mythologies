@@ -24,7 +24,7 @@ html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;oversc
   --shadow-gold:0 0 28px rgba(201,168,76,0.22);
   --glow:0 0 18px rgba(201,168,76,0.35);
 }
-html,body{margin:0;padding:0;height:100%;height:-webkit-fill-available;background-color:var(--bg);background-image:radial-gradient(ellipse at 25% 15%,rgba(201,168,76,.055) 0%,transparent 55%),radial-gradient(ellipse at 75% 85%,rgba(80,40,10,.07) 0%,transparent 45%);color:var(--text);font-family:'IM Fell English',Georgia,serif;overflow:hidden;overscroll-behavior:none}
+html,body{margin:0;padding:0;height:100%;height:-webkit-fill-available;background-color:var(--bg);color:var(--text);font-family:'IM Fell English',Georgia,serif;overflow:hidden;overscroll-behavior:none}
 body{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%}
 
 /* ── SCREEN TRANSITIONS ── */
@@ -52,7 +52,7 @@ body{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%}
 .mjpill{position:absolute;top:calc(10px + env(safe-area-inset-top));right:14px;background:rgba(180,30,30,.9);color:#fff;font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;padding:3px 9px;border-radius:10px}
 
 /* ── SCROLL ── */
-.scroll{flex:1;overflow-y:auto;padding:14px 16px 0;-webkit-overflow-scrolling:touch;position:relative;padding-bottom:0;display:flex;flex-direction:column}
+.scroll{flex:1;overflow-y:auto;padding:14px 16px 60px;-webkit-overflow-scrolling:touch;position:relative;display:flex;flex-direction:column}
 .scroll::-webkit-scrollbar{display:none}
 
 /* ── CHRONO BAR ── */
@@ -258,7 +258,7 @@ html.light{
   --gd:rgba(138,96,16,.09);--gb:rgba(138,96,16,.26);
   --glow:0 0 18px rgba(138,96,16,.3);--shadow-gold:0 0 28px rgba(138,96,16,.2);
 }
-html.light body{background:var(--bg);background-image:radial-gradient(ellipse at 25% 15%,rgba(180,140,60,.07) 0%,transparent 55%),radial-gradient(ellipse at 75% 85%,rgba(120,80,20,.05) 0%,transparent 45%)}
+html.light body{background:var(--bg)}
 html.light .hdr{background:linear-gradient(180deg,var(--bg3) 0%,var(--bg2) 100%);border-bottom-color:rgba(138,96,16,.2)}
 html.light .cbar{background:var(--bg2);border-bottom-color:rgba(0,0,0,.07)}
 html.light .steps{background:var(--bg2)}
@@ -296,7 +296,7 @@ html.light .cs{border-color:var(--tbr)}
 <body ontouchstart="">
 
 <button id="btnTheme" onclick="toggleTheme()" style="position:fixed;top:calc(8px + env(safe-area-inset-top));left:12px;z-index:1000;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.22);border-radius:9px;color:var(--muted);font-size:13px;padding:6px 10px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px;display:none;line-height:0"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
-<button id="btnMap" style="position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));right:12px;z-index:1000;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);border-radius:12px;color:var(--gold);font-size:12px;padding:8px 13px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px;display:none;box-shadow:0 2px 12px rgba(0,0,0,.3);line-height:1;display:none;gap:5px;align-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Carte</button>
+<button id="btnMap" style="position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));right:12px;z-index:1000;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);border-radius:12px;color:var(--gold);font-size:12px;padding:8px 13px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px;display:none;box-shadow:0 2px 12px rgba(0,0,0,.3);line-height:1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Carte</button>
 <button id="btnPhoto" style="position:fixed;bottom:calc(72px + env(safe-area-inset-bottom));right:12px;z-index:1000;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:12px;color:var(--danger);font-size:12px;padding:8px 13px;cursor:pointer;touch-action:manipulation;font-family:'Cinzel',serif;letter-spacing:1px;display:none;box-shadow:0 2px 12px rgba(0,0,0,.3);line-height:1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Photo</button>
 <!-- MAP OVERLAY -->
 <div id="mapOverlay" style="position:fixed;inset:0;z-index:5000;background:rgba(6,4,2,.97);display:none;flex-direction:column;justify-content:center;align-items:center;padding:20px">
