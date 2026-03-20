@@ -267,7 +267,7 @@ function launchConfetti() {
       if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
     });
     frame++;
-    if (frame < 450) {
+    if (frame < 1800) {
       requestAnimationFrame(draw);
     } else {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
