@@ -78,6 +78,7 @@ body>*{position:relative;z-index:1}
 .hs{font-size:13px;color:var(--muted);text-align:center;margin-top:3px;font-style:italic;letter-spacing:.3px}
 .hdr-wm{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:32px;height:32px;opacity:.1;pointer-events:none;color:var(--tc)}
 .mjpill{position:absolute;top:calc(10px + env(safe-area-inset-top));right:14px;background:rgba(180,30,30,.9);color:#fff;font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;padding:3px 9px;border-radius:10px}
+#btnTheme{position:fixed;top:calc(10px + env(safe-area-inset-top));left:12px;z-index:1000;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.22);border-radius:9px;color:var(--muted);cursor:pointer;touch-action:manipulation;display:none;padding:0;width:36px;height:36px;box-sizing:border-box;align-items:center;justify-content:center}
 
 /* ── SCROLL ── */
 .scroll{flex:1;overflow-y:auto;padding:14px 16px 20px;-webkit-overflow-scrolling:touch;position:relative;display:flex;flex-direction:column}
@@ -336,7 +337,7 @@ html.light .cc{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.14)}
 html.light .cc:focus{background:rgba(138,96,16,.07);border-color:var(--gold)}
 html.light .s1-hero{background:linear-gradient(180deg,rgba(138,96,16,.06) 0%,transparent 100%);border-bottom-color:rgba(138,96,16,.16)}
 html.light #citOv{background:rgba(240,232,215,.98)}
-html.light #testOv{background:rgba(240,235,222,.97);border-color:rgba(138,96,16,.35)}
+html.light #testOv{background:rgba(240,235,222,.97);border-color:rgba(138,96,16,.18)}
 html.light .tov-btn{border-color:rgba(0,0,0,.14)}
 html.light #s2,html.light #s4,html.light #s6{background:var(--bg)}
 html.light .srow{border-bottom-color:rgba(0,0,0,.07)}
@@ -344,6 +345,9 @@ html.light .div{background:linear-gradient(90deg,transparent,rgba(138,96,16,.2),
 html.light .toast{color:#fff}
 html.light .mjpill{background:rgba(180,30,30,.85)}
 html.light .cs{border-color:var(--tbr)}
+html.light #btnTheme{background:rgba(138,96,16,.05);border:1px solid rgba(138,96,16,.1);color:var(--muted)}
+html.light #testOv .tov-toggle{color:rgba(138,96,16,.5)}
+html.light #testOv .tov-val{color:#8a6010}
 
 /* ── RESPONSIVE 320px ── */
 @media (max-width:360px){
@@ -398,7 +402,7 @@ html.light .cs{border-color:var(--tbr)}
 </head>
 <body ontouchstart="">
 
-<button id="btnTheme" onclick="toggleTheme()" style="position:fixed;top:calc(10px + env(safe-area-inset-top));left:12px;z-index:1000;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.22);border-radius:9px;color:var(--muted);cursor:pointer;touch-action:manipulation;display:none;padding:0;width:36px;height:36px;box-sizing:border-box"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+<button id="btnTheme" onclick="toggleTheme()"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
 <div id="helpDrawer">
   <div id="helpTab">Aide</div>
   <div id="helpPanel">
