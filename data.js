@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════
 const MJ_CODE = "ZEUS";
 const LS_KEY  = "myth_v5";
-const APP_VERSION = '2.2.9';
+const APP_VERSION = '3.0.0';
 const EVENT_DATE     = '29 mars 2025';
 const EVENT_LOCATION = 'Dosches';
 
@@ -17,7 +17,8 @@ const TEAMS = {
     arrival:"Comme Ulysse retrouvant Ithaque après vingt ans d'errance, votre odyssée s'achève ici.",
     members:["Antoine","Bastien","Matthieu","Thomas"],
     color:"#5a8fd4", bg:"rgba(90,143,212,0.12)", border:"rgba(90,143,212,0.32)",
-    route:["fresque","eglise","lavoir","salle"]
+    route:["fresque","eglise","lavoir","salle"],
+    emblem:'./emblem-grec.webp'
   },
   nordique: {
     key:"nordique", name:"Équipe Nordique", mascot:"🐦‍⬛", tagline:"Les Guerriers du Valhalla",
@@ -25,7 +26,8 @@ const TEAMS = {
     arrival:"Comme Sigurd de retour de sa quête, vos exploits seront chantés au mead-hall ce soir.",
     members:["Alex","Livia","Raphaël","Victor"],
     color:"#c8c8c8", colorLight:"#5a5a5a", bg:"rgba(160,160,160,0.10)", border:"rgba(160,160,160,0.28)",
-    route:["mairie","salle","fresque","lavoir"]
+    route:["mairie","salle","fresque","lavoir"],
+    emblem:'./emblem-nordique.webp'
   },
   hindou: {
     key:"hindou", name:"Équipe Hindoue", mascot:"🐯", tagline:"Les Disciples du Dharma",
@@ -33,7 +35,8 @@ const TEAMS = {
     arrival:"Votre yatra s'achève. Le moksha vous attend — repos mérité après ce périple.",
     members:["Axel","Jade","LG","Patrick"],
     color:"#c080e8", bg:"rgba(160,80,200,0.12)", border:"rgba(160,80,200,0.32)",
-    route:["lavoir","mairie","eglise","fresque"]
+    route:["lavoir","mairie","eglise","fresque"],
+    emblem:'./emblem-hindou.webp'
   }
 };
 

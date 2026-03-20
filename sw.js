@@ -1,8 +1,8 @@
 // ═══════════════════════════════════════════
 // SERVICE WORKER — Mythologies PWA
 // ═══════════════════════════════════════════
-var CACHE = 'mythologies-v35';
-var PRECACHE = ['./', './index.html', './data.js', './game.js', './logo.png', './manifest.json', './map-dosches.svg'];
+var CACHE = 'mythologies-v36';
+var PRECACHE = ['./', './index.html', './data.js', './game.js', './logo.png', './manifest.json', './map-dosches.svg', './emblem-grec.webp', './emblem-nordique.webp', './emblem-hindou.webp', './splash-compass.webp', './victory-laurel.webp', './bg-parchment.webp'];
 
 self.addEventListener('install', function(e) {
   self.skipWaiting();

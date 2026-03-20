@@ -303,6 +303,21 @@ html.light .toast{color:#fff}
 html.light .mjpill{background:rgba(180,30,30,.85)}
 html.light .cs{border-color:var(--tbr)}
 
+/* ── EMBLEMS ── */
+.emblem-wrap{width:80px;height:80px;border-radius:50%;overflow:hidden;background:#0f0c09;border:2px solid rgba(201,168,76,.3);box-shadow:0 0 20px rgba(201,168,76,.15);flex-shrink:0}
+.emblem-wrap img{width:100%;height:100%;object-fit:cover}
+.emblem-wrap.lg{width:120px;height:120px;margin:0 auto 16px;border-width:3px}
+.emblem-wrap.xl{width:160px;height:160px;margin:0 auto 20px;border-width:3px}
+/* Splash new logo */
+.spl-logo-new{width:180px;height:180px;border-radius:50%;overflow:hidden;background:#0f0c09;border:3px solid rgba(201,168,76,.35);box-shadow:0 0 40px rgba(201,168,76,.2);margin-bottom:24px}
+.spl-logo-new img{width:100%;height:100%;object-fit:cover;animation:splashLogo 1.1s cubic-bezier(.2,1.3,.4,1) forwards}
+/* Victory emblem */
+.victory-wrap{width:140px;height:140px;border-radius:50%;overflow:hidden;background:#0f0c09;border:3px solid rgba(201,168,76,.35);box-shadow:0 0 30px rgba(201,168,76,.2);margin:0 auto 12px}
+.victory-wrap img{width:100%;height:100%;object-fit:cover}
+/* Briefing parchment */
+.briefing-bg{position:absolute;inset:0;background:url('./bg-parchment.webp') center/cover no-repeat;opacity:.15;pointer-events:none;z-index:0}
+#s3 .scroll{position:relative}
+#s3 .scroll>*{position:relative;z-index:1}
 </style>
 </head>
 <body ontouchstart="">
@@ -393,7 +408,7 @@ html.light .cs{border-color:var(--tbr)}
 
 <!-- S0: SPLASH -->
 <div class="screen hidden" id="sSplash">
-  <img src="logo.png" class="spl-logo" alt="Mythologies">
+  <div class="spl-logo-new"><img src="./splash-compass.webp" alt="Mythologies"></div>
   <div class="spl-title">MYTHOLOGIES</div>
   <div class="spl-sub" id="splSub">Jeu d'orientation · Dosches</div>
   <div class="spl-orn">✦ ── ✦ ── ✦</div>
@@ -426,6 +441,8 @@ html.light .cs{border-color:var(--tbr)}
 <div class="screen hidden" id="s3">
   <div class="hdr"><div class="ht" id="s3title">—</div><div class="hs" id="s3sub">—</div></div>
   <div class="scroll">
+    <div class="briefing-bg"></div>
+    <div style="text-align:center"><div class="emblem-wrap lg" style="display:inline-block"><img id="s3emblem" src="" alt=""></div></div>
     <div class="orn">— ✦ —</div>
     <div class="card ct2" style="text-align:center;margin-top:8px"><p style="font-size:15px;font-style:italic;line-height:1.9;color:var(--text)" id="s3flavor">—</p></div>
     <div class="card">
@@ -537,7 +554,7 @@ html.light .cs{border-color:var(--tbr)}
   <div class="hdr"><div class="ht">✦ ARRIVÉE ✦</div><div class="hs" id="s9sub">—</div></div>
   <div class="scroll">
     <div class="arr-hero">
-      <div class="arr-trophy">✦</div>
+      <div class="victory-wrap"><img src="./victory-laurel.webp" alt="Victoire"></div>
       <div class="arr-team" id="s9team">—</div>
       <div class="arr-flavor" id="s9flavor">—</div>
     </div>

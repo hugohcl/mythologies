@@ -524,6 +524,12 @@ function renderTeams() {
     var tc=teamColor(t);
     bar.style.cssText='position:absolute;left:0;top:0;bottom:0;width:3px;background:'+tc+';border-radius:2px 0 0 2px;opacity:.8';
 
+    var embWrap=document.createElement('div');
+    embWrap.className='emblem-wrap';
+    embWrap.style.cssText='float:right;margin:-2px 0 8px 12px';
+    var embImg=document.createElement('img');
+    embImg.src=t.emblem;embImg.alt=t.name;
+    embWrap.appendChild(embImg);
     var nm=document.createElement('div'); nm.className='tn'; nm.style.color=tc; nm.textContent=t.mascot+' '+t.name;
 
     var tag=document.createElement('div');
@@ -536,7 +542,7 @@ function renderTeams() {
     dep.style.borderColor=t.border; dep.style.color=tc;
     dep.textContent="Départ — La Ferme d'Octave";
 
-    card.appendChild(bar); card.appendChild(nm); card.appendChild(tag); card.appendChild(mem); card.appendChild(dep);
+    card.appendChild(bar); card.appendChild(embWrap); card.appendChild(nm); card.appendChild(tag); card.appendChild(mem); card.appendChild(dep);
 
     card.addEventListener('click', function(){ selTeam(k); });
     card.addEventListener('mouseenter', function(){ card.style.boxShadow='0 0 0 1px '+t.border; });
@@ -557,6 +563,8 @@ function doSelTeam(k) {
   var t=TEAMS[k];
   S.team=t; S.idx=0; S.pen=0; S.oh={}; S.onPen=false; S.t0=null; S.plog=[]; S.quizAnswers={}; S.cpTimes=[];
   th(t);
+  var s3emblem=document.getElementById('s3emblem');
+  if(s3emblem) s3emblem.src=t.emblem;
   setText('s3title', t.mascot+' '+t.name);
   setText('s3sub',   t.members.join(' · '));
   setText('s3flavor',t.flavor);
@@ -610,7 +618,8 @@ function showS5() {
 function showEnRoute(cpk) {
   var cp=CPS[cpk], t=S.team; th(t);
   setText('s6title', t.mascot+' '+t.name);
-  setText('erIcon',  t.mascot);
+  var erIconEl=document.getElementById('erIcon');
+  if(erIconEl) erIconEl.innerHTML='<div class="emblem-wrap lg" style="margin:0 auto"><img src="'+t.emblem+'" alt="'+t.name+'"></div>';
   setText('erName',  cp.name); setStyle('erName','color','var(--tc)');
   setText('erAddr',  cp.addr);
   mkSteps('st6');
@@ -831,7 +840,8 @@ function showReturnHome() {
     hindou: "Le dharma vous a guidés jusqu'ici. Votre yatra s'achève — le repos du moksha vous attend à la Ferme d'Octave."
   };
   setText('s6title', t.mascot + ' ' + t.name);
-  setText('erIcon', '🏠');
+  var erIconEl2=document.getElementById('erIcon');
+  if(erIconEl2) erIconEl2.innerHTML='🏠';
   setText('erName', 'Retour à la Ferme'); setStyle('erName', 'color', t.color);
   setText('erAddr', returnTexts[t.key] || 'Retournez à la Ferme d\'Octave — 1 rue de la Fontaine des Champs');
   mkSteps('st6');
