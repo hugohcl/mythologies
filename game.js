@@ -619,7 +619,7 @@ function showEnRoute(cpk) {
   var cp=CPS[cpk], t=S.team; th(t);
   setText('s6title', t.name);
   var erIconEl=document.getElementById('erIcon');
-  if(erIconEl) erIconEl.innerHTML='<div class="emblem-wrap lg" style="margin:0 auto"><img src="'+t.emblem+'" alt="'+t.name+'"></div>';
+  if(erIconEl) erIconEl.innerHTML=cp.icon ? '<div class="emblem-wrap lg" style="margin:0 auto"><img src="'+cp.icon+'" alt="'+cp.name+'"></div>' : '';
   setText('erName',  cp.name); setStyle('erName','color','var(--tc)');
   setText('erAddr',  cp.addr);
   mkSteps('st6');
