@@ -563,7 +563,28 @@ function renderTeams() {
 function selTeam(k) {
   checkOnline(function(online) {
     if (online) { S.pendingTeam=k; go('s2','forward'); return; }
-    doSelTeam(k);
+    // Immersive selection animation
+    var t=TEAMS[k];
+    th(t);
+    var cards=document.querySelectorAll('#teamList .tcard');
+    var selected=null;
+    cards.forEach(function(card,i){
+      var teamKey=Object.keys(TEAMS)[i];
+      if(teamKey===k){
+        selected=card;
+        card.style.transition='transform .4s cubic-bezier(.2,1.3,.4,1), box-shadow .4s';
+        card.style.transform='scale(1.04)';
+        card.style.boxShadow='0 0 30px '+t.color+', 0 0 60px '+t.color+'44, inset 0 0 20px '+t.color+'22';
+        card.style.borderColor=t.color;
+      } else {
+        card.style.transition='opacity .35s, transform .35s';
+        card.style.opacity='0.15';
+        card.style.transform='scale(.96)';
+        card.style.pointerEvents='none';
+      }
+    });
+    playSound('success');
+    setTimeout(function(){ doSelTeam(k); }, 850);
   });
 }
 
@@ -1421,7 +1442,13 @@ document.getElementById('btnStart').onclick = function(){
     startGame();
   });
 };
-document.getElementById('btnBackTeam').onclick = function(){ go('s1','back'); };
+document.getElementById('btnBackTeam').onclick = function(){
+  // Reset team card styles when going back
+  var cards=document.querySelectorAll('#teamList .tcard');
+  cards.forEach(function(card){ card.style.transition=''; card.style.transform=''; card.style.opacity=''; card.style.boxShadow=''; card.style.pointerEvents=''; card.style.borderColor=''; });
+  th(null);
+  go('s1','back');
+};
 var _lastTap=0;
 function guardTap(fn){ return function(){ var now=Date.now(); if(now-_lastTap<600) return; _lastTap=now; fn(); }; }
 document.getElementById('btnGoStart').onclick = guardTap(function(){
