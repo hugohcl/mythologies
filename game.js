@@ -1214,7 +1214,7 @@ function toggleHelpPanel() {
   if (!panel) return;
   var open = panel.style.display === 'flex';
   panel.style.display = open ? 'none' : 'flex';
-  if (tab) tab.style.display = open ? '' : 'none';
+  if (tab) tab.textContent = open ? 'Aide' : '✕';
 }
 
 var MAP_WARN = {

@@ -46,12 +46,12 @@ const ENIGMES = {
 };
 
 const CPS = {
-  fresque:{name:"La Fresque du portail",          icon:"🎨", addr:"17 rue des Buchettes — nord-est du village", code:"NORD"},
-  eglise: {name:"Église Saint-Jean-Baptiste",     icon:"⛪", addr:"Rue de l'Église — centre du village",        code:"JEAN"},
-  lavoir: {name:"Le Lavoir",                      icon:"💧", addr:"Rue de la Fontaine des Champs",              code:"ONDE"},
-  salle:  {name:"Salle Polyvalente de la Rose",   icon:"🌹", addr:"2 rue de la Côte aux Suisses",               code:"ROSE"},
-  mairie: {name:"La Mairie",                      icon:"🏛️", addr:"4 rue du Grand-Cernay",                      code:"LOIS"},
-  ferme:  {name:"La Ferme d'Octave",              icon:"🏡", addr:"1 rue de la Fontaine des Champs — ARRIVÉE",  code:null}
+  fresque:{name:"La Fresque du portail",  icon:"🎨", addr:"", code:"NORD"},
+  eglise: {name:"L'Église",              icon:"⛪", addr:"", code:"JEAN"},
+  lavoir: {name:"Le Lavoir",             icon:"💧", addr:"", code:"ONDE"},
+  salle:  {name:"Salle Polyvalente",     icon:"🌹", addr:"", code:"ROSE"},
+  mairie: {name:"La Mairie",             icon:"🏛️", addr:"", code:"LOIS"},
+  ferme:  {name:"La Ferme d'Octave",     icon:"🏡", addr:"Point de départ · 1 rue de la Fontaine des Champs", code:null}
 };
 
 // ─────────────────────────────────────────────────────────────────
