@@ -1264,7 +1264,31 @@ function doOpenMap() {
   }, 1000);
 }
 
+var PHOTO_WARN = {
+  grec: "Les Moires tissent votre destin — cette vision vous coûtera du fil.",
+  nordique: "Les Nornes vous accordent un aperçu du futur. Mais le temps file au sablier d'Yggdrasil.",
+  hindou: "Shiva ouvre son troisième œil pour vous. Chaque révélation a son prix karmique."
+};
+
 function openPhoto() {
+  var cpk = curCP();
+  // Already used for this checkpoint — reopen directly
+  if (_photoUsed[cpk]) {
+    doOpenPhoto();
+    return;
+  }
+  // Show confirmation
+  var tk = S.team ? S.team.key : 'grec';
+  var ov = document.getElementById('photoConfirm');
+  if (ov) {
+    document.getElementById('photoWarnLore').textContent = PHOTO_WARN[tk] || PHOTO_WARN.grec;
+    ov.style.display = 'flex';
+    return;
+  }
+  doOpenPhoto();
+}
+
+function doOpenPhoto() {
   var cpk = curCP();
   if (!_photoUsed[cpk]) {
     _photoUsed[cpk] = true;
@@ -1337,6 +1361,13 @@ document.getElementById('btnMapCancel').onclick = function(){
 document.getElementById('btnMapConfirm').onclick = function(){
   document.getElementById('mapConfirm').style.display = 'none';
   doOpenMap();
+};
+document.getElementById('btnPhotoCancel').onclick = function(){
+  document.getElementById('photoConfirm').style.display = 'none';
+};
+document.getElementById('btnPhotoConfirm').onclick = function(){
+  document.getElementById('photoConfirm').style.display = 'none';
+  doOpenPhoto();
 };
 document.getElementById('btnClosePhoto').onclick = function(){ closePhoto(); };
 document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };

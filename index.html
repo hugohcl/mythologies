@@ -346,6 +346,22 @@ html.light .cs{border-color:var(--tbr)}
   </div>
   <div id="mapTimer" style="font-family:'Cinzel',serif;font-size:28px;color:var(--gold);margin-top:12px;letter-spacing:3px">5</div>
 </div>
+<!-- PHOTO CONFIRM -->
+<div id="photoConfirm" style="position:fixed;inset:0;z-index:5500;background:rgba(6,4,2,.92);display:none;flex-direction:column;justify-content:center;align-items:center;padding:28px">
+  <div style="max-width:340px;text-align:center">
+    <div style="font-size:36px;margin-bottom:14px">📷</div>
+    <div id="photoWarnLore" style="font-family:'IM Fell English',serif;font-size:15px;color:var(--text);line-height:1.6;font-style:italic;margin-bottom:20px"></div>
+    <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:24px;letter-spacing:.5px">
+      <div>👁 Photo de la cachette à trouver</div>
+      <div>⏱ Consultable <strong style="color:var(--gold)">sans limite de temps</strong></div>
+      <div>⚠️ Pénalité de <strong style="color:var(--danger)">+15 minutes</strong></div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button id="btnPhotoCancel" class="btn bt" style="flex:1;max-width:140px">Annuler</button>
+      <button id="btnPhotoConfirm" class="btn bred" style="flex:1;max-width:140px">Voir la photo</button>
+    </div>
+  </div>
+</div>
 <!-- PHOTO HINT OVERLAY -->
 <div id="photoOverlay" style="position:fixed;inset:0;z-index:5000;background:rgba(6,4,2,.97);display:none;flex-direction:column;justify-content:center;align-items:center;padding:20px">
   <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--danger);letter-spacing:2px;margin-bottom:12px;text-transform:uppercase"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Photo indice — Pénalité active</div>
