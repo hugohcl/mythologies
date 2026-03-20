@@ -1,0 +1,31 @@
+name: Auto-merge Claude branches
+
+on:
+  push:
+    branches: ['claude/**']
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-and-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create PR and merge
+        run: |
+          PR_URL=$(gh pr create --base master --head "$GITHUB_REF_NAME" \
+            --title "Auto-merge: $GITHUB_REF_NAME" \
+            --body "Auto-created from push to $GITHUB_REF_NAME" 2>&1) || true
+
+          if echo "$PR_URL" | grep -q "already exists"; then
+            PR_URL=$(gh pr list --head "$GITHUB_REF_NAME" --json url --jq '.[0].url')
+          fi
+
+          sleep 5
+          gh pr merge "$GITHUB_REF_NAME" --squash --delete-branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
