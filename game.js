@@ -524,12 +524,18 @@ function renderTeams() {
     var tc=teamColor(t);
     bar.style.cssText='position:absolute;left:0;top:0;bottom:0;width:3px;background:'+tc+';border-radius:2px 0 0 2px;opacity:.8';
 
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:14px';
+
     var embWrap=document.createElement('div');
     embWrap.className='emblem-wrap';
-    embWrap.style.cssText='float:right;margin:-2px 0 8px 12px';
     var embImg=document.createElement('img');
     embImg.src=t.emblem;embImg.alt=t.name;
     embWrap.appendChild(embImg);
+
+    var info=document.createElement('div');
+    info.style.cssText='flex:1;min-width:0';
+
     var nm=document.createElement('div'); nm.className='tn'; nm.style.color=tc; nm.textContent=t.name;
 
     var tag=document.createElement('div');
@@ -542,7 +548,9 @@ function renderTeams() {
     dep.style.borderColor=t.border; dep.style.color=tc;
     dep.textContent="Départ — La Ferme d'Octave";
 
-    card.appendChild(bar); card.appendChild(embWrap); card.appendChild(nm); card.appendChild(tag); card.appendChild(mem); card.appendChild(dep);
+    info.appendChild(nm); info.appendChild(tag); info.appendChild(mem); info.appendChild(dep);
+    row.appendChild(embWrap); row.appendChild(info);
+    card.appendChild(bar); card.appendChild(row);
 
     card.addEventListener('click', function(){ selTeam(k); });
     card.addEventListener('mouseenter', function(){ card.style.boxShadow='0 0 0 1px '+t.border; });
