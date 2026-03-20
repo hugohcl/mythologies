@@ -1140,6 +1140,59 @@ function renderTestTeamTabs() {
   });
 }
 
+// Hard pass: force next screen in game flow, bypass all checks
+function hardPass() {
+  if (!_mjMode) return;
+  var cur = document.querySelector('.screen:not(.hidden)');
+  var id = cur ? cur.id : '';
+  // Ensure basics
+  if (!S.team) { S.team = TEAMS[Object.keys(TEAMS)[0]]; }
+  if (!S.t0) S.t0 = Date.now();
+  th(S.team);
+
+  if (id === 'sSplash' || id === 's1') {
+    // Pick first team and go to briefing
+    doSelTeam(Object.keys(TEAMS)[0]);
+  } else if (id === 's2') {
+    // Skip airplane check
+    if (S.pendingTeam) doSelTeam(S.pendingTeam);
+    else doSelTeam(S.team.key);
+  } else if (id === 's3') {
+    // Skip briefing → countdown → start
+    startGame();
+  } else if (id === 's4') {
+    // Skip countdown
+    S.t0 = Date.now();
+    S.iv = setInterval(tick, 1000);
+    showS5();
+  } else if (id === 's5') {
+    // Skip first destination input → go to first checkpoint
+    showEnRoute(S.team.route[0]);
+  } else if (id === 's6') {
+    // Skip en-route → show enigme
+    showEnigme(curCP());
+  } else if (id === 'sEnigme') {
+    // Skip enigme → show code entry
+    showCode(curCP());
+  } else if (id === 's7') {
+    // Auto-validate code + advance
+    S.cpTimes.push({ cp: curCP(), t: Date.now() });
+    var isLast = (S.idx >= S.team.route.length - 1);
+    if (isLast) { S.idx++; save(); showReturnHome(); }
+    else { showHintsScreen(curCP()); }
+  } else if (id === 's8') {
+    // Skip destination input → advance to next checkpoint
+    S.idx++; save();
+    var nk = S.idx >= S.team.route.length ? 'ferme' : S.team.route[S.idx];
+    if (nk === 'ferme') showReturnHome();
+    else showEnRoute(nk);
+  } else if (id === 's9') {
+    toast('Déjà arrivé !');
+  } else {
+    toast('Hard pass: écran ' + id);
+  }
+}
+
 function testGo(screenId) {
   if(!S.team){ S.team=TEAMS[Object.keys(TEAMS)[0]]; S.mjT=Object.keys(TEAMS)[0]; }
   if(!S.t0) S.t0=Date.now();
