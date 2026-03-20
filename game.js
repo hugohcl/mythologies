@@ -1498,7 +1498,8 @@ if (saved && S.team && S.t0) {
   // Show recovery toast then restore
   th(S.team);
   S.iv = setInterval(tick, 1000);
-  if      (saved==='s9')       showArrival();
+  var _done = S.idx >= S.team.route.length;
+  if      (saved==='s9' || _done) showArrival();
   else if (saved==='s8')       showHintsScreen(curCP());
   else if (saved==='s7')       showCode(curCP());
   else if (saved==='sEnigme')  showEnigme(curCP());
