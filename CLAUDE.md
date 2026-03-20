@@ -105,6 +105,23 @@ Grec : cheval d'Odin, Léthé, 12 travaux, Achille
 Nordique : Níðhöggr, 9 mondes, Mjölnir, Sleipnir
 Hindou : 10 bras Durga, Matsya, Ganesh, Nandi
 
+## Auto-deploy (Claude Code web → GitHub Pages)
+
+Claude Code web ne peut pas push sur `master`. Le workflow est :
+1. Claude push sur `claude/xxx`
+2. GitHub Actions rebase sur master, crée une PR, et squash-merge automatiquement
+3. GitHub Pages déploie depuis `master`
+
+**Avant chaque push sur une branche `claude/xxx` déjà mergée :** rebaser sur master pour éviter les conflits post-squash :
+```bash
+git fetch origin master
+git rebase origin/master
+# Si rebase dit "all commits already upstream" et qu'il n'y a rien à push, c'est normal
+git push --force-with-lease -u origin claude/xxx
+# Si --force-with-lease échoue (branche supprimée) :
+git push -f -u origin claude/xxx
+```
+
 ## Règles de travail (apprises sur ce projet)
 
 **Ne JAMAIS réécrire le fichier from scratch** — toujours patcher l'existant avec des str_replace ciblés. La réécriture introduit des régressions et consomme 10x plus de tokens.
