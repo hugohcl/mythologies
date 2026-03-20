@@ -282,25 +282,25 @@ function launchConfetti() {
 // ═══════════════════════════════════════════
 var BADGES = {
   grec: [
-    {max:25, icon:'⚡', title:'Foudre de Zeus', desc:'Vitesse divine — les dieux sont impressionnés.'},
-    {max:35, icon:'🏛️', title:'Héros de l\'Olympe', desc:'Un exploit digne des plus grands mythes.'},
-    {max:45, icon:'🦉', title:'Protégé d\'Athéna', desc:'La sagesse vous a guidés avec brio.'},
-    {max:60, icon:'🏺', title:'Voyageur d\'Ithaque', desc:'Comme Ulysse, le chemin compte autant que la destination.'},
-    {max:Infinity, icon:'🐢', title:'Tortue de Zénon', desc:'Lent mais philosophique — Zénon serait fier.'}
+    {max:25, icon:'I', title:'Foudre de Zeus', desc:'Vitesse divine — les dieux sont impressionnés.'},
+    {max:35, icon:'II', title:'Héros de l\'Olympe', desc:'Un exploit digne des plus grands mythes.'},
+    {max:45, icon:'III', title:'Protégé d\'Athéna', desc:'La sagesse vous a guidés avec brio.'},
+    {max:60, icon:'IV', title:'Voyageur d\'Ithaque', desc:'Comme Ulysse, le chemin compte autant que la destination.'},
+    {max:Infinity, icon:'V', title:'Tortue de Zénon', desc:'Lent mais philosophique — Zénon serait fier.'}
   ],
   nordique: [
-    {max:25, icon:'⚡', title:'Éclair de Mjölnir', desc:'Thor lui-même applaudit votre rapidité.'},
-    {max:35, icon:'⚔️', title:'Berserker légendaire', desc:'Une charge digne du Valhalla.'},
-    {max:45, icon:'🐦‍⬛', title:'Favori d\'Odin', desc:'Les corbeaux ont chanté vos louanges.'},
-    {max:60, icon:'🛡️', title:'Gardien du Bifröst', desc:'Solide et déterminé, comme Heimdall.'},
-    {max:Infinity, icon:'🐌', title:'Escargot d\'Yggdrasil', desc:'Même le Serpent-Monde avance plus vite… mais bravo.'}
+    {max:25, icon:'I', title:'Éclair de Mjölnir', desc:'Thor lui-même applaudit votre rapidité.'},
+    {max:35, icon:'II', title:'Berserker légendaire', desc:'Une charge digne du Valhalla.'},
+    {max:45, icon:'III', title:'Favori d\'Odin', desc:'Les corbeaux ont chanté vos louanges.'},
+    {max:60, icon:'IV', title:'Gardien du Bifröst', desc:'Solide et déterminé, comme Heimdall.'},
+    {max:Infinity, icon:'V', title:'Escargot d\'Yggdrasil', desc:'Même le Serpent-Monde avance plus vite… mais bravo.'}
   ],
   hindou: [
-    {max:25, icon:'🔥', title:'Flamme d\'Agni', desc:'Une célérité digne des dieux védiques.'},
-    {max:35, icon:'🐯', title:'Rugissement de Durga', desc:'La force et la grâce, en un seul parcours.'},
-    {max:45, icon:'🪷', title:'Lotus d\'or', desc:'L\'éveil est proche — parcours exemplaire.'},
-    {max:60, icon:'🙏', title:'Pèlerin du Dharma', desc:'Chaque pas était une prière — beau voyage.'},
-    {max:Infinity, icon:'🐘', title:'Patience de Ganesh', desc:'Ganesh approuve la lenteur contemplative.'}
+    {max:25, icon:'I', title:'Flamme d\'Agni', desc:'Une célérité digne des dieux védiques.'},
+    {max:35, icon:'II', title:'Rugissement de Durga', desc:'La force et la grâce, en un seul parcours.'},
+    {max:45, icon:'III', title:'Lotus d\'or', desc:'L\'éveil est proche — parcours exemplaire.'},
+    {max:60, icon:'IV', title:'Pèlerin du Dharma', desc:'Chaque pas était une prière — beau voyage.'},
+    {max:Infinity, icon:'V', title:'Patience de Ganesh', desc:'Ganesh approuve la lenteur contemplative.'}
   ]
 };
 
@@ -479,7 +479,7 @@ function updateTestOverlay(showNext) {
   var cpk = showNext ? nextK() : curCP();
   var cp  = CPS[cpk] || {};
   body.innerHTML =
-    '<div class="tov-row">CP<br><span class="tov-val">'+(cp.icon||'')+' '+(cp.name||cpk)+'</span></div>'
+    '<div class="tov-row">CP<br><span class="tov-val">'+(cp.icon?'<img class="cp-img sm" src="'+cp.icon+'"> ':'')+''+(cp.name||cpk)+'</span></div>'
    +'<div class="tov-row">Code<br><span class="tov-val" style="letter-spacing:3px">'+(cp.code||'—')+'</span></div>';
 }
 
@@ -530,7 +530,7 @@ function renderTeams() {
     var embImg=document.createElement('img');
     embImg.src=t.emblem;embImg.alt=t.name;
     embWrap.appendChild(embImg);
-    var nm=document.createElement('div'); nm.className='tn'; nm.style.color=tc; nm.textContent=t.mascot+' '+t.name;
+    var nm=document.createElement('div'); nm.className='tn'; nm.style.color=tc; nm.textContent=t.name;
 
     var tag=document.createElement('div');
     tag.style.cssText='font-size:12px;font-style:italic;color:'+tc+';opacity:.75;margin-bottom:6px';
@@ -565,7 +565,7 @@ function doSelTeam(k) {
   th(t);
   var s3emblem=document.getElementById('s3emblem');
   if(s3emblem) s3emblem.src=t.emblem;
-  setText('s3title', t.mascot+' '+t.name);
+  setText('s3title', t.name);
   setText('s3sub',   t.members.join(' · '));
   setText('s3flavor',t.flavor);
   go('s3','forward');
@@ -603,7 +603,7 @@ function startGame() {
 // ═══════════════════════════════════════════
 function showS5() {
   var t=S.team; th(t);
-  setText('s5title', t.mascot+' '+t.name);
+  setText('s5title', t.name);
   setText('s5sub',   t.members.join(' · '));
   mkSteps('st5');
   buildHints('hintsStart','ferme',t.key);
@@ -617,7 +617,7 @@ function showS5() {
 // ═══════════════════════════════════════════
 function showEnRoute(cpk) {
   var cp=CPS[cpk], t=S.team; th(t);
-  setText('s6title', t.mascot+' '+t.name);
+  setText('s6title', t.name);
   var erIconEl=document.getElementById('erIcon');
   if(erIconEl) erIconEl.innerHTML='<div class="emblem-wrap lg" style="margin:0 auto"><img src="'+t.emblem+'" alt="'+t.name+'"></div>';
   setText('erName',  cp.name); setStyle('erName','color','var(--tc)');
@@ -642,8 +642,8 @@ function showEnRoute(cpk) {
 function showEnigme(cpk) {
   var s6=document.getElementById('s6'); if(s6) s6.onclick=null;
   var cp=CPS[cpk], t=S.team; th(t);
-  document.getElementById('enigTitle').textContent=t.mascot+' '+t.name;
-  document.getElementById('enigCPName').textContent=cp.icon+' '+cp.name;
+  document.getElementById('enigTitle').textContent=t.name;
+  document.getElementById('enigCPName').innerHTML=(cp.icon?'<img class="cp-img sm" src="'+cp.icon+'"> ':'')+cp.name;
   document.getElementById('enigCPAddr').textContent=cp.addr;
   document.getElementById('enigText').textContent=ENIGMES[cpk]||'Cherchez la cachette sur ce lieu.';
   mkSteps('stEnigme');
@@ -656,8 +656,8 @@ function showEnigme(cpk) {
 function showCode(cpk) {
   var s6=document.getElementById('s6'); if(s6) s6.onclick=null;
   var cp=CPS[cpk], t=S.team; th(t);
-  setText('s7title',  t.mascot+' '+t.name);
-  setText('s7cpName', cp.icon+' '+cp.name);
+  setText('s7title',  t.name);
+  var s7cpEl=document.getElementById('s7cpName'); if(s7cpEl) s7cpEl.innerHTML=(cp.icon?'<img class="cp-img sm" src="'+cp.icon+'"> ':'')+cp.name;
   setText('s7cpAddr', cp.addr);
   setText('codeErr',  '');
   mkSteps('st7');
@@ -737,9 +737,9 @@ function validateCode() {
 // ═══════════════════════════════════════════
 function showHintsScreen(cpk) {
   var cp=CPS[cpk], t=S.team; th(t);
-  setText('s8title',  t.mascot+' '+t.name);
+  setText('s8title',  t.name);
   setText('s8sub',    t.members.join(' · '));
-  setText('s8cpName', cp.icon+' '+cp.name);
+  var s8cpEl=document.getElementById('s8cpName'); if(s8cpEl) s8cpEl.innerHTML=(cp.icon?'<img class="cp-img sm" src="'+cp.icon+'"> ':'')+cp.name;
   setText('s8cpAddr', cp.addr);
   mkSteps('st8', 1);
   buildHints('hintsList',cpk,t.key);
@@ -839,9 +839,9 @@ function showReturnHome() {
     nordique: "Le Bifröst s'illumine une dernière fois. Votre saga s'achève — le mead-hall de la Ferme d'Octave vous attend, guerriers.",
     hindou: "Le dharma vous a guidés jusqu'ici. Votre yatra s'achève — le repos du moksha vous attend à la Ferme d'Octave."
   };
-  setText('s6title', t.mascot + ' ' + t.name);
+  setText('s6title', t.name);
   var erIconEl2=document.getElementById('erIcon');
-  if(erIconEl2) erIconEl2.innerHTML='🏠';
+  if(erIconEl2) erIconEl2.textContent='';
   setText('erName', 'Retour à la Ferme'); setStyle('erName', 'color', t.color);
   setText('erAddr', returnTexts[t.key] || 'Retournez à la Ferme d\'Octave — 1 rue de la Fontaine des Champs');
   mkSteps('st6');
@@ -868,8 +868,8 @@ function showArrival() {
   S.mjEnd[t.key]=endTime; saveMJ();
   var el=endTime-S.t0, tot=el/60000+S.pen;
   var tc=teamColor(t);
-  setText('s9team',   t.mascot+' '+t.name); setStyle('s9team','color',tc);
-  setText('s9title',  '✦ ARRIVÉE ✦'); setStyle('s9title','color',tc);
+  setText('s9team',   t.name); setStyle('s9team','color',tc);
+  setText('s9title',  'ARRIVÉE'); setStyle('s9title','color',tc);
   // Badge based on score
   var badge = getBadge(t.key, tot);
   setText('s9flavor', '');
@@ -888,20 +888,20 @@ function showArrival() {
     var prev=S.t0;
     // Départ
     tlHtml+='<div class="tl-item"><div class="tl-dot done" style="border-color:'+tc+';background:'+tc+'"></div>'
-      +'<div class="tl-name" style="color:'+tc+'">'+CPS.ferme.icon+' Départ — La Ferme</div>'
+      +'<div class="tl-name" style="color:'+tc+'">Départ — La Ferme</div>'
       +'<div class="tl-time">00:00</div></div>';
     S.cpTimes.forEach(function(ct){
       var cp=CPS[ct.cp];
       var leg=ct.t-prev;
       prev=ct.t;
       tlHtml+='<div class="tl-item"><div class="tl-dot done" style="border-color:'+tc+';background:'+tc+'"></div>'
-        +'<div class="tl-name" style="color:'+tc+'">'+(cp?cp.icon+' '+cp.name:ct.cp)+'</div>'
+        +'<div class="tl-name" style="color:'+tc+'">'+(cp?(cp.icon?'<img class="cp-img sm" src="'+cp.icon+'"> ':'')+cp.name:ct.cp)+'</div>'
         +'<div class="tl-time">+'+fmt(leg)+' (à '+fmt(ct.t-S.t0)+')</div></div>';
     });
     // Retour ferme
     var lastLeg=endTime-S.t0-(S.cpTimes.length?S.cpTimes[S.cpTimes.length-1].t-S.t0:0);
     tlHtml+='<div class="tl-item"><div class="tl-dot done" style="border-color:var(--gold);background:var(--gold)"></div>'
-      +'<div class="tl-name" style="color:var(--gold)">🏁 Arrivée — La Ferme</div>'
+      +'<div class="tl-name" style="color:var(--gold)">Arrivée — La Ferme</div>'
       +'<div class="tl-time">+'+fmt(lastLeg)+' (total '+fmt(el)+')</div></div>';
     tlHtml+='</div>';
   }
@@ -1003,8 +1003,8 @@ function renderQuiz() {
     var row=document.createElement('div'); row.className='qrow';
     var txt=document.createElement('div'); txt.className='qtxt';
     var tc=TEAMS[q.t]?TEAMS[q.t].color:'var(--gold)';
-    var mascot=TEAMS[q.t]?TEAMS[q.t].mascot+' '+TEAMS[q.t].name:'';
-    txt.innerHTML='<span style="font-size:10px;color:'+tc+';font-family:Cinzel,serif;display:block;margin-bottom:2px">'+mascot+'</span>'+q.q+'<br><span style="font-size:10px;color:var(--gold);font-style:italic">Rép : '+q.a+'</span>';
+    var teamLabel=TEAMS[q.t]?TEAMS[q.t].name:'';
+    txt.innerHTML='<span style="font-size:10px;color:'+tc+';font-family:Cinzel,serif;display:block;margin-bottom:2px">'+teamLabel+'</span>'+q.q+'<br><span style="font-size:10px;color:var(--gold);font-style:italic">Rép : '+q.a+'</span>';
     var btns=document.createElement('div'); btns.className='qbtns';
     var yes=document.createElement('button'); yes.className='qbtn'+(ans===true?' yes':''); yes.textContent='✓';
     var no=document.createElement('button');  no.className='qbtn'+(ans===false?' no':'');  no.textContent='✗';
@@ -1020,7 +1020,7 @@ function renderQuiz() {
       var t=TEAMS[k];
       var n=QUIZ.filter(function(q,i){return q.t===k&&S.quizAnswers[i]===true;}).length;
       return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px">'
-        +'<span style="color:'+t.color+'">'+t.mascot+' '+t.name+'</span>'
+        +'<span style="color:'+t.color+'">'+t.name+'</span>'
         +'<span style="font-family:Cinzel,serif;color:var(--ok)">-'+(n*0.5).toFixed(1)+' min ('+n+'/4)</span></div>';
     }).join('');
 }
@@ -1040,12 +1040,12 @@ function renderLB() {
     if(a.elapsed&&b.elapsed) return a.elapsed-b.elapsed;
     if(a.elapsed) return -1; if(b.elapsed) return 1; return 0;
   });
-  var medals=['🥇','🥈','🥉'];
+  var medals=['1.','2.','3.'];
   el.innerHTML=entries.map(function(e,i){
     var ts=e.elapsed?fmt(e.elapsed):'—';
     var status=e.done?'Terminé':e.elapsed?'En cours':'Pas encore parti';
     return '<div class="lbrow"><div style="font-family:Cinzel,serif;font-size:18px;width:28px;text-align:center;flex-shrink:0">'+(i<3?medals[i]:(i+1)+'.')+'</div>'
-      +'<div style="flex:1"><div style="font-family:Cinzel,serif;font-size:13px;margin-bottom:2px;color:'+e.t.color+'">'+e.t.mascot+' '+e.t.name+'</div>'
+      +'<div style="flex:1"><div style="font-family:Cinzel,serif;font-size:13px;margin-bottom:2px;color:'+e.t.color+'">'+e.t.name+'</div>'
       +'<div style="font-size:12px;color:var(--muted)">'+status+' · bonus -'+e.qBonus.toFixed(1)+' min</div></div>'
       +'<div style="font-family:Cinzel,serif;font-size:16px;color:'+e.t.color+'">'+ts+'</div></div>';
   }).join('');
@@ -1066,7 +1066,7 @@ function renderMJLive() {
     var stat=end?'Terminé':st?'En cours':'Pas encore parti';
     var resetBtn=st?'<button onclick="resetTeamChrono(\''+k+'\')" style="font-size:10px;padding:3px 8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:var(--muted);border-radius:6px;cursor:pointer;font-family:Cinzel,serif;margin-left:8px;touch-action:manipulation">↺</button>':'';
     return '<div class="mjlr">'
-      +'<div style="flex:1"><div style="font-family:Cinzel,serif;font-size:13px;color:'+t.color+'">'+t.mascot+' '+t.name+'</div>'
+      +'<div style="flex:1"><div style="font-family:Cinzel,serif;font-size:13px;color:'+t.color+'">'+t.name+'</div>'
       +'<div style="font-size:12px;color:var(--muted);margin-top:2px">'+stat+'</div></div>'
       +'<div style="display:flex;align-items:center"><span style="font-family:Cinzel,serif;font-size:16px;color:'+t.color+'">'+elapsed+'</span>'+resetBtn+'</div>'
       +'</div>';
@@ -1088,7 +1088,7 @@ function renderMJTabs() {
     var tm=TEAMS[k];
     var btn=document.createElement('button'); btn.className='mjtb'+(S.mjT===k?' on':'');
     if(S.mjT===k){btn.style.color=tm.color;btn.style.background=tm.bg;btn.style.borderColor=tm.border;}
-    btn.textContent=tm.mascot+' '+tm.name.replace('Équipe ','');
+    btn.textContent=tm.name.replace('Équipe ','');
     btn.addEventListener('click',(function(key){return function(){S.mjT=key;S.mjC='ferme';renderMJTabs();renderMJContent();};})(k));
     tt.appendChild(btn);
   });
@@ -1099,8 +1099,8 @@ function renderMJTabs() {
     var cp=CPS[ck];
     var btn=document.createElement('button'); btn.className='mjtb'+(S.mjC===ck?' on':'');
     if(S.mjC===ck){btn.style.color='var(--gold)';btn.style.background='var(--gd)';btn.style.borderColor='var(--gb)';}
-    var label=cp.name.replace('Église Saint-Jean-Baptiste','Église').replace('La Mairie','Mairie').replace('Le Lavoir','Lavoir').replace('La Fresque du portail','Fresque').replace('Salle Polyvalente de la Rose','Salle').replace("La Ferme d'Octave","Ferme ★");
-    btn.textContent=cp.icon+' '+label;
+    var label=cp.name.replace('Église Saint-Jean-Baptiste','Église').replace('La Mairie','Mairie').replace('Le Lavoir','Lavoir').replace('La Fresque du portail','Fresque').replace('Salle Polyvalente de la Rose','Salle').replace("La Ferme d'Octave","Ferme (depart)");
+    btn.textContent=label;
     btn.addEventListener('click',(function(key){return function(){S.mjC=key;renderMJTabs();renderMJContent();};})(ck));
     ct.appendChild(btn);
   });
@@ -1111,9 +1111,9 @@ function renderMJContent() {
   var ri=S.mjC==='ferme'?-1:t.route.indexOf(S.mjC);
   var nk=ri+1<t.route.length?t.route[ri+1]:'ferme', ncp=CPS[nk];
   var html='<div style="background:'+t.bg+';border:1px solid '+t.border+';border-radius:12px;padding:11px 14px;margin-bottom:10px">'
-    +'<div style="font-family:Cinzel,serif;font-size:13px;color:'+t.color+';margin-bottom:4px">'+t.mascot+' '+t.name+' — '+cp.icon+' '+cp.name+'</div>'
+    +'<div style="font-family:Cinzel,serif;font-size:13px;color:'+t.color+';margin-bottom:4px">'+t.name+' — '+(cp.icon?'<img class="cp-img sm" src="'+cp.icon+'"> ':'')+cp.name+'</div>'
     +'<div style="font-size:12px;color:var(--muted);margin-bottom:4px">'+cp.addr+(cp.code?' · Code : <b style="color:'+t.color+';letter-spacing:2px">'+cp.code+'</b>':'')+'</div>'
-    +'<div style="font-size:12px;color:var(--muted)">→ Destination : '+ncp.icon+' <b style="color:'+t.color+'">'+ncp.name+'</b></div>'
+    +'<div style="font-size:12px;color:var(--muted)">→ Destination : '+(ncp.icon?'<img class="cp-img sm" src="'+ncp.icon+'"> ':'')+' <b style="color:'+t.color+'">'+ncp.name+'</b></div>'
     +'</div>';
   LVL.forEach(function(lvl,idx){
     html+='<div style="background:'+lvl.c+'0d;border:1px solid '+lvl.c+'38;border-radius:10px;padding:10px 14px;margin-bottom:8px">'
@@ -1138,7 +1138,7 @@ function renderTestTeamTabs() {
     var btn=document.createElement('button');
     btn.className='mjtb'+(S.mjT===k?' on':'');
     if(S.mjT===k){btn.style.color=tm.color;btn.style.background=tm.bg;btn.style.borderColor=tm.border;}
-    btn.textContent=tm.mascot+' '+tm.name.replace('Équipe ','');
+    btn.textContent=tm.name.replace('Équipe ','');
     btn.addEventListener('click',(function(key){
       return function(){
         S.team=TEAMS[key]; S.mjT=key;
@@ -1216,7 +1216,7 @@ function testGo(screenId) {
   else if(screenId==='s8')      showHintsScreen(curCP());
   else if(screenId==='s9')      showArrival();
   else if(screenId==='s3'){
-    setText('s3title',S.team.mascot+' '+S.team.name);
+    setText('s3title',S.team.name);
     setText('s3sub',S.team.members.join(' · '));
     setText('s3flavor',S.team.flavor);
     go(screenId);
@@ -1515,7 +1515,7 @@ if (saved && S.team && S.t0) {
   else if (saved==='sEnigme')  showEnigme(curCP());
   else if (saved==='s5')       showS5();
   else { th(null); go('s1'); }
-  setTimeout(function(){ toast('Partie reprise — '+S.team.mascot+' '+S.team.name); }, 400);
+  setTimeout(function(){ toast('Partie reprise — '+S.team.name); }, 400);
 } else {
   th(null);
   go('sSplash');

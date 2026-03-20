@@ -12,31 +12,34 @@ const EVENT_LOCATION = 'Dosches';
 // ═══════════════════════════════════════════
 const TEAMS = {
   grec: {
-    key:"grec", name:"Équipe Grecque", mascot:"🦉", tagline:"Les Enfants de l'Olympe",
+    key:"grec", name:"Équipe Grecque", mascot:"", tagline:"Les Enfants de l'Olympe",
     flavor:"Ô héros d'Athéna ! Comme Ulysse, vous voilà lancés dans une odyssée champenoise, boussole en main, sous le regard bienveillant de la chouette de la sagesse.",
     arrival:"Comme Ulysse retrouvant Ithaque après vingt ans d'errance, votre odyssée s'achève ici.",
     members:["Antoine","Bastien","Matthieu","Thomas"],
     color:"#5a8fd4", bg:"rgba(90,143,212,0.12)", border:"rgba(90,143,212,0.32)",
     route:["fresque","eglise","lavoir","salle"],
-    emblem:'./emblem-grec.webp'
+    emblem:'./emblem-grec.webp',
+    bgTexture:'./bg-grec.webp'
   },
   nordique: {
-    key:"nordique", name:"Équipe Nordique", mascot:"🐦‍⬛", tagline:"Les Guerriers du Valhalla",
+    key:"nordique", name:"Équipe Nordique", mascot:"", tagline:"Les Guerriers du Valhalla",
     flavor:"Guerriers du Valhalla ! Odin a tracé votre saga sur les feuilles d'Yggdrasil. Le corbeau noir vole devant vous — suivez-le dans les rues de Dosches.",
     arrival:"Comme Sigurd de retour de sa quête, vos exploits seront chantés au mead-hall ce soir.",
     members:["Alex","Livia","Raphaël","Victor"],
     color:"#c8c8c8", colorLight:"#5a5a5a", bg:"rgba(160,160,160,0.10)", border:"rgba(160,160,160,0.28)",
     route:["mairie","salle","fresque","lavoir"],
-    emblem:'./emblem-nordique.webp'
+    emblem:'./emblem-nordique.webp',
+    bgTexture:'./bg-nordique.webp'
   },
   hindou: {
-    key:"hindou", name:"Équipe Hindoue", mascot:"🐯", tagline:"Les Disciples du Dharma",
+    key:"hindou", name:"Équipe Hindoue", mascot:"", tagline:"Les Disciples du Dharma",
     flavor:"Disciples du Dharma ! Le tigre sacré ouvre la voie. Chaque checkpoint est une étape de votre yatra — votre pèlerinage champenois vers le moksha.",
     arrival:"Votre yatra s'achève. Le moksha vous attend — repos mérité après ce périple.",
     members:["Axel","Jade","LG","Patrick"],
     color:"#c080e8", bg:"rgba(160,80,200,0.12)", border:"rgba(160,80,200,0.32)",
     route:["lavoir","mairie","eglise","fresque"],
-    emblem:'./emblem-hindou.webp'
+    emblem:'./emblem-hindou.webp',
+    bgTexture:'./bg-hindou.webp'
   }
 };
 
@@ -49,21 +52,21 @@ const ENIGMES = {
 };
 
 const CPS = {
-  fresque:{name:"La Fresque du portail",  icon:"🎨", addr:"", code:"NORD"},
-  eglise: {name:"L'Église",              icon:"⛪", addr:"", code:"JEAN"},
-  lavoir: {name:"Le Lavoir",             icon:"💧", addr:"", code:"ONDE"},
-  salle:  {name:"La Salle Polyvalente",   icon:"🌹", addr:"", code:"ROSE"},
-  mairie: {name:"La Mairie",             icon:"🏛️", addr:"", code:"LOIS"},
-  ferme:  {name:"La Ferme d'Octave",     icon:"🏡", addr:"Point de départ · 1 rue de la Fontaine des Champs", code:null}
+  fresque:{name:"La Fresque du portail",  icon:"./cp-fresque.webp", addr:"", code:"NORD"},
+  eglise: {name:"L'Église",              icon:"./cp-eglise.webp", addr:"", code:"JEAN"},
+  lavoir: {name:"Le Lavoir",             icon:"./cp-lavoir.webp", addr:"", code:"ONDE"},
+  salle:  {name:"La Salle Polyvalente",   icon:"./cp-salle.webp", addr:"", code:"ROSE"},
+  mairie: {name:"La Mairie",             icon:"./cp-mairie.webp", addr:"", code:"LOIS"},
+  ferme:  {name:"La Ferme d'Octave",     icon:"", addr:"Point de départ · 1 rue de la Fontaine des Champs", code:null}
 };
 
 // ─────────────────────────────────────────────────────────────────
 // HINTS : clé = CP QUI VIENT D'ÊTRE VALIDÉ → indices vers le SUIVANT
 //
 // Routes :
-//   🦉 Grec    : Ferme → Fresque → Église → Lavoir → Salle → Ferme
-//   🐦‍⬛ Nordique : Ferme → Mairie → Salle → Fresque → Lavoir → Ferme
-//   🐯 Hindou  : Ferme → Lavoir → Mairie → Église → Fresque → Ferme
+//   Grec    : Ferme -> Fresque -> Eglise -> Lavoir -> Salle -> Ferme
+//   Nordique : Ferme -> Mairie -> Salle -> Fresque -> Lavoir -> Ferme
+//   Hindou  : Ferme -> Lavoir -> Mairie -> Eglise -> Fresque -> Ferme
 // ─────────────────────────────────────────────────────────────────
 const HINTS = {
 
