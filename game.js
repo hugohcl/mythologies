@@ -402,11 +402,12 @@ function stopC()  { if(S.iv) clearInterval(S.iv); }
 function curCP()  { return S.team.route[S.idx]; }
 function nextK()  { return S.idx>=S.team.route.length-1 ? 'ferme' : S.team.route[S.idx+1]; }
 
-function mkSteps(id) {
+function mkSteps(id, offset) {
   var el=document.getElementById(id); if(!el) return;
   var r = S.team.route.concat(['ferme']);
   var total = r.length;
-  var pct = total > 1 ? (S.idx / (total - 1)) * 100 : 0;
+  var idx = S.idx + (offset || 0);
+  var pct = total > 1 ? (idx / (total - 1)) * 100 : 0;
   // Reuse existing track if present, otherwise create
   var track = el.querySelector('.steps-track');
   var fill;
@@ -418,8 +419,8 @@ function mkSteps(id) {
     var mks = track.querySelectorAll('.steps-mk');
     for (var i = 0; i < mks.length; i++) {
       mks[i].classList.remove('done','now');
-      if (i < S.idx) mks[i].classList.add('done');
-      if (i === S.idx) mks[i].classList.add('now');
+      if (i < idx) mks[i].classList.add('done');
+      if (i === idx) mks[i].classList.add('now');
     }
     return;
   }
@@ -435,8 +436,8 @@ function mkSteps(id) {
   for (var i = 0; i < total; i++) {
     var mk = document.createElement('div');
     mk.className = 'steps-mk';
-    if (i < S.idx) mk.classList.add('done');
-    if (i === S.idx) mk.classList.add('now');
+    if (i < idx) mk.classList.add('done');
+    if (i === idx) mk.classList.add('now');
     mk.style.left = (total > 1 ? (i / (total - 1)) * 100 : 0) + '%';
     track.appendChild(mk);
   }
@@ -725,7 +726,7 @@ function showHintsScreen(cpk) {
   setText('s8sub',    t.members.join(' · '));
   setText('s8cpName', cp.icon+' '+cp.name);
   setText('s8cpAddr', cp.addr);
-  mkSteps('st8');
+  mkSteps('st8', 1);
   buildHints('hintsList',cpk,t.key);
   var di=document.getElementById('destNext'); if(di) di.value='';
   setText('destNextErr','');
