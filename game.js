@@ -356,10 +356,15 @@ var TEAM_SVG = {
   nordique:'<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="20" y1="4" x2="20" y2="36"/><line x1="12" y1="10" x2="28" y2="10"/><line x1="14" y1="18" x2="26" y2="18"/><line x1="12" y1="10" x2="8" y2="18"/><line x1="28" y1="10" x2="32" y2="18"/><line x1="14" y1="18" x2="10" y2="26"/><line x1="26" y1="18" x2="30" y2="26"/></svg>',
   hindou:'<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="20" cy="20" r="16"/><circle cx="20" cy="20" r="10"/><circle cx="20" cy="20" r="4"/><line x1="20" y1="4" x2="20" y2="36"/><line x1="4" y1="20" x2="36" y2="20"/><line x1="8.7" y1="8.7" x2="31.3" y2="31.3"/><line x1="31.3" y1="8.7" x2="8.7" y2="31.3"/></svg>'
 };
+function teamColor(t) {
+  var isLight = document.documentElement.classList.contains('light');
+  return (isLight && t.colorLight) ? t.colorLight : t.color;
+}
 function th(t) {
   var r = document.documentElement.style;
+  var isLight = document.documentElement.classList.contains('light');
   if (!t) { r.setProperty('--tc','var(--gold)'); r.setProperty('--tb','var(--gd)'); r.setProperty('--tbr','var(--gb)'); }
-  else { r.setProperty('--tc', t.color); r.setProperty('--tb', t.bg); r.setProperty('--tbr', t.border); }
+  else { r.setProperty('--tc', (isLight && t.colorLight) ? t.colorLight : t.color); r.setProperty('--tb', t.bg); r.setProperty('--tbr', t.border); }
   // Watermark
   document.querySelectorAll('.hdr-wm').forEach(function(el){ el.remove(); });
   var k = t && t.key ? t.key : null;
@@ -516,18 +521,19 @@ function renderTeams() {
     card.style.borderColor=t.border; card.style.background=t.bg;
 
     var bar=document.createElement('div');
-    bar.style.cssText='position:absolute;left:0;top:0;bottom:0;width:3px;background:'+t.color+';border-radius:2px 0 0 2px;opacity:.8';
+    var tc=teamColor(t);
+    bar.style.cssText='position:absolute;left:0;top:0;bottom:0;width:3px;background:'+tc+';border-radius:2px 0 0 2px;opacity:.8';
 
-    var nm=document.createElement('div'); nm.className='tn'; nm.style.color=t.color; nm.textContent=t.mascot+' '+t.name;
+    var nm=document.createElement('div'); nm.className='tn'; nm.style.color=tc; nm.textContent=t.mascot+' '+t.name;
 
     var tag=document.createElement('div');
-    tag.style.cssText='font-size:12px;font-style:italic;color:'+t.color+';opacity:.75;margin-bottom:6px';
+    tag.style.cssText='font-size:12px;font-style:italic;color:'+tc+';opacity:.75;margin-bottom:6px';
     tag.textContent=t.tagline;
 
     var mem=document.createElement('div'); mem.className='tm'; mem.textContent=t.members.join(' · ');
 
     var dep=document.createElement('div'); dep.className='tbg';
-    dep.style.borderColor=t.border; dep.style.color=t.color;
+    dep.style.borderColor=t.border; dep.style.color=tc;
     dep.textContent="Départ — La Ferme d'Octave";
 
     card.appendChild(bar); card.appendChild(nm); card.appendChild(tag); card.appendChild(mem); card.appendChild(dep);
@@ -605,7 +611,7 @@ function showEnRoute(cpk) {
   var cp=CPS[cpk], t=S.team; th(t);
   setText('s6title', t.mascot+' '+t.name);
   setText('erIcon',  t.mascot);
-  setText('erName',  cp.name); setStyle('erName','color',t.color);
+  setText('erName',  cp.name); setStyle('erName','color','var(--tc)');
   setText('erAddr',  cp.addr);
   mkSteps('st6');
   go('s6','forward');
@@ -851,14 +857,15 @@ function showArrival() {
   var endTime=Date.now();
   S.mjEnd[t.key]=endTime; saveMJ();
   var el=endTime-S.t0, tot=el/60000+S.pen;
-  setText('s9team',   t.mascot+' '+t.name); setStyle('s9team','color',t.color);
-  setText('s9title',  '✦ ARRIVÉE ✦'); setStyle('s9title','color',t.color);
+  var tc=teamColor(t);
+  setText('s9team',   t.mascot+' '+t.name); setStyle('s9team','color',tc);
+  setText('s9title',  '✦ ARRIVÉE ✦'); setStyle('s9title','color',tc);
   // Badge based on score
   var badge = getBadge(t.key, tot);
   setText('s9flavor', '');
   var flavorEl = document.getElementById('s9flavor');
   if (flavorEl) flavorEl.innerHTML = '<div class="badge-wrap"><div class="badge-icon">' + badge.icon + '</div>'
-    + '<div class="badge-title" style="color:' + t.color + '">' + badge.title + '</div>'
+    + '<div class="badge-title" style="color:' + tc + '">' + badge.title + '</div>'
     + '<div class="badge-desc">' + badge.desc + '</div></div>';
   var rows=S.plog.map(function(p){
     return '<div class="srow"><span class="sl" style="padding-left:12px;font-size:12px">↳ '+p.reason+'</span><span class="sv" style="color:#e74c3c;font-size:13px">+'+p.min+' min</span></div>';
@@ -870,15 +877,15 @@ function showArrival() {
     tlHtml='<div class="tl-wrap"><div class="tl-line"></div>';
     var prev=S.t0;
     // Départ
-    tlHtml+='<div class="tl-item"><div class="tl-dot done" style="border-color:'+t.color+';background:'+t.color+'"></div>'
-      +'<div class="tl-name" style="color:'+t.color+'">'+CPS.ferme.icon+' Départ — La Ferme</div>'
+    tlHtml+='<div class="tl-item"><div class="tl-dot done" style="border-color:'+tc+';background:'+tc+'"></div>'
+      +'<div class="tl-name" style="color:'+tc+'">'+CPS.ferme.icon+' Départ — La Ferme</div>'
       +'<div class="tl-time">00:00</div></div>';
     S.cpTimes.forEach(function(ct){
       var cp=CPS[ct.cp];
       var leg=ct.t-prev;
       prev=ct.t;
-      tlHtml+='<div class="tl-item"><div class="tl-dot done" style="border-color:'+t.color+';background:'+t.color+'"></div>'
-        +'<div class="tl-name" style="color:'+t.color+'">'+(cp?cp.icon+' '+cp.name:ct.cp)+'</div>'
+      tlHtml+='<div class="tl-item"><div class="tl-dot done" style="border-color:'+tc+';background:'+tc+'"></div>'
+        +'<div class="tl-name" style="color:'+tc+'">'+(cp?cp.icon+' '+cp.name:ct.cp)+'</div>'
         +'<div class="tl-time">+'+fmt(leg)+' (à '+fmt(ct.t-S.t0)+')</div></div>';
     });
     // Retour ferme
@@ -1169,6 +1176,8 @@ function toggleTheme() {
   if(icon) icon.innerHTML = next==='dark'
     ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
     : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  // Re-apply team color for light/dark switch
+  if (S.team) th(S.team);
 }
 
 // ═══════════════════════════════════════════

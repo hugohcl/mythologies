@@ -24,7 +24,7 @@ const TEAMS = {
     flavor:"Guerriers du Valhalla ! Odin a tracé votre saga sur les feuilles d'Yggdrasil. Le corbeau noir vole devant vous — suivez-le dans les rues de Dosches.",
     arrival:"Comme Sigurd de retour de sa quête, vos exploits seront chantés au mead-hall ce soir.",
     members:["Alex","Livia","Raphaël","Victor"],
-    color:"#c8c8c8", bg:"rgba(160,160,160,0.10)", border:"rgba(160,160,160,0.28)",
+    color:"#c8c8c8", colorLight:"#5a5a5a", bg:"rgba(160,160,160,0.10)", border:"rgba(160,160,160,0.28)",
     route:["mairie","salle","fresque","lavoir"]
   },
   hindou: {
@@ -49,7 +49,7 @@ const CPS = {
   fresque:{name:"La Fresque du portail",  icon:"🎨", addr:"", code:"NORD"},
   eglise: {name:"L'Église",              icon:"⛪", addr:"", code:"JEAN"},
   lavoir: {name:"Le Lavoir",             icon:"💧", addr:"", code:"ONDE"},
-  salle:  {name:"Salle Polyvalente",     icon:"🌹", addr:"", code:"ROSE"},
+  salle:  {name:"La Salle Polyvalente",   icon:"🌹", addr:"", code:"ROSE"},
   mairie: {name:"La Mairie",             icon:"🏛️", addr:"", code:"LOIS"},
   ferme:  {name:"La Ferme d'Octave",     icon:"🏡", addr:"Point de départ · 1 rue de la Fontaine des Champs", code:null}
 };
