@@ -89,6 +89,9 @@ body>*{position:relative;z-index:1}
 .scroll{flex:1;overflow-y:auto;padding:14px 16px calc(12px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch;position:relative;display:flex;flex-direction:column}
 .scroll::-webkit-scrollbar{display:none}
 .scroll-end{text-align:center;padding:8px 0 4px;opacity:.18;color:var(--gold);font-size:12px;letter-spacing:6px;flex-shrink:0;margin-top:auto}
+/* ── BOTTOM BAR ── */
+#bottomBar{position:fixed;bottom:0;left:0;right:0;z-index:100;text-align:center;padding:6px 0 calc(6px + env(safe-area-inset-bottom,0px));background:linear-gradient(0deg,var(--bg) 60%,transparent);pointer-events:none;display:none}
+#bottomBar .bb-inner{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--gold);opacity:.25;text-transform:uppercase}
 
 /* ── CHRONO BAR ── */
 .cbar{background:var(--bg2);border-bottom:1px solid rgba(255,255,255,.05);padding:9px 22px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
@@ -487,6 +490,7 @@ html.light #testOv .tov-val{color:#8a6010}
     <button class="tov-btn" onclick="deactivateMJ()" style="margin-top:4px;opacity:.6;font-size:9px">Désactiver MJ</button>
   </div>
 </div>
+<div id="bottomBar"><div class="bb-inner">MYTHOLOGIES</div></div>
 <div class="banner" style="background:var(--danger);color:#fff" id="banOnline">CONNEXION DÉTECTÉE — +30 MIN DE PÉNALITÉ</div>
 <div class="toast" style="background:rgba(192,57,43,.96)" id="toastR"></div>
 <div id="citOv">
