@@ -223,7 +223,7 @@ const CITS = {
 };
 
 const QUIZ = [
-  {t:"grec",    q:"Quel était le nom du cheval à 8 pattes d'Odin ?",          a:"Sleipnir"},
+  {t:"grec",    q:"Qui est le roi des dieux de l'Olympe ?",                    a:"Zeus"},
   {t:"grec",    q:"Quel fleuve des Enfers faisait oublier les mémoires ?",    a:"Le Léthé"},
   {t:"grec",    q:"Combien de travaux Héraclès devait-il accomplir ?",         a:"12"},
   {t:"grec",    q:"Qui a tué Achille d'une flèche dans le talon ?",            a:"Pâris"},

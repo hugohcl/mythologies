@@ -25,9 +25,10 @@ function syncMJOverlay() {
 var S = {
   team:null, idx:0, t0:null, pen:0, oh:{}, iv:null,
   onPen:false, plog:[], mjT:"grec", mjC:"fresque",
-  mjST:{}, mjEnd:{}, mjIv:null, pendingTeam:null, quizAnswers:{},
+  mjST:{}, mjEnd:{}, mjPen:{}, mjIv:null, pendingTeam:null, quizAnswers:{},
   cpTimes:[]
 };
+var _visitedScreens = {}; // Track which screens have been visited (for animation replay prevention)
 
 // ═══════════════════════════════════════════
 // PERSIST
@@ -59,12 +60,12 @@ function loadSaved() {
 }
 function clr() { try { localStorage.removeItem(LS_KEY); } catch(e) {} }
 function saveMJ() {
-  try { localStorage.setItem(LS_KEY+'_mj', JSON.stringify({mjST:S.mjST,mjEnd:S.mjEnd,quizAnswers:S.quizAnswers})); } catch(e) {}
+  try { localStorage.setItem(LS_KEY+'_mj', JSON.stringify({mjST:S.mjST,mjEnd:S.mjEnd,mjPen:S.mjPen,quizAnswers:S.quizAnswers})); } catch(e) {}
 }
 function loadMJ() {
   try {
     var d = JSON.parse(localStorage.getItem(LS_KEY+'_mj')||'null');
-    if (d) { S.mjST=d.mjST||{}; S.mjEnd=d.mjEnd||{}; S.quizAnswers=d.quizAnswers||{}; }
+    if (d) { S.mjST=d.mjST||{}; S.mjEnd=d.mjEnd||{}; S.mjPen=d.mjPen||{}; S.quizAnswers=d.quizAnswers||{}; }
   } catch(e) {}
 }
 
@@ -75,17 +76,26 @@ var _TR={sSplash:'tr-fade',s4:'tr-zoom',s9:'tr-fade',sEnigme:'tr-up',s7:'tr-up'}
 function go(id, dir) {
   var trClass=_TR[id]||'';
   // Mark visible screen for directional exit before hiding
-  if (dir === 'forward') {
-    document.querySelectorAll('.screen:not(.hidden)').forEach(function(s){
-      s.classList.add('exit-forward');
-    });
-  }
+  document.querySelectorAll('.screen:not(.hidden)').forEach(function(s){
+    if (dir === 'forward') s.classList.add('exit-forward');
+    else if (dir === 'back') s.classList.add('exit-back');
+  });
   document.querySelectorAll('.screen').forEach(function(s){
     s.classList.add('hidden');
     s.classList.remove('tr-up','tr-zoom','tr-fade');
   });
   var el = document.getElementById(id);
-  if (el) { if(trClass) el.classList.add(trClass); el.classList.remove('hidden', 'exit-forward'); }
+  if (el) {
+    if(trClass) el.classList.add(trClass);
+    // For back navigation, slide in from left
+    if (dir === 'back' && !trClass) el.classList.add('slide-back');
+    el.classList.remove('hidden', 'exit-forward', 'exit-back');
+    // Remove slide-back class after transition completes
+    if (dir === 'back') setTimeout(function(){ el.classList.remove('slide-back'); }, 500);
+    // Prevent animation replay on revisited screens
+    if (_visitedScreens[id]) el.classList.add('revisit');
+    else { _visitedScreens[id] = true; el.classList.remove('revisit'); }
+  }
   var bt = document.getElementById('btnTheme');
   if (bt) bt.style.display = 'flex';
   // Show help drawer on game screens only
@@ -97,7 +107,7 @@ function go(id, dir) {
   showPhotoBtn(photoScreens.indexOf(id) >= 0);
   // Clean exit class after transition
   setTimeout(function(){
-    document.querySelectorAll('.exit-forward').forEach(function(s){ s.classList.remove('exit-forward'); });
+    document.querySelectorAll('.exit-forward,.exit-back').forEach(function(s){ s.classList.remove('exit-forward','exit-back'); });
   }, 500);
 }
 
@@ -198,7 +208,9 @@ var VIB = {
   hint:      [40, 30, 40],               // ·· (gentle double tap)
   arrival:   [80, 40, 80, 40, 200, 80, 300], // ··—·——— (fanfare)
   map:       [200, 80, 200],             // —·— (alert)
-  countdown: [50]                        // · (tick)
+  countdown: [50],                       // · (tick)
+  codeOk:    [30, 20, 30, 20, 80, 40, 150], // ··—·—— (code validated celebration)
+  badDest:   [150, 50, 150]             // —·— (wrong destination)
 };
 
 // ═══════════════════════════════════════════
@@ -235,7 +247,8 @@ function launchConfetti() {
   canvas.height = window.innerHeight;
   canvas.style.display = 'block';
   var ctx = canvas.getContext('2d');
-  var colors = ['#C9A84C','#5a8fd4','#c080e8','#c8c8c8','#d07030','#27ae60'];
+  var tc = S.team ? teamColor(S.team) : '#C9A84C';
+  var colors = ['#C9A84C','#C9A84C','#C9A84C','#e8c46a','#e8c46a',tc,tc,'#fff'];
   var particles = [];
   for (var i = 0; i < 140; i++) {
     particles.push({
@@ -294,6 +307,13 @@ function launchConfetti() {
 // ═══════════════════════════════════════════
 // BADGES (feature 9)
 // ═══════════════════════════════════════════
+function badgeShield(numeral, color) {
+  return '<svg width="56" height="64" viewBox="0 0 56 64" fill="none" xmlns="http://www.w3.org/2000/svg">'
+    +'<path d="M28 2L4 12V32C4 48 28 62 28 62S52 48 52 32V12L28 2Z" fill="'+(color||'var(--gold)')+'" fill-opacity=".12" stroke="'+(color||'var(--gold)')+'" stroke-width="2"/>'
+    +'<path d="M28 8L10 16V32C10 44 28 56 28 56S46 44 46 32V16L28 8Z" fill="'+(color||'var(--gold)')+'" fill-opacity=".06"/>'
+    +'<text x="28" y="40" text-anchor="middle" fill="'+(color||'var(--gold)')+'" font-family="Cinzel,serif" font-size="20" font-weight="700">'+numeral+'</text>'
+    +'</svg>';
+}
 var BADGES = {
   grec: [
     {max:25, icon:'I', title:'Foudre de Zeus', desc:'Vitesse divine — les dieux sont impressionnés.'},
@@ -793,7 +813,7 @@ function validateCode() {
     S.cpTimes.push({cp:cpk, t:Date.now()});
     if(document.activeElement) document.activeElement.blur();
     flashSuccess();
-    vibrate(VIB.success);
+    vibrate(VIB.codeOk);
     setTimeout(function(){ showCit(S.team.key); },50);
     // Si c'est le dernier CP, aller directement au retour ferme (pas d'indices)
     var isLast = (S.idx >= S.team.route.length - 1);
@@ -904,7 +924,7 @@ function confirmDest(inputId, errId, nextKey, onSuccess) {
   else {
     addP(1,'Mauvaise destination');
     if(err) err.textContent='Mauvaise destination — +1 min';
-    vibrate(VIB.penalty);
+    vibrate(VIB.badDest);
     inp.value='';
   }
 }
@@ -945,7 +965,7 @@ function showReturnHome() {
 function showArrival() {
   stopC(); var t=S.team; th(t);
   var endTime=Date.now();
-  S.mjEnd[t.key]=endTime; saveMJ();
+  S.mjEnd[t.key]=endTime; S.mjPen[t.key]=S.pen; saveMJ();
   var el=endTime-S.t0, tot=el/60000+S.pen;
   var tc=teamColor(t);
   setText('s9team',   t.name); setStyle('s9team','color',tc);
@@ -954,7 +974,7 @@ function showArrival() {
   var badge = getBadge(t.key, tot);
   setText('s9flavor', '');
   var flavorEl = document.getElementById('s9flavor');
-  if (flavorEl) flavorEl.innerHTML = '<div class="badge-wrap"><div class="badge-icon">' + badge.icon + '</div>'
+  if (flavorEl) flavorEl.innerHTML = '<div class="badge-wrap"><div class="badge-icon">' + badgeShield(badge.icon, tc) + '</div>'
     + '<div class="badge-title" style="color:' + tc + '">' + badge.title + '</div>'
     + '<div class="badge-desc">' + badge.desc + '</div></div>';
   var rows=S.plog.map(function(p){
@@ -1007,8 +1027,8 @@ function showArrival() {
 function resetGame() {
   stopC();
   // Préserver les données MJ entre les équipes
-  var mjST = S.mjST, mjEnd = S.mjEnd, quizAnswers = S.quizAnswers, mjT = S.mjT, mjC = S.mjC, mjIv = S.mjIv;
-  S={team:null,idx:0,t0:null,pen:0,oh:{},iv:null,onPen:false,plog:[],mjT:mjT,mjC:mjC,mjST:mjST,mjEnd:mjEnd,mjIv:mjIv,pendingTeam:null,quizAnswers:quizAnswers,cpTimes:[]};
+  var mjST = S.mjST, mjEnd = S.mjEnd, mjPen = S.mjPen, quizAnswers = S.quizAnswers, mjT = S.mjT, mjC = S.mjC, mjIv = S.mjIv;
+  S={team:null,idx:0,t0:null,pen:0,oh:{},iv:null,onPen:false,plog:[],mjT:mjT,mjC:mjC,mjST:mjST,mjEnd:mjEnd,mjPen:mjPen,mjIv:mjIv,pendingTeam:null,quizAnswers:quizAnswers,cpTimes:[]};
   clr(); saveMJ(); th(null);
   _mapUsed = false; _photoUsed = {};
   syncMJOverlay();
@@ -1062,7 +1082,7 @@ function loginMJ() {
 }
 
 function switchMJTab(tab) {
-  ['live','indices','quiz','lb'].forEach(function(t){
+  ['live','indices'].forEach(function(t){
     var p=document.getElementById('mjPane'+t.charAt(0).toUpperCase()+t.slice(1));
     var b=document.getElementById('mjTab'+t.charAt(0).toUpperCase()+t.slice(1));
     if(p) p.style.display=(t===tab)?'':'none';
@@ -1071,8 +1091,6 @@ function switchMJTab(tab) {
       else{b.style.color='';b.style.borderColor='';b.style.background='';}
     }
   });
-  if(tab==='quiz') renderQuiz();
-  if(tab==='lb')   renderLB();
 }
 
 function renderQuiz() {
@@ -1110,12 +1128,14 @@ function renderLB() {
   var now=Date.now();
   var entries=Object.keys(TEAMS).map(function(k){
     var t=TEAMS[k], st=S.mjST[k], end=S.mjEnd[k];
+    var pen=S.mjPen[k]||0;
     var qBonus=QUIZ.filter(function(q,i){return q.t===k&&S.quizAnswers[i]===true;}).length*0.5;
     var elapsed=st?(end?(end-st):(now-st)):null;
-    return {t:t,elapsed:elapsed,qBonus:qBonus,done:!!end};
+    var score=elapsed?(elapsed/60000+pen-qBonus):null;
+    return {t:t,key:k,elapsed:elapsed,pen:pen,qBonus:qBonus,score:score,done:!!end};
   });
   entries.sort(function(a,b){
-    if(a.done&&b.done) return a.elapsed-b.elapsed;
+    if(a.done&&b.done) return a.score-b.score;
     if(a.done) return -1; if(b.done) return 1;
     if(a.elapsed&&b.elapsed) return a.elapsed-b.elapsed;
     if(a.elapsed) return -1; if(b.elapsed) return 1; return 0;
@@ -1124,11 +1144,54 @@ function renderLB() {
   el.innerHTML=entries.map(function(e,i){
     var ts=e.elapsed?fmt(e.elapsed):'—';
     var status=e.done?'Terminé':e.elapsed?'En cours':'Pas encore parti';
+    var details=status;
+    if(e.done) details=e.score.toFixed(1)+' min (chrono '+fmt(e.elapsed)+' +'+e.pen+'min -'+e.qBonus.toFixed(1)+'min quiz)';
+    else if(e.elapsed) details='En cours · '+ts;
     return '<div class="lbrow"><div style="font-family:Cinzel,serif;font-size:18px;width:28px;text-align:center;flex-shrink:0">'+(i<3?medals[i]:(i+1)+'.')+'</div>'
       +'<div style="flex:1"><div style="font-family:Cinzel,serif;font-size:13px;margin-bottom:2px;color:'+e.t.color+'">'+e.t.name+'</div>'
-      +'<div style="font-size:12px;color:var(--muted)">'+status+' · bonus -'+e.qBonus.toFixed(1)+' min</div></div>'
-      +'<div style="font-family:Cinzel,serif;font-size:16px;color:'+e.t.color+'">'+ts+'</div></div>';
+      +'<div style="font-size:12px;color:var(--muted)">'+details+'</div></div>'
+      +'<div style="font-family:Cinzel,serif;font-size:16px;color:'+e.t.color+'">'+(e.done?e.score.toFixed(1):ts)+'</div></div>';
   }).join('');
+}
+
+function exportResults() {
+  var now=Date.now();
+  var lines=['MYTHOLOGIES — Résultats',''];
+  var entries=Object.keys(TEAMS).map(function(k){
+    var t=TEAMS[k], st=S.mjST[k], end=S.mjEnd[k];
+    var pen=S.mjPen[k]||0;
+    var qBonus=QUIZ.filter(function(q,i){return q.t===k&&S.quizAnswers[i]===true;}).length*0.5;
+    var elapsed=st?(end?(end-st):(now-st)):null;
+    var score=elapsed?(elapsed/60000+pen-qBonus):null;
+    return {t:t,elapsed:elapsed,pen:pen,qBonus:qBonus,score:score,done:!!end};
+  });
+  entries.sort(function(a,b){
+    if(a.done&&b.done) return a.score-b.score;
+    if(a.done) return -1; if(b.done) return 1;
+    return 0;
+  });
+  entries.forEach(function(e,i){
+    if(e.done){
+      lines.push((i+1)+'. '+e.t.name+' — '+e.score.toFixed(1)+' min');
+      lines.push('   Chrono: '+fmt(e.elapsed)+' | Pénalités: +'+e.pen+' min | Quiz: -'+e.qBonus.toFixed(1)+' min');
+    } else if(e.elapsed){
+      lines.push((i+1)+'. '+e.t.name+' — En cours ('+fmt(e.elapsed)+')');
+    } else {
+      lines.push((i+1)+'. '+e.t.name+' — Pas encore parti');
+    }
+  });
+  var text=lines.join('\n');
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      toast('Résultats copiés !');
+    }).catch(function(){ fallbackCopy(text); });
+  } else { fallbackCopy(text); }
+}
+function fallbackCopy(text){
+  var ta=document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0';
+  document.body.appendChild(ta); ta.select();
+  try{document.execCommand('copy'); toast('Résultats copiés !');}catch(e){toast('Erreur copie');}
+  ta.remove();
 }
 
 function openMJ() {
@@ -1534,6 +1597,7 @@ document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setTe
 document.getElementById('btnMJLogin').onclick  = function(){ loginMJ(); };
 document.getElementById('btnMJBack').onclick   = function(){ go('s1','back'); };
 document.getElementById('btnMJHome').onclick   = function(){ go('s1','back'); };
+document.getElementById('btnExport').onclick   = function(){ exportResults(); };
 // btnReset removed — teams cannot change after finishing
 document.getElementById('btnTestMode').onclick = function(){ renderTestTeamTabs(); go('sTest','forward'); };
 document.getElementById('btnS9Test').onclick = function(){ renderTestTeamTabs(); go('sTest','forward'); };
