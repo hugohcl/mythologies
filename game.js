@@ -108,7 +108,7 @@ function go(id, dir) {
   // Bottom bar on scrollable game screens
   var bbScreens = ['s3','s5','sEnigme','s7','s8','s9'];
   var bb = document.getElementById('bottomBar');
-  if (bb) bb.style.display = bbScreens.indexOf(id) >= 0 ? '' : 'none';
+  if (bb) bb.style.display = bbScreens.indexOf(id) >= 0 ? 'block' : 'none';
   // Clean exit class after transition
   setTimeout(function(){
     document.querySelectorAll('.exit-forward,.exit-back').forEach(function(s){ s.classList.remove('exit-forward','exit-back'); });
