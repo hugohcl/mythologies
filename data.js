@@ -48,7 +48,8 @@ const ENIGMES = {
   eglise: "[PLACEHOLDER — à compléter après repérage vendredi]",
   lavoir: "[PLACEHOLDER — à compléter après repérage vendredi]",
   salle:  "[PLACEHOLDER — à compléter après repérage vendredi]",
-  mairie: "[PLACEHOLDER — à compléter après repérage vendredi]"
+  mairie: "[PLACEHOLDER — à compléter après repérage vendredi]",
+  ferme:  "[PLACEHOLDER — énigme d'arrivée à la Ferme d'Octave]"
 };
 
 const CPS = {

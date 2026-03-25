@@ -300,8 +300,15 @@ function launchConfetti() {
     if (alive > 0) {
       requestAnimationFrame(draw);
     } else {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      canvas.style.display = 'none';
+      // Fade out canvas smoothly
+      canvas.style.transition = 'opacity 1.5s ease-out';
+      canvas.style.opacity = '0';
+      setTimeout(function() {
+        canvas.style.display = 'none';
+        canvas.style.opacity = '1';
+        canvas.style.transition = '';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }, 1500);
     }
   }
   draw();
