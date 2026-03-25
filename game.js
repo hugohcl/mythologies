@@ -105,10 +105,6 @@ function go(id, dir) {
   // Show photo button only on enigme/code screens
   var photoScreens = ['sEnigme','s7'];
   showPhotoBtn(photoScreens.indexOf(id) >= 0);
-  // Bottom bar on scrollable game screens
-  var bbScreens = ['s3','s5','sEnigme','s7','s8','s9'];
-  var bb = document.getElementById('bottomBar');
-  if (bb) bb.style.display = bbScreens.indexOf(id) >= 0 ? 'block' : 'none';
   // Clean exit class after transition
   setTimeout(function(){
     document.querySelectorAll('.exit-forward,.exit-back').forEach(function(s){ s.classList.remove('exit-forward','exit-back'); });
@@ -312,9 +308,9 @@ function launchConfetti() {
 // BADGES (feature 9)
 // ═══════════════════════════════════════════
 function badgeShield(numeral, color) {
-  return '<svg width="56" height="64" viewBox="0 0 56 64" fill="none" xmlns="http://www.w3.org/2000/svg">'
-    +'<path d="M28 2L4 12V32C4 48 28 62 28 62S52 48 52 32V12L28 2Z" fill="'+(color||'var(--gold)')+'" fill-opacity=".12" stroke="'+(color||'var(--gold)')+'" stroke-width="2"/>'
-    +'<path d="M28 8L10 16V32C10 44 28 56 28 56S46 44 46 32V16L28 8Z" fill="'+(color||'var(--gold)')+'" fill-opacity=".06"/>'
+  return '<svg width="72" height="82" viewBox="0 0 56 64" fill="none" xmlns="http://www.w3.org/2000/svg">'
+    +'<path d="M28 2L4 12V32C4 48 28 62 28 62S52 48 52 32V12L28 2Z" fill="'+(color||'var(--gold)')+'" fill-opacity=".15" stroke="'+(color||'var(--gold)')+'" stroke-width="2"/>'
+    +'<path d="M28 8L10 16V32C10 44 28 56 28 56S46 44 46 32V16L28 8Z" fill="'+(color||'var(--gold)')+'" fill-opacity=".08"/>'
     +'<text x="28" y="40" text-anchor="middle" fill="'+(color||'var(--gold)')+'" font-family="Cinzel,serif" font-size="20" font-weight="700">'+numeral+'</text>'
     +'</svg>';
 }
@@ -473,7 +469,7 @@ function tick() {
 }
 function startC() { S.t0=Date.now(); S.iv=setInterval(tick,1000); acquireWakeLock(); }
 function stopC()  { if(S.iv) clearInterval(S.iv); }
-function curCP()  { return S.team.route[S.idx]; }
+function curCP()  { return S.idx < S.team.route.length ? S.team.route[S.idx] : 'ferme'; }
 function nextK()  { return S.idx>=S.team.route.length-1 ? 'ferme' : S.team.route[S.idx+1]; }
 
 function mkSteps(id, offset) {
@@ -516,10 +512,9 @@ function mkSteps(id, offset) {
     track.appendChild(mk);
   }
   el.appendChild(track);
-  // Re-enable transition after first paint
-  requestAnimationFrame(function(){ requestAnimationFrame(function(){
-    fill.style.transition = '';
-  }); });
+  // Force synchronous layout then re-enable transition
+  void fill.offsetWidth;
+  fill.style.transition = '';
 }
 
 function showCit(tk) {
@@ -761,6 +756,9 @@ function showCode(cpk) {
   setText('s7title',  t.name);
   var s7cpEl=document.getElementById('s7cpName'); if(s7cpEl) s7cpEl.innerHTML=(cp.icon?'<img class="cp-img sm" src="'+cp.icon+'"> ':'')+cp.name;
   setText('s7cpAddr', cp.addr);
+  // Update subtitle for ferme arrival code
+  var s7sub=document.querySelector('#s7 .hdr .hs');
+  if(s7sub) s7sub.textContent = cpk==='ferme' ? 'Code d\'arrivée' : 'Entrez le code de la cachette';
   setText('codeErr',  '');
   mkSteps('st7');
   buildCodeRow();
@@ -819,12 +817,17 @@ function validateCode() {
     flashSuccess();
     vibrate(VIB.codeOk);
     setTimeout(function(){ showCit(S.team.key); },50);
-    // Si c'est le dernier CP, aller directement au retour ferme (pas d'indices)
-    var isLast = (S.idx >= S.team.route.length - 1);
-    setTimeout(function(){
-      if(isLast){ S.idx++; save(); showReturnHome(); }
-      else { showHintsScreen(cpk); }
-    },700);
+    // Si c'est le code FINI à la ferme, aller à l'arrivée
+    if(cpk === 'ferme'){
+      setTimeout(function(){ save(); showArrival(); },700);
+    } else {
+      // Si c'est le dernier CP, aller au retour ferme (code FINI)
+      var isLast = (S.idx >= S.team.route.length - 1);
+      setTimeout(function(){
+        if(isLast){ S.idx++; save(); showReturnHome(); }
+        else { showHintsScreen(cpk); }
+      },700);
+    }
   } else {
     for(var i=0;i<4;i++){
       (function(el){ el.classList.add('err'); setTimeout(function(){ el.classList.remove('err'); },300); })(row.children[i]);
@@ -960,7 +963,7 @@ function showReturnHome() {
   var s6 = document.getElementById('s6');
   var backBtn = document.getElementById('btnEnRouteBack');
   if (backBtn) backBtn.style.display = 'none';
-  s6.onclick = function(e) { s6.onclick = null; if (backBtn) backBtn.style.display = ''; showArrival(); };
+  s6.onclick = function(e) { s6.onclick = null; if (backBtn) backBtn.style.display = ''; showCode('ferme'); };
 }
 
 // ═══════════════════════════════════════════
@@ -978,7 +981,9 @@ function showArrival() {
   var badge = getBadge(t.key, tot);
   setText('s9flavor', '');
   var flavorEl = document.getElementById('s9flavor');
-  if (flavorEl) flavorEl.innerHTML = '<div class="badge-wrap"><div class="badge-icon">' + badgeShield(badge.icon, tc) + '</div>'
+  if (flavorEl) flavorEl.innerHTML = '<div class="badge-wrap">'
+    + '<div style="font-family:Cinzel,serif;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Rang obtenu</div>'
+    + '<div class="badge-icon">' + badgeShield(badge.icon, tc) + '</div>'
     + '<div class="badge-title" style="color:' + tc + '">' + badge.title + '</div>'
     + '<div class="badge-desc">' + badge.desc + '</div></div>';
   var rows=S.plog.map(function(p){
@@ -1326,18 +1331,22 @@ function hardPass() {
     // Skip first destination input → go to first checkpoint
     showEnRoute(S.team.route[0]);
   } else if (id === 's6') {
-    // If returning to ferme (last stage), go to arrival
-    if (S.idx >= S.team.route.length) { showArrival(); }
+    // If returning to ferme (last stage), go to code entry for FINI
+    if (S.idx >= S.team.route.length) { showCode('ferme'); }
     else { showEnigme(curCP()); }
   } else if (id === 'sEnigme') {
     // Skip enigme → show code entry
     showCode(curCP());
   } else if (id === 's7') {
     // Auto-validate code + advance
-    S.cpTimes.push({ cp: curCP(), t: Date.now() });
-    var isLast = (S.idx >= S.team.route.length - 1);
-    if (isLast) { S.idx++; save(); showReturnHome(); }
-    else { showHintsScreen(curCP()); }
+    var cpk = curCP();
+    S.cpTimes.push({ cp: cpk, t: Date.now() });
+    if (cpk === 'ferme') { save(); showArrival(); }
+    else {
+      var isLast = (S.idx >= S.team.route.length - 1);
+      if (isLast) { S.idx++; save(); showReturnHome(); }
+      else { showHintsScreen(cpk); }
+    }
   } else if (id === 's8') {
     // Skip destination input → advance to next checkpoint
     S.idx++; save();
@@ -1598,6 +1607,10 @@ document.getElementById('btnPhotoConfirm').onclick = function(){
 };
 document.getElementById('btnClosePhoto').onclick = function(){ closePhoto(); };
 document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
+document.getElementById('btnMJFloat').onclick = function(){
+  if(_mjMode){ openMJ(); }
+  else { buildMJRow(); setText('mjErr',''); go('s10','forward'); }
+};
 document.getElementById('btnMJLogin').onclick  = function(){ loginMJ(); };
 document.getElementById('btnMJBack').onclick   = function(){ go('s1','back'); };
 document.getElementById('btnMJHome').onclick   = function(){ go('s1','back'); };
@@ -1663,10 +1676,11 @@ if (saved && S.team && S.t0) {
   th(S.team);
   S.iv = setInterval(tick, 1000);
   var _done = S.idx >= S.team.route.length;
-  if      (saved==='s9' || _done) showArrival();
+  if      (saved==='s9') showArrival();
   else if (saved==='s8')       showHintsScreen(curCP());
   else if (saved==='s7')       showCode(curCP());
   else if (saved==='sEnigme')  showEnigme(curCP());
+  else if (saved==='s6' && _done) showReturnHome();
   else if (saved==='s5')       showS5();
   else { th(null); go('s1'); }
   setTimeout(function(){ toast('Partie reprise — '+S.team.name); }, 400);
