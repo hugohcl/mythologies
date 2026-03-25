@@ -1464,6 +1464,34 @@ function openMap() {
   doOpenMap();
 }
 
+function drawMapOnCanvas() {
+  var img = document.getElementById('mapImg');
+  var canvas = document.getElementById('mapCanvas');
+  if (!canvas || !img || !img.naturalWidth) return;
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var isPortrait = vh > vw;
+  canvas.width = vw; canvas.height = vh;
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, vw, vh);
+  if (isPortrait) {
+    // Rotate image 90° CCW to fill portrait screen
+    ctx.save();
+    ctx.translate(0, vh);
+    ctx.rotate(-Math.PI / 2);
+    // Now drawing in rotated space: width=vh, height=vw
+    var scale = Math.min(vh / img.naturalWidth, vw / img.naturalHeight);
+    var dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
+    var dx = (vh - dw) / 2, dy = (vw - dh) / 2;
+    ctx.drawImage(img, dx, dy, dw, dh);
+    ctx.restore();
+  } else {
+    var scale = Math.min(vw / img.naturalWidth, vh / img.naturalHeight);
+    var dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
+    var dx = (vw - dw) / 2, dy = (vh - dh) / 2;
+    ctx.drawImage(img, dx, dy, dw, dh);
+  }
+}
+
 function doOpenMap() {
   _mapUsed = true;
   addP(15, 'Carte consultée');
@@ -1475,6 +1503,10 @@ function doOpenMap() {
   var ov = document.getElementById('mapOverlay');
   if (!ov) return;
   ov.style.display = 'flex';
+  // Draw map on canvas (rotated in portrait)
+  var img = document.getElementById('mapImg');
+  if (img && img.complete && img.naturalWidth) { drawMapOnCanvas(); }
+  else if (img) { img.onload = function(){ drawMapOnCanvas(); }; }
   var timer = document.getElementById('mapTimer');
   var sec = 5;
   if (timer) timer.textContent = sec;

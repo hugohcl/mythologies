@@ -437,7 +437,7 @@ html.light #testOv .tov-val{color:#8a6010}
       <div>Consultable <strong style="color:var(--gold)">une seule fois</strong></div>
       <div>Pénalité de <strong style="color:var(--danger)">+15 minutes</strong></div>
     </div>
-    <div style="font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/></svg><span>Tournez votre téléphone en paysage</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></div>
+    <div style="font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="transform:rotate(90deg)"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/></svg><span>Tournez le téléphone vers la gauche</span></div>
     <div style="display:flex;gap:10px;justify-content:center">
       <button id="btnMapCancel" class="btn bt" style="flex:1;max-width:140px">Annuler</button>
       <button id="btnMapConfirm" class="btn bred" style="flex:1;max-width:140px">Consulter</button>
@@ -445,11 +445,11 @@ html.light #testOv .tov-val{color:#8a6010}
   </div>
 </div>
 <!-- MAP OVERLAY -->
-<div id="mapOverlay" style="position:fixed;inset:0;z-index:5000;background:rgba(6,4,2,.97);display:none;flex-direction:column;justify-content:center;align-items:center;padding:0">
-  <div id="mapImgWrap" style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom">
-    <img id="mapImg" src="Carte.png" alt="Carte du village" style="max-width:100%;max-height:100%;object-fit:contain" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\'text-align:center;color:var(--muted);font-style:italic;padding:40px\'>Carte non disponible</div>'">
-  </div>
-  <div id="mapTimer" style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:24px;color:var(--gold);letter-spacing:3px;background:rgba(6,4,2,.8);padding:4px 16px;border-radius:20px;border:1px solid rgba(201,168,76,.3)">5</div>
+<div id="mapOverlay" style="position:fixed;inset:0;z-index:5000;background:rgba(6,4,2,.97);display:none;justify-content:center;align-items:center">
+  <div id="mapImgWrap" style="display:flex;align-items:center;justify-content:center;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom"></div>
+  <img id="mapImg" src="Carte.png" alt="Carte du village" style="display:none" onerror="this.dataset.broken='1'">
+  <canvas id="mapCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%"></canvas>
+  <div id="mapTimer" style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:24px;color:var(--gold);letter-spacing:3px;background:rgba(6,4,2,.8);padding:4px 16px;border-radius:20px;border:1px solid rgba(201,168,76,.3);z-index:1">5</div>
 </div>
 <!-- PHOTO CONFIRM -->
 <div id="photoConfirm" style="position:fixed;inset:0;z-index:5500;background:rgba(6,4,2,.92);display:none;flex-direction:column;justify-content:center;align-items:center;padding:28px">
