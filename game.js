@@ -90,6 +90,9 @@ function go(id, dir) {
     // For back navigation, slide in from left
     if (dir === 'back' && !trClass) el.classList.add('slide-back');
     el.classList.remove('hidden', 'exit-forward', 'exit-back');
+    // Scroll to top on screen change
+    var sc = el.querySelector('.scroll');
+    if (sc) sc.scrollTop = 0;
     // Remove slide-back class after transition completes
     if (dir === 'back') setTimeout(function(){ el.classList.remove('slide-back'); }, 500);
     // Prevent animation replay on revisited screens
@@ -603,7 +606,7 @@ function renderTeams() {
     var nm=document.createElement('div'); nm.className='tn'; nm.style.color=tc; nm.textContent=t.name;
 
     var tag=document.createElement('div');
-    tag.style.cssText='font-size:12px;font-style:italic;color:'+tc+';opacity:.75;margin-bottom:6px';
+    tag.style.cssText='font-size:13px;font-style:italic;color:'+tc+';opacity:.85;margin-bottom:6px';
     tag.textContent=t.tagline;
 
     var mem=document.createElement('div'); mem.className='tm'; mem.textContent=t.members.join(' · ');
@@ -1393,6 +1396,7 @@ function toggleTheme() {
     : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
   // Re-apply team color for light/dark switch
   if (S.team) th(S.team);
+  renderTeams();
 }
 
 // ═══════════════════════════════════════════

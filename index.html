@@ -115,7 +115,7 @@ body>*{position:relative;z-index:1}
 .tcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px 0 0 2px}
 .tcard:active{transform:scale(.985);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
 .tn{font-family:'Cinzel',serif;font-size:20px;margin-bottom:3px;letter-spacing:.5px}
-.tm{font-size:14px;color:var(--muted);margin-bottom:9px}
+.tm{font-size:15px;color:var(--muted);margin-bottom:9px}
 .tbg{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:5px 12px;font-size:12px;background:rgba(255,255,255,.04);color:var(--muted)}
 
 /* ── BUTTONS ── */
@@ -226,7 +226,7 @@ body>*{position:relative;z-index:1}
 #s11 #btnTestMode{margin-top:auto}
 
 /* ── SAFE AREA (non-scroll centered screens) ── */
-#s2,#s4,#s6{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom,0)}
+#s2,#s4{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom,0)}
 
 /* ── MJ / QUIZ / LB ── */
 .qrow{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);gap:8px}
@@ -310,7 +310,7 @@ body>*{position:relative;z-index:1}
 html.light{
   background:#f5f0e6;
   --bg:#f5f0e6;--bg2:#ede5d4;--bg3:#e3d9c6;
-  --text:#2a1e0e;--muted:#7a6040;--muted2:#5a4020;
+  --text:#1a0e00;--muted:#5a4020;--muted2:#3a2010;
   --gold:#8a6010;--gold2:#a07020;
   --gd:rgba(138,96,16,.09);--gb:rgba(138,96,16,.26);
   --glow:0 0 18px rgba(138,96,16,.3);--shadow-gold:0 0 28px rgba(138,96,16,.2);
@@ -329,7 +329,9 @@ html.light .hcard{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.08)}
 html.light .hbody{background:rgba(0,0,0,.04);border-top-color:rgba(0,0,0,.07)}
 html.light .hbtn{background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.11);color:var(--muted)}
 html.light .cph{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.12)}
-html.light .tcard{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.09)}
+html.light .tcard{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12)}
+html.light .tn{color:#1a0e00}
+html.light .tm{color:#4a3020}
 html.light .tbg{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.11);color:var(--muted)}
 html.light .btn.bgh{border-color:rgba(0,0,0,.14);color:var(--muted)}
 html.light .btn.bt{background:rgba(138,96,16,.1);border-color:rgba(138,96,16,.38)}
@@ -508,7 +510,9 @@ html.light #testOv .tov-val{color:#8a6010}
 <!-- S1: ÉQUIPES -->
 <div class="screen hidden" id="s1">
   <div class="s1-hero">
-    <div class="s1-title">MYTHOLOGIES</div>
+    <div style="width:36px;flex-shrink:0"></div>
+    <div class="s1-title" style="flex:1;text-align:center">MYTHOLOGIES</div>
+    <div style="width:36px;flex-shrink:0"></div>
   </div>
   <div class="scroll">
     <div style="text-align:center;margin:8px 0 12px">

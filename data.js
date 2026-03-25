@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════
 const MJ_CODE = "ZEUS";
 const LS_KEY  = "myth_v5";
-const APP_VERSION = '3.4.1';
+const APP_VERSION = '3.4.2';
 const EVENT_DATE     = '29 mars 2025';
 const EVENT_LOCATION = 'Dosches';
 
@@ -16,7 +16,7 @@ const TEAMS = {
     flavor:"Ô héros d'Athéna ! Comme Ulysse, vous voilà lancés dans une odyssée champenoise, boussole en main, sous le regard bienveillant de la chouette de la sagesse.",
     arrival:"Comme Ulysse retrouvant Ithaque après vingt ans d'errance, votre odyssée s'achève ici.",
     members:["Antoine","Bastien","Matthieu","Thomas"],
-    color:"#5a8fd4", bg:"rgba(90,143,212,0.12)", border:"rgba(90,143,212,0.32)",
+    color:"#5a8fd4", colorLight:"#2a5a9a", bg:"rgba(90,143,212,0.12)", border:"rgba(90,143,212,0.32)",
     route:["fresque","eglise","lavoir","salle"],
     emblem:'./emblem-grec.webp',
     bgTexture:'./bg-grec.webp'
@@ -36,7 +36,7 @@ const TEAMS = {
     flavor:"Disciples du Dharma ! Le tigre sacré ouvre la voie. Chaque checkpoint est une étape de votre yatra — votre pèlerinage champenois vers le moksha.",
     arrival:"Votre yatra s'achève. Le moksha vous attend — repos mérité après ce périple.",
     members:["Axel","Jade","LG","Patrick"],
-    color:"#c080e8", bg:"rgba(160,80,200,0.12)", border:"rgba(160,80,200,0.32)",
+    color:"#c080e8", colorLight:"#7a3aa0", bg:"rgba(160,80,200,0.12)", border:"rgba(160,80,200,0.32)",
     route:["lavoir","mairie","eglise","fresque"],
     emblem:'./emblem-hindou.webp',
     bgTexture:'./bg-hindou.webp'
