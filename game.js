@@ -1474,10 +1474,10 @@ function drawMapOnCanvas() {
   var ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, vw, vh);
   if (isPortrait) {
-    // Rotate image 90° CCW to fill portrait screen
+    // Rotate image 90° CW so it reads correctly when phone is turned left
     ctx.save();
-    ctx.translate(0, vh);
-    ctx.rotate(-Math.PI / 2);
+    ctx.translate(vw, 0);
+    ctx.rotate(Math.PI / 2);
     // Now drawing in rotated space: width=vh, height=vw
     var scale = Math.min(vh / img.naturalWidth, vw / img.naturalHeight);
     var dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
