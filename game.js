@@ -978,7 +978,7 @@ function showArrival() {
   var flavorEl = document.getElementById('s9flavor');
   if (flavorEl) flavorEl.innerHTML = '<div class="badge-wrap">'
     + '<div style="font-family:Cinzel,serif;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Rang obtenu</div>'
-    + '<div class="badge-icon">' + badgeShield(badge.icon, tc) + '</div>'
+    + '<div class="badge-icon"><img src="./badge.png" alt="Badge" style="width:120px;height:120px;object-fit:contain;mix-blend-mode:screen;border-radius:12px"></div>'
     + '<div class="badge-title" style="color:' + tc + '">' + badge.title + '</div>'
     + '<div class="badge-desc">' + badge.desc + '</div></div>';
   var rows=S.plog.map(function(p){
