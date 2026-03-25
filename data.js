@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════
 const MJ_CODE = "ZEUS";
 const LS_KEY  = "myth_v5";
-const APP_VERSION = '3.2.2';
+const APP_VERSION = '3.3.0';
 const EVENT_DATE     = '29 mars 2025';
 const EVENT_LOCATION = 'Dosches';
 
@@ -57,7 +57,7 @@ const CPS = {
   lavoir: {name:"Le Lavoir",             icon:"./cp-lavoir.webp", addr:"", code:"ONDE"},
   salle:  {name:"La Salle Polyvalente",   icon:"./cp-salle.webp", addr:"", code:"ROSE"},
   mairie: {name:"La Mairie",             icon:"./cp-mairie.webp", addr:"", code:"LOIS"},
-  ferme:  {name:"La Ferme d'Octave",     icon:"", addr:"Point de départ · 1 rue de la Fontaine des Champs", code:null}
+  ferme:  {name:"La Ferme d'Octave",     icon:"", addr:"Point de départ · 1 rue de la Fontaine des Champs", code:"FINI"}
 };
 
 // ─────────────────────────────────────────────────────────────────
