@@ -625,31 +625,26 @@ function renderTeams() {
 }
 
 function selTeam(k) {
-  checkOnline(function(online) {
-    if (online) { S.pendingTeam=k; go('s2','forward'); return; }
-    // Immersive selection animation
-    var t=TEAMS[k];
-    th(t);
-    var cards=document.querySelectorAll('#teamList .tcard');
-    var selected=null;
-    cards.forEach(function(card,i){
-      var teamKey=Object.keys(TEAMS)[i];
-      if(teamKey===k){
-        selected=card;
-        card.style.transition='transform .4s cubic-bezier(.2,1.3,.4,1), box-shadow .4s';
-        card.style.transform='scale(1.04)';
-        card.style.boxShadow='0 0 30px '+t.color+', 0 0 60px '+t.color+'44, inset 0 0 20px '+t.color+'22';
-        card.style.borderColor=t.color;
-      } else {
-        card.style.transition='opacity .35s, transform .35s';
-        card.style.opacity='0.15';
-        card.style.transform='scale(.96)';
-        card.style.pointerEvents='none';
-      }
-    });
-    playSound('success');
-    setTimeout(function(){ doSelTeam(k); }, 850);
+  // Airplane mode already verified before reaching team select — play animation directly
+  var t=TEAMS[k];
+  th(t);
+  var cards=document.querySelectorAll('#teamList .tcard');
+  cards.forEach(function(card,i){
+    var teamKey=Object.keys(TEAMS)[i];
+    if(teamKey===k){
+      card.style.transition='transform .4s cubic-bezier(.2,1.3,.4,1), box-shadow .4s';
+      card.style.transform='scale(1.04)';
+      card.style.boxShadow='0 0 30px '+t.color+', 0 0 60px '+t.color+'44, inset 0 0 20px '+t.color+'22';
+      card.style.borderColor=t.color;
+    } else {
+      card.style.transition='opacity .35s, transform .35s';
+      card.style.opacity='0.15';
+      card.style.transform='scale(.96)';
+      card.style.pointerEvents='none';
+    }
   });
+  playSound('success');
+  setTimeout(function(){ doSelTeam(k); }, 850);
 }
 
 function doSelTeam(k) {
@@ -1044,9 +1039,9 @@ function resetGame() {
   go('sSplash','back');
   var _sEl = document.getElementById('sSplash');
   if (_sEl) {
-    var _goS1 = function(){ go('s1', 'forward'); };
-    _sEl.addEventListener('click', _goS1, {once: true});
-    _sEl.addEventListener('touchstart', _goS1, {once: true});
+    var _goS2 = function(){ go('s2', 'forward'); };
+    _sEl.addEventListener('click', _goS2, {once: true});
+    _sEl.addEventListener('touchstart', _goS2, {once: true});
   }
 }
 
@@ -1557,18 +1552,11 @@ document.getElementById('btnAP').onclick = function(){
       return;
     }
     var e=document.getElementById('s2err'); if(e) e.textContent='';
-    if(S.pendingTeam){ doSelTeam(S.pendingTeam); S.pendingTeam=null; }
+    // Airplane mode OK — go to team selection
+    go('s1', 'forward');
   });
 };
-document.getElementById('btnStart').onclick = function(){
-  var btn=this, orig=btn.textContent;
-  btn.disabled=true; btn.textContent='Vérification…';
-  checkOnline(function(online){
-    btn.disabled=false; btn.textContent=orig;
-    if(online){ go('s2'); var e=document.getElementById('s2err'); if(e) e.textContent='Connexion détectée. Mode avion requis.'; return; }
-    startGame();
-  });
-};
+document.getElementById('btnStart').onclick = function(){ startGame(); };
 document.getElementById('btnBackTeam').onclick = function(){
   // Reset team card styles when going back
   var cards=document.querySelectorAll('#teamList .tcard');
@@ -1693,7 +1681,7 @@ if (saved && S.team && S.t0) {
     var _splashGo = function(){
       // Unlock AudioContext on first user gesture (required by iOS)
       getAudioCtx();
-      go('s1', 'forward');
+      go('s2', 'forward');
     };
     _sEl.addEventListener('click', _splashGo, {once: true});
     _sEl.addEventListener('touchstart', _splashGo, {once: true});

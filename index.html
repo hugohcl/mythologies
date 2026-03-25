@@ -119,7 +119,7 @@ body>*{position:relative;z-index:1}
 .tbg{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:5px 12px;font-size:12px;background:rgba(255,255,255,.04);color:var(--muted)}
 
 /* ── BUTTONS ── */
-.btn{display:block;width:100%;padding:15px;border-radius:13px;border:none;cursor:pointer;font-family:'Cinzel',serif;font-size:14px;letter-spacing:1.2px;transition:transform .12s,opacity .12s;margin-bottom:9px;touch-action:manipulation}
+.btn{display:block;width:100%;padding:15px;border-radius:13px;border:none;cursor:pointer;font-family:'Cinzel',serif;font-size:14px;letter-spacing:1.2px;transition:transform .12s,opacity .12s;margin-bottom:9px;touch-action:manipulation;text-align:center}
 .btn:active{transform:scale(.97);opacity:.9}
 .btn:last-child{margin-bottom:0}
 .bg{background:linear-gradient(135deg,#d4a94a 0%,#8a6120 100%);color:#080600;font-weight:700;box-shadow:0 4px 22px rgba(201,168,76,.32),inset 0 1px 0 rgba(255,230,120,.25)}
@@ -240,7 +240,7 @@ body>*{position:relative;z-index:1}
 
 /* ── HELP DRAWER ── */
 #helpDrawer{position:fixed;bottom:0;right:0;z-index:1100;display:none;font-family:'Cinzel',serif}
-#helpTab{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 0px);right:0;background:var(--bg2);border:1px solid rgba(201,168,76,.25);border-right:none;border-radius:8px 0 0 8px;padding:10px 6px;cursor:pointer;touch-action:manipulation;writing-mode:vertical-rl;text-orientation:mixed;font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;box-shadow:-2px 2px 12px rgba(0,0,0,.25)}
+#helpTab{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 0px);right:0;background:var(--bg2);border:1px solid rgba(201,168,76,.25);border-right:none;border-radius:8px 0 0 8px;padding:8px 5px;cursor:pointer;touch-action:manipulation;writing-mode:vertical-rl;text-orientation:mixed;font-size:9px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;box-shadow:-2px 2px 12px rgba(0,0,0,.25);white-space:nowrap}
 #helpPanel{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 0px);right:0;background:var(--bg2);border:1px solid rgba(201,168,76,.2);border-right:none;border-radius:12px 0 0 12px;padding:14px 16px;display:none;flex-direction:column;gap:10px;box-shadow:-4px 0 20px rgba(0,0,0,.3);min-width:200px}
 #helpPanel .help-title{font-size:12px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;display:flex;align-items:center;justify-content:space-between}
 #helpPanel .help-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 0 0 12px;line-height:1}
@@ -412,7 +412,7 @@ html.light #testOv .tov-val{color:#8a6010}
 <button id="btnMJFloat" style="position:fixed;bottom:calc(8px + env(safe-area-inset-bottom,0px));left:8px;z-index:1000;background:none;border:none;color:var(--muted);opacity:.2;font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;cursor:pointer;touch-action:manipulation;padding:6px 8px">MJ</button>
 <button id="btnTheme" onclick="toggleTheme()"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
 <div id="helpDrawer">
-  <div id="helpTab">Aide ?</div>
+  <div id="helpTab">Besoin d'aide ?</div>
   <div id="helpPanel">
     <div class="help-title"><span>Besoin d'aide ?</span><button class="help-close" id="helpClose">✕</button></div>
     <div class="help-btn" id="btnMap">
