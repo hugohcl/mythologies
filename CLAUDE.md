@@ -30,10 +30,10 @@ Toutes les équipes partent et arrivent à la **Ferme d'Octave**.
 1. Toutes les équipes démarrent à la Ferme — reçoivent leur 1er indice sur place
 2. Les indices révèlent la **prochaine destination**
 3. À chaque checkpoint : **énigme de localisation** → trouvent la cachette → **code 4 lettres** → débloque les indices suivants
-4. 4 niveaux d'indices : I gratuit / II +2min / III +5min / IV +10min
-5. Mauvaise destination tapée = +2 min
+4. 4 niveaux d'indices : I gratuit / II +3min / III +6min / IV +10min
+5. Mauvaise destination tapée = +1 min
 6. Connexion internet détectée = +30 min
-7. Score = chrono + pénalités − (bonnes réponses quiz × 0,5 min)
+7. Score = chrono + pénalités
 
 ## Code MJ
 `ZEUS`
@@ -100,10 +100,9 @@ var ENIGMES = {
 - Mode avion : le bouton vérifie `navigator.onLine` en temps réel (ne pas faire confiance à l'utilisateur)
 - Wake lock activé au démarrage du chrono
 
-## Quiz (12 questions, 4 par mythologie)
-Grec : cheval d'Odin, Léthé, 12 travaux, Achille
-Nordique : Níðhöggr, 9 mondes, Mjölnir, Sleipnir
-Hindou : 10 bras Durga, Matsya, Ganesh, Nandi
+## Quiz
+Supprimé de l'app — remplacé par un jeu d'anagrammes physique le jour J.
+Les données QUIZ restent dans data.js mais les fonctions renderQuiz/renderLB ont été supprimées.
 
 ## Auto-deploy (Claude Code web → GitHub Pages)
 
@@ -139,9 +138,7 @@ git push -f -u origin claude/xxx
 
 ## Ce qui reste à faire
 - [ ] Remplacer les énigmes cachettes par les vraies (vendredi repérage)
+- [ ] Ajouter les photos des cachettes
 - [ ] Vérifier que le son fonctionne sur iOS (AudioContext user gesture)
 - [ ] Tester le mode avion sur vrais téléphones
-- [ ] Préparer les 5 cachettes physiques avec les codes (NORD/JEAN/ONDE/ROSE/LOIS)
-- [ ] Départ échelonné : 10 min entre équipes
-- [ ] Passer `TEST_MODE = false` dans data.js avant le jour J
-- [ ] Corriger Quiz Q1 (tagué "grec" mais question nordique — doublon avec Q8)
+- [ ] Préparer les 6 cachettes physiques avec les codes (NORD/JEAN/ONDE/ROSE/LOIS/FINI)

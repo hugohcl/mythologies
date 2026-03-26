@@ -1045,11 +1045,14 @@ function resetGame() {
   S={team:null,idx:0,t0:null,pen:0,oh:{},iv:null,onPen:false,plog:[],mjT:mjT,mjC:mjC,mjST:mjST,mjEnd:mjEnd,mjPen:mjPen,mjIv:mjIv,pendingTeam:null,quizAnswers:quizAnswers,cpTimes:[]};
   clr(); saveMJ(); th(null);
   _mapUsed = false; _photoUsed = {};
+  try { localStorage.removeItem('myth_mj_mode'); } catch(e){}
+  _mjMode = false;
   syncMJOverlay();
   go('sSplash','back');
   var _sEl = document.getElementById('sSplash');
   if (_sEl) {
-    var _goS2 = function(){ go('s2', 'forward'); };
+    var _rsDone = false;
+    var _goS2 = function(){ if(_rsDone)return; _rsDone=true; go('s2', 'forward'); };
     _sEl.addEventListener('click', _goS2, {once: true});
     _sEl.addEventListener('touchstart', _goS2, {once: true});
   }
@@ -1107,66 +1110,7 @@ function switchMJTab(tab) {
   });
 }
 
-function renderQuiz() {
-  var el=document.getElementById('quizDiv'); if(!el) return;
-  el.innerHTML='';
-  QUIZ.forEach(function(q,i){
-    var ans=S.quizAnswers[i];
-    var row=document.createElement('div'); row.className='qrow';
-    var txt=document.createElement('div'); txt.className='qtxt';
-    var tc=TEAMS[q.t]?TEAMS[q.t].color:'var(--gold)';
-    var teamLabel=TEAMS[q.t]?TEAMS[q.t].name:'';
-    txt.innerHTML='<span style="font-size:10px;color:'+tc+';font-family:Cinzel,serif;display:block;margin-bottom:2px">'+teamLabel+'</span>'+q.q+'<br><span style="font-size:10px;color:var(--gold);font-style:italic">Rép : '+q.a+'</span>';
-    var btns=document.createElement('div'); btns.className='qbtns';
-    var yes=document.createElement('button'); yes.className='qbtn'+(ans===true?' yes':''); yes.textContent='✓';
-    var no=document.createElement('button');  no.className='qbtn'+(ans===false?' no':'');  no.textContent='✗';
-    yes.onclick=(function(idx){return function(){S.quizAnswers[idx]=true; save();saveMJ();renderQuiz();renderLB();};})(i);
-    no.onclick =(function(idx){return function(){S.quizAnswers[idx]=false;save();saveMJ();renderQuiz();renderLB();};})(i);
-    btns.appendChild(yes); btns.appendChild(no);
-    row.appendChild(txt); row.appendChild(btns);
-    el.appendChild(row);
-  });
-  var bonus=document.getElementById('quizBonus'); if(!bonus) return;
-  bonus.innerHTML='<div style="font-family:Cinzel,serif;font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:8px">BONUS PAR ÉQUIPE</div>'
-    +Object.keys(TEAMS).map(function(k){
-      var t=TEAMS[k];
-      var n=QUIZ.filter(function(q,i){return q.t===k&&S.quizAnswers[i]===true;}).length;
-      return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px">'
-        +'<span style="color:'+t.color+'">'+t.name+'</span>'
-        +'<span style="font-family:Cinzel,serif;color:var(--ok)">-'+(n*0.5).toFixed(1)+' min ('+n+'/4)</span></div>';
-    }).join('');
-}
-
-function renderLB() {
-  var el=document.getElementById('lbDiv'); if(!el) return;
-  var now=Date.now();
-  var entries=Object.keys(TEAMS).map(function(k){
-    var t=TEAMS[k], st=S.mjST[k], end=S.mjEnd[k];
-    var pen=S.mjPen[k]||0;
-    var qBonus=QUIZ.filter(function(q,i){return q.t===k&&S.quizAnswers[i]===true;}).length*0.5;
-    var elapsed=st?(end?(end-st):(now-st)):null;
-    var score=elapsed?(elapsed/60000+pen-qBonus):null;
-    return {t:t,key:k,elapsed:elapsed,pen:pen,qBonus:qBonus,score:score,done:!!end};
-  });
-  entries.sort(function(a,b){
-    if(a.done&&b.done) return a.score-b.score;
-    if(a.done) return -1; if(b.done) return 1;
-    if(a.elapsed&&b.elapsed) return a.elapsed-b.elapsed;
-    if(a.elapsed) return -1; if(b.elapsed) return 1; return 0;
-  });
-  var medals=['1.','2.','3.'];
-  el.innerHTML=entries.map(function(e,i){
-    var ts=e.elapsed?fmt(e.elapsed):'—';
-    var status=e.done?'Terminé':e.elapsed?'En cours':'Pas encore parti';
-    var details=status;
-    if(e.done) details=e.score.toFixed(1)+' min (chrono '+fmt(e.elapsed)+' +'+e.pen+'min -'+e.qBonus.toFixed(1)+'min quiz)';
-    else if(e.elapsed) details='En cours · '+ts;
-    return '<div class="lbrow"><div style="font-family:Cinzel,serif;font-size:18px;width:28px;text-align:center;flex-shrink:0">'+(i<3?medals[i]:(i+1)+'.')+'</div>'
-      +'<div style="flex:1"><div style="font-family:Cinzel,serif;font-size:13px;margin-bottom:2px;color:'+e.t.color+'">'+e.t.name+'</div>'
-      +'<div style="font-size:12px;color:var(--muted)">'+details+'</div></div>'
-      +'<div style="font-family:Cinzel,serif;font-size:16px;color:'+e.t.color+'">'+(e.done?e.score.toFixed(1):ts)+'</div></div>';
-  }).join('');
-}
+// Quiz and Leaderboard removed — replaced by physical anagram game
 
 function exportResults() {
   var now=Date.now();
@@ -1217,17 +1161,29 @@ function openMJ() {
 
 function renderMJLive() {
   var now=Date.now(), el=document.getElementById('mjLive'); if(!el) return;
-  el.innerHTML=Object.keys(TEAMS).map(function(k){
+  el.innerHTML='';
+  Object.keys(TEAMS).forEach(function(k){
     var t=TEAMS[k], st=S.mjST[k], end=S.mjEnd[k];
     var elapsed=st?(end?fmt(end-st):fmt(now-st)):'—';
     var stat=end?'Terminé':st?'En cours':'Pas encore parti';
-    var resetBtn=st?'<button onclick="resetTeamChrono(\''+k+'\')" style="font-size:10px;padding:3px 8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:var(--muted);border-radius:6px;cursor:pointer;font-family:Cinzel,serif;margin-left:8px;touch-action:manipulation">↺</button>':'';
-    return '<div class="mjlr">'
-      +'<div style="flex:1"><div style="font-family:Cinzel,serif;font-size:13px;color:'+t.color+'">'+t.name+'</div>'
-      +'<div style="font-size:12px;color:var(--muted);margin-top:2px">'+stat+'</div></div>'
-      +'<div style="display:flex;align-items:center"><span style="font-family:Cinzel,serif;font-size:16px;color:'+t.color+'">'+elapsed+'</span>'+resetBtn+'</div>'
-      +'</div>';
-  }).join('');
+    var row=document.createElement('div'); row.className='mjlr';
+    var left=document.createElement('div'); left.style.flex='1';
+    var name=document.createElement('div'); name.style.cssText='font-family:Cinzel,serif;font-size:13px;color:'+t.color; name.textContent=t.name;
+    var status=document.createElement('div'); status.style.cssText='font-size:12px;color:var(--muted);margin-top:2px'; status.textContent=stat;
+    left.appendChild(name); left.appendChild(status);
+    var right=document.createElement('div'); right.style.cssText='display:flex;align-items:center';
+    var time=document.createElement('span'); time.style.cssText='font-family:Cinzel,serif;font-size:16px;color:'+t.color; time.textContent=elapsed;
+    right.appendChild(time);
+    if(st){
+      var btn=document.createElement('button');
+      btn.style.cssText='font-size:10px;padding:3px 8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:var(--muted);border-radius:6px;cursor:pointer;font-family:Cinzel,serif;margin-left:8px;touch-action:manipulation';
+      btn.textContent='↺';
+      btn.addEventListener('click',function(){ resetTeamChrono(k); });
+      right.appendChild(btn);
+    }
+    row.appendChild(left); row.appendChild(right);
+    el.appendChild(row);
+  });
 }
 
 function resetTeamChrono(k) {
@@ -1731,6 +1687,7 @@ if (saved && S.team && S.t0) {
   else if (saved==='s7')       showCode(curCP());
   else if (saved==='sEnigme')  showEnigme(curCP());
   else if (saved==='s6' && _done) showReturnHome();
+  else if (saved==='s6')        showEnRoute(curCP());
   else if (saved==='s5')       showS5();
   else { th(null); go('s1'); }
   setTimeout(function(){ toast('Partie reprise — '+S.team.name); }, 400);
@@ -1740,7 +1697,10 @@ if (saved && S.team && S.t0) {
   createParticles('sSplash', 22);
   var _sEl = document.getElementById('sSplash');
   if (_sEl) {
+    var _splashDone = false;
     var _splashGo = function(){
+      if (_splashDone) return;
+      _splashDone = true;
       // Unlock AudioContext on first user gesture (required by iOS)
       getAudioCtx();
       go('s2', 'forward');
