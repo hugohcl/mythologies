@@ -24,13 +24,11 @@ html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;oversc
   --shadow-gold:0 0 28px rgba(201,168,76,0.22);
   --glow:0 0 18px rgba(201,168,76,0.35);
 }
-html{margin:0;padding:0;height:100%;background-color:var(--bg);color:var(--text);font-family:'IM Fell English',Georgia,serif;overflow:hidden;overscroll-behavior:none}
-body{margin:0;padding:0;position:relative;width:100%;height:var(--vh,100vh);overflow:hidden;overscroll-behavior:none;background-color:var(--bg)}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;overscroll-behavior:none;background-color:var(--bg);color:var(--text);font-family:'IM Fell English',Georgia,serif}
 body::before{content:'';position:fixed;inset:0;background:var(--team-bg,none) center/cover no-repeat;opacity:.08;pointer-events:none;z-index:0;transition:opacity .5s}
-body>*{position:relative;z-index:1}
 
 /* ── SCREEN TRANSITIONS ── */
-.screen{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;transition:opacity .32s cubic-bezier(.4,0,.2,1),transform .32s cubic-bezier(.4,0,.2,1)}
+.screen{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;transition:opacity .32s cubic-bezier(.4,0,.2,1),transform .32s cubic-bezier(.4,0,.2,1)}
 .screen.hidden{opacity:0;pointer-events:none;transform:translateX(40px)}
 .screen.hidden.slide-back{transform:translateX(-40px)}
 .screen.hidden.exit-forward{transform:translateX(-40px)}
@@ -119,7 +117,7 @@ body>*{position:relative;z-index:1}
 .tbg{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:5px 12px;font-size:12px;background:rgba(255,255,255,.04);color:var(--muted)}
 
 /* ── BUTTONS ── */
-.btn{display:block;width:100%;padding:15px;border-radius:13px;border:none;cursor:pointer;font-family:'Cinzel',serif;font-size:14px;letter-spacing:1.2px;transition:transform .12s,opacity .12s;margin-bottom:9px;touch-action:manipulation;text-align:center}
+.btn{display:block;width:100%;padding:15px 15px 15px calc(15px + 1.2px);border-radius:13px;border:none;cursor:pointer;font-family:'Cinzel',serif;font-size:14px;letter-spacing:1.2px;transition:transform .12s,opacity .12s;margin-bottom:9px;touch-action:manipulation;text-align:center}
 .btn:active{transform:scale(.97);opacity:.9}
 .btn:last-child{margin-bottom:0}
 .bg{background:linear-gradient(135deg,#d4a94a 0%,#8a6120 100%);color:#080600;font-weight:700;box-shadow:0 4px 22px rgba(201,168,76,.32),inset 0 1px 0 rgba(255,230,120,.25)}
@@ -409,16 +407,6 @@ html.light #testOv .tov-val{color:#8a6010}
 .parchment-scroll::before{content:'';position:absolute;inset:0;background:url('./bg-parchment.webp') center/cover no-repeat;opacity:.12;pointer-events:none;z-index:0}
 .parchment-scroll>*{position:relative;z-index:1}
 </style>
-<script>
-// Fix perenne pour la hauteur viewport Safari iOS / PWA
-// window.innerHeight retourne TOUJOURS la vraie hauteur visible
-(function(){
-  function setVH(){document.documentElement.style.setProperty('--vh',window.innerHeight+'px')}
-  setVH();
-  window.addEventListener('resize',setVH);
-  if(window.visualViewport){window.visualViewport.addEventListener('resize',setVH)}
-})();
-</script>
 </head>
 <body ontouchstart="">
 
