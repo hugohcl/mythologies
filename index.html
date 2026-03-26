@@ -431,16 +431,16 @@ html.light #testOv .tov-val{color:#8a6010}
   </div>
 </div>
 <!-- MAP CONFIRM -->
-<div id="mapConfirm" style="position:fixed;inset:0;z-index:5500;background:rgba(6,4,2,.92);display:none;flex-direction:column;justify-content:center;align-items:center;padding:28px">
+<div id="mapConfirm" style="position:fixed;inset:0;z-index:5500;background:var(--bg);display:none;flex-direction:column;justify-content:center;align-items:center;padding:28px">
   <div style="max-width:340px;text-align:center">
-    <div style="font-size:16px;font-family:Cinzel,serif;color:var(--gold);letter-spacing:2px;margin-bottom:14px;text-transform:uppercase">Carte</div>
-    <div id="mapWarnLore" style="font-family:'IM Fell English',serif;font-size:15px;color:var(--text);line-height:1.6;font-style:italic;margin-bottom:20px"></div>
-    <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:16px;letter-spacing:.5px">
+    <div style="font-size:18px;font-family:Cinzel,serif;color:var(--gold);letter-spacing:2px;margin-bottom:16px;text-transform:uppercase">Carte</div>
+    <div id="mapWarnLore" style="font-family:'IM Fell English',serif;font-size:16px;color:var(--text);line-height:1.7;font-style:italic;margin-bottom:22px"></div>
+    <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--text);line-height:2;margin-bottom:18px;letter-spacing:.5px">
       <div>La carte s'affiche <strong style="color:var(--gold)">5 secondes</strong></div>
       <div>Consultable <strong style="color:var(--gold)">une seule fois</strong></div>
       <div>Pénalité de <strong style="color:var(--danger)">+15 minutes</strong></div>
     </div>
-    <div style="font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="transform:rotate(90deg)"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/></svg><span>Tournez le téléphone vers la gauche</span></div>
+    <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:22px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="transform:rotate(90deg)"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/></svg><span>Tournez le téléphone vers la gauche</span></div>
     <div style="display:flex;gap:10px;justify-content:center">
       <button id="btnMapCancel" class="btn bt" style="flex:1;max-width:140px">Annuler</button>
       <button id="btnMapConfirm" class="btn bred" style="flex:1;max-width:140px">Consulter</button>
@@ -448,18 +448,18 @@ html.light #testOv .tov-val{color:#8a6010}
   </div>
 </div>
 <!-- MAP OVERLAY -->
-<div id="mapOverlay" style="position:fixed;inset:0;z-index:5000;background:rgba(6,4,2,.97);display:none;justify-content:center;align-items:center">
+<div id="mapOverlay" style="position:fixed;inset:0;z-index:5000;background:var(--bg);display:none;justify-content:center;align-items:center">
   <div id="mapImgWrap" style="display:flex;align-items:center;justify-content:center;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom"></div>
   <img id="mapImg" src="Carte.png" alt="Carte du village" style="display:none" onerror="this.dataset.broken='1'">
   <canvas id="mapCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%"></canvas>
   <div id="mapTimer" style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:24px;color:var(--gold);letter-spacing:3px;background:rgba(6,4,2,.8);padding:4px 16px;border-radius:20px;border:1px solid rgba(201,168,76,.3);z-index:1">5</div>
 </div>
 <!-- PHOTO CONFIRM -->
-<div id="photoConfirm" style="position:fixed;inset:0;z-index:5500;background:rgba(6,4,2,.92);display:none;flex-direction:column;justify-content:center;align-items:center;padding:28px">
+<div id="photoConfirm" style="position:fixed;inset:0;z-index:5500;background:var(--bg);display:none;flex-direction:column;justify-content:center;align-items:center;padding:28px">
   <div style="max-width:340px;text-align:center">
-    <div style="font-size:16px;font-family:Cinzel,serif;color:var(--gold);letter-spacing:2px;margin-bottom:14px;text-transform:uppercase">Photo</div>
-    <div id="photoWarnLore" style="font-family:'IM Fell English',serif;font-size:15px;color:var(--text);line-height:1.6;font-style:italic;margin-bottom:20px"></div>
-    <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:24px;letter-spacing:.5px">
+    <div style="font-size:18px;font-family:Cinzel,serif;color:var(--gold);letter-spacing:2px;margin-bottom:16px;text-transform:uppercase">Photo</div>
+    <div id="photoWarnLore" style="font-family:'IM Fell English',serif;font-size:16px;color:var(--text);line-height:1.7;font-style:italic;margin-bottom:22px"></div>
+    <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--text);line-height:2;margin-bottom:24px;letter-spacing:.5px">
       <div>Photo de la cachette à trouver</div>
       <div>Consultable <strong style="color:var(--gold)">sans limite de temps</strong></div>
       <div>Pénalité de <strong style="color:var(--danger)">+15 minutes</strong></div>
@@ -471,7 +471,7 @@ html.light #testOv .tov-val{color:#8a6010}
   </div>
 </div>
 <!-- PHOTO HINT OVERLAY -->
-<div id="photoOverlay" style="position:fixed;inset:0;z-index:5000;background:rgba(6,4,2,.97);display:none;flex-direction:column;justify-content:center;align-items:center;padding:20px">
+<div id="photoOverlay" style="position:fixed;inset:0;z-index:5000;background:var(--bg);display:none;flex-direction:column;justify-content:center;align-items:center;padding:20px">
   <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--danger);letter-spacing:2px;margin-bottom:12px;text-transform:uppercase"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Photo indice — Pénalité active</div>
   <div id="photoImgWrap" style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;max-height:80vh;overflow:hidden">
     <img id="photoImg" src="" alt="Photo indice" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;border:2px solid rgba(201,168,76,.3)">
