@@ -1514,19 +1514,38 @@ function doOpenMap() {
   var ov = document.getElementById('mapOverlay');
   if (!ov) return;
   ov.style.display = 'flex';
-  // Draw map on canvas (rotated in portrait)
+  // Pre-draw map on canvas (hidden behind countdown)
   var img = document.getElementById('mapImg');
+  var canvas = document.getElementById('mapCanvas');
+  var wrap = document.getElementById('mapImgWrap');
+  if (canvas) canvas.style.display = 'none';
   if (img && img.complete && img.naturalWidth) { drawMapOnCanvas(); }
   else if (img) { img.onload = function(){ drawMapOnCanvas(); }; }
+  // Countdown 3-2-1 before showing map
   var timer = document.getElementById('mapTimer');
-  var sec = 5;
-  if (timer) timer.textContent = sec;
-  var iv = setInterval(function() {
-    sec--;
-    if (timer) timer.textContent = sec;
-    if (sec <= 0) {
-      clearInterval(iv);
-      ov.style.display = 'none';
+  var countdown = 3;
+  if (timer) { timer.textContent = countdown; timer.style.fontSize = '60px'; timer.style.position = 'static'; timer.style.transform = 'none'; timer.style.left = 'auto'; timer.style.bottom = 'auto'; timer.style.background = 'none'; timer.style.border = 'none'; }
+  if (wrap) wrap.style.display = 'none';
+  var cdIv = setInterval(function() {
+    countdown--;
+    if (countdown > 0) {
+      if (timer) timer.textContent = countdown;
+    } else {
+      clearInterval(cdIv);
+      // Show map
+      if (canvas) canvas.style.display = 'block';
+      if (wrap) wrap.style.display = 'flex';
+      if (timer) { timer.style.fontSize = '24px'; timer.style.position = 'absolute'; timer.style.bottom = '12px'; timer.style.left = '50%'; timer.style.transform = 'translateX(-50%)'; timer.style.background = 'rgba(6,4,2,.8)'; timer.style.border = '1px solid rgba(201,168,76,.3)'; }
+      var sec = 5;
+      if (timer) timer.textContent = sec;
+      var iv = setInterval(function() {
+        sec--;
+        if (timer) timer.textContent = sec;
+        if (sec <= 0) {
+          clearInterval(iv);
+          ov.style.display = 'none';
+        }
+      }, 1000);
     }
   }, 1000);
 }
