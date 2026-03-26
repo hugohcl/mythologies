@@ -1477,21 +1477,29 @@ function doOpenMap() {
   if (canvas) canvas.style.display = 'none';
   if (img && img.complete && img.naturalWidth) { drawMapOnCanvas(); }
   else if (img) { img.onload = function(){ drawMapOnCanvas(); }; }
-  // Countdown 3-2-1 before showing map
+  // Countdown 3-2-1 before showing map (with rotate instruction)
   var timer = document.getElementById('mapTimer');
   var countdown = 3;
-  if (timer) { timer.textContent = countdown; timer.style.fontSize = '60px'; timer.style.position = 'static'; timer.style.transform = 'none'; timer.style.left = 'auto'; timer.style.bottom = 'auto'; timer.style.background = 'none'; timer.style.border = 'none'; }
+  if (timer) {
+    timer.innerHTML = '<div style="font-size:80px;font-weight:700;margin-bottom:16px">'+countdown+'</div>'
+      +'<div style="font-size:13px;letter-spacing:1px;opacity:.7;display:flex;align-items:center;justify-content:center;gap:8px">'
+      +'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="transform:rotate(90deg)"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/></svg>'
+      +'Tournez le téléphone</div>';
+    timer.style.cssText = 'font-family:Cinzel,serif;color:var(--gold);text-align:center;position:static;transform:none;background:none;border:none;padding:0';
+  }
   if (wrap) wrap.style.display = 'none';
   var cdIv = setInterval(function() {
     countdown--;
     if (countdown > 0) {
-      if (timer) timer.textContent = countdown;
+      if (timer) timer.querySelector('div').textContent = countdown;
     } else {
       clearInterval(cdIv);
       // Show map
       if (canvas) canvas.style.display = 'block';
       if (wrap) wrap.style.display = 'flex';
-      if (timer) { timer.style.fontSize = '24px'; timer.style.position = 'absolute'; timer.style.bottom = '12px'; timer.style.left = '50%'; timer.style.transform = 'translateX(-50%)'; timer.style.background = 'rgba(6,4,2,.8)'; timer.style.border = '1px solid rgba(201,168,76,.3)'; }
+      if (timer) {
+        timer.style.cssText = 'font-family:Cinzel,serif;font-size:24px;color:var(--gold);letter-spacing:3px;position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(6,4,2,.8);padding:4px 16px;border-radius:20px;border:1px solid rgba(201,168,76,.3);z-index:1';
+      }
       var sec = 5;
       if (timer) timer.textContent = sec;
       var iv = setInterval(function() {
