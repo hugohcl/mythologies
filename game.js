@@ -440,17 +440,7 @@ function th(t) {
   var isLight = document.documentElement.classList.contains('light');
   if (!t) { r.setProperty('--tc','var(--gold)'); r.setProperty('--tb','var(--gd)'); r.setProperty('--tbr','var(--gb)'); r.setProperty('--team-bg','none'); }
   else { r.setProperty('--tc', (isLight && t.colorLight) ? t.colorLight : t.color); r.setProperty('--tb', t.bg); r.setProperty('--tbr', t.border); r.setProperty('--team-bg', t.bgTexture ? 'url('+t.bgTexture+')' : 'none'); }
-  // Watermark
-  document.querySelectorAll('.hdr-wm').forEach(function(el){ el.remove(); });
-  var k = t && t.key ? t.key : null;
-  if (k && TEAM_SVG[k]) {
-    document.querySelectorAll('.hdr').forEach(function(hdr){
-      var wm = document.createElement('div');
-      wm.className = 'hdr-wm';
-      wm.innerHTML = TEAM_SVG[k];
-      hdr.appendChild(wm);
-    });
-  }
+  // Watermark removed
 }
 
 function fmt(ms) {
