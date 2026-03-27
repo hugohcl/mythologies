@@ -113,6 +113,8 @@ function go(id, dir) {
   setTimeout(function(){
     document.querySelectorAll('.exit-forward,.exit-back').forEach(function(s){ s.classList.remove('exit-forward','exit-back'); });
   }, 500);
+  // Always keep MJ overlay visible when MJ mode is active
+  syncMJOverlay();
 }
 
 // ═══════════════════════════════════════════
