@@ -716,15 +716,7 @@ function showEnRoute(cpk) {
   go('s6','forward');
   createTeamParticles('s6', t.key, 10);
   var s6=document.getElementById('s6');
-  s6.onclick=function(e){ if(e.target.id==='btnEnRouteBack') return; s6.onclick=null; showEnigme(cpk); };
-  var backBtn=document.getElementById('btnEnRouteBack');
-  if(backBtn){
-    backBtn.onclick=function(e){
-      e.stopPropagation(); s6.onclick=null;
-      if(S.idx===0){ showS5(); }
-      else{ S.idx--; save(); showHintsScreen(S.team.route[S.idx]); }
-    };
-  }
+  s6.onclick=function(e){ s6.onclick=null; showEnigme(cpk); };
 }
 
 // ═══════════════════════════════════════════
