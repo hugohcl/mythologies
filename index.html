@@ -191,7 +191,7 @@ body>*{position:relative;z-index:1}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
 /* ── TEST OVERLAY ── */
-#testOv{position:fixed;top:calc(10px + env(safe-area-inset-top));right:10px;z-index:4000;background:rgba(10,6,3,.97);border:1px solid rgba(201,168,76,.4);border-radius:11px;display:none}
+#testOv{position:fixed;top:calc(10px + env(safe-area-inset-top));right:10px;z-index:4000;background:rgba(10,6,3,.97);border:1px solid rgba(201,168,76,.4);border-radius:11px;display:block}
 #testOv .tov-toggle{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(201,168,76,.6);padding:6px 10px;cursor:pointer;user-select:none;display:flex;align-items:center;gap:5px;white-space:nowrap}
 #testOv .tov-toggle::after{content:'▾';font-size:10px;color:rgba(201,168,76,.5)}
 #testOv.collapsed .tov-toggle::after{content:'▸'}

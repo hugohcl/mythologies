@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════
 // MJ MODE (remplace TEST_MODE)
 // ═══════════════════════════════════════════
-var _mjMode = false;
+var _mjMode = true;
 function isMJ() { return _mjMode; }
 function activateMJ() {
   _mjMode = true;
