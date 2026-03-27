@@ -1612,7 +1612,7 @@ document.getElementById('btnPhotoConfirm').onclick = function(){
 document.getElementById('btnClosePhoto').onclick = function(){ closePhoto(); };
 document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
 document.getElementById('btnMJFloat').onclick = function(){
-  if(_mjMode){ openMJ(); }
+  if(_mjMode){ renderTestTeamTabs(); go('sTest','forward'); }
   else { buildMJRow(); setText('mjErr',''); go('s10','forward'); }
 };
 document.getElementById('btnMJLogin').onclick  = function(){ loginMJ(); };
