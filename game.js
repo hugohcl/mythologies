@@ -1612,8 +1612,20 @@ document.getElementById('btnPhotoConfirm').onclick = function(){
 document.getElementById('btnClosePhoto').onclick = function(){ closePhoto(); };
 document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
 document.getElementById('btnMJFloat').onclick = function(){
-  if(_mjMode){ renderTestTeamTabs(); go('sTest','forward'); }
-  else { buildMJRow(); setText('mjErr',''); go('s10','forward'); }
+  if(_mjMode){
+    // Toggle test overlay on current screen
+    var ov = document.getElementById('testOv');
+    if (ov) ov.style.display = ov.style.display === 'block' ? 'none' : 'block';
+    updateTestOverlay(true);
+  } else {
+    // Ask for MJ code via prompt
+    var code = prompt('Code MJ :');
+    if (code && code.toUpperCase() === 'ZEUS') {
+      activateMJ();
+      updateTestOverlay(true);
+      toast('Mode MJ activé');
+    }
+  }
 };
 document.getElementById('btnMJLogin').onclick  = function(){ loginMJ(); };
 document.getElementById('btnMJBack').onclick   = function(){ go('s1','back'); };
