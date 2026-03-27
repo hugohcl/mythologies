@@ -795,7 +795,7 @@ function validateCode() {
   for(var i=0;i<4;i++){ entered+=(row.children[i]?row.children[i].value:'').toUpperCase(); }
   if(entered.length<4){ setText('codeErr','Entrez les 4 lettres.'); return; }
   if(entered===exp){
-    playSound('success');
+    if(cpk !== 'ferme') playSound('success');
     for(var i=0;i<4;i++){
       (function(el,d){ setTimeout(function(){ el.classList.add('ok'); el.style.animation='codeWave .4s ease'; },d*80); })(row.children[i],i);
     }
