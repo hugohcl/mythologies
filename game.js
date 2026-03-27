@@ -40,7 +40,7 @@ function save() {
       tk:S.team&&S.team.key, idx:S.idx, t0:S.t0, pen:S.pen,
       oh:S.oh, onPen:S.onPen, plog:S.plog, mjST:S.mjST, quizAnswers:S.quizAnswers,
       cpTimes:S.cpTimes, scr:cur&&cur.id,
-      mapUsed:_mapUsed, photoUsed:_photoUsed
+      mapUses:_mapUses, mapUsed:_mapUsed, photoUsed:_photoUsed
     }));
   } catch(e) {}
 }
@@ -53,7 +53,8 @@ function loadSaved() {
     S.oh=d.oh||{}; S.onPen=d.onPen||false;
     S.plog=d.plog||[]; S.mjST=d.mjST||{}; S.quizAnswers=d.quizAnswers||{};
     S.cpTimes=d.cpTimes||[];
-    if(d.mapUsed) _mapUsed=true;
+    _mapUses=d.mapUses||0;
+    if(d.mapUsed||_mapUses>=2) _mapUsed=true;
     if(d.photoUsed) _photoUsed=d.photoUsed;
     return d.scr;
   } catch(e) { return null; }
@@ -72,7 +73,7 @@ function loadMJ() {
 // ═══════════════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════════════
-var _TR={sSplash:'tr-fade',s4:'tr-zoom',s9:'tr-fade',sEnigme:'tr-up',s7:'tr-up'};
+var _TR={sSplash:'tr-fade',s4:'tr-zoom',s9:'tr-fade',sEnigme:'tr-up',s7:'tr-up',sFinal:'tr-up'};
 function go(id, dir) {
   var trClass=_TR[id]||'';
   // Mark visible screen for directional exit before hiding
@@ -459,13 +460,13 @@ function tick() {
   var elapsed = Date.now()-S.t0;
   var t = fmt(elapsed), p = '+'+S.pen+' min';
   var urgent = elapsed > 45*60*1000;
-  ['c5','c6','cEnigme','c7','c8'].forEach(function(id){
+  ['c5','c6','cEnigme','c7','c8','cFinal'].forEach(function(id){
     var e=document.getElementById(id); if(!e) return;
     e.textContent=t;
     if(urgent){ e.style.color='var(--danger)'; e.classList.add('chrono-urgent'); }
     else { e.style.color=''; e.classList.remove('chrono-urgent'); }
   });
-  ['p5','p6','pEnigme','p7','p8'].forEach(function(id){ var e=document.getElementById(id); if(e) e.textContent=p; });
+  ['p5','p6','pEnigme','p7','p8','pFinal'].forEach(function(id){ var e=document.getElementById(id); if(e) e.textContent=p; });
 }
 function startC() { S.t0=Date.now(); S.iv=setInterval(tick,1000); acquireWakeLock(); }
 function stopC()  { if(S.iv) clearInterval(S.iv); }
@@ -747,6 +748,8 @@ function showCode(cpk) {
   var s7sub=document.querySelector('#s7 .hdr .hs');
   if(s7sub) s7sub.textContent = cpk==='ferme' ? 'Code d\'arrivée' : 'Entrez le code de la cachette';
   setText('codeErr',  '');
+  // Hide "Revoir les indices" on ferme code screen (no previous hints)
+  var bhBtn=document.getElementById('btnBackHintsCode'); if(bhBtn) bhBtn.style.display=(cpk==='ferme'?'none':'');
   mkSteps('st7');
   buildCodeRow();
   go('s7','forward'); updateTestOverlay();
@@ -804,11 +807,10 @@ function validateCode() {
     flashSuccess();
     vibrate(VIB.codeOk);
     setTimeout(function(){ showCit(S.team.key); },50);
-    // Si c'est le code FINI à la ferme, aller à l'arrivée
     if(cpk === 'ferme'){
+      // Code FINI donné à l'oral après le jeu physique → arrivée
       setTimeout(function(){ save(); showArrival(); },700);
     } else {
-      // Si c'est le dernier CP, aller au retour ferme (code FINI)
       var isLast = (S.idx >= S.team.route.length - 1);
       setTimeout(function(){
         if(isLast){ S.idx++; save(); showReturnHome(); }
@@ -826,9 +828,44 @@ function validateCode() {
 }
 
 // ═══════════════════════════════════════════
+// REVIEW PREVIOUS HINTS (back from enigme/code)
+// ═══════════════════════════════════════════
+var _reviewReturn = null;
+
+function reviewPrevHints(returnTo) {
+  // The hints that led to curCP() are under the previous CP key
+  var prevCPk = S.idx === 0 ? 'ferme' : S.team.route[S.idx - 1];
+  _reviewReturn = returnTo;
+  var cp=CPS[prevCPk], t=S.team; th(t);
+  setText('s8title',  t.name);
+  setText('s8sub',    'Indices précédents');
+  var s8cpEl=document.getElementById('s8cpName');
+  if(s8cpEl) s8cpEl.innerHTML=(cp&&cp.icon?'<img class="cp-img sm" src="'+cp.icon+'"> ':'')+(cp?cp.name:prevCPk);
+  setText('s8cpAddr', cp?cp.addr:'');
+  mkSteps('st8');
+  buildHints('hintsList',prevCPk,t.key);
+  // Hide destination input section, show back button
+  var destSection=document.querySelector('#s8 .cs'); if(destSection) destSection.style.display='none';
+  var backBtn=document.getElementById('btnReviewBack'); if(backBtn) backBtn.style.display='';
+  go('s8','forward');
+}
+
+function exitReviewHints() {
+  // Restore destination section visibility
+  var destSection=document.querySelector('#s8 .cs'); if(destSection) destSection.style.display='';
+  if(_reviewReturn === 'sEnigme') showEnigme(curCP());
+  else if(_reviewReturn === 's7') showCode(curCP());
+  else go(_reviewReturn || 'sEnigme', 'back');
+  _reviewReturn = null;
+}
+
+// ═══════════════════════════════════════════
 // SCREEN 8: HINTS
 // ═══════════════════════════════════════════
 function showHintsScreen(cpk) {
+  _reviewReturn = null; // Clear review mode
+  var destSection=document.querySelector('#s8 .cs'); if(destSection) destSection.style.display='';
+  var backBtn=document.getElementById('btnReviewBack'); if(backBtn) backBtn.style.display='none';
   var cp=CPS[cpk], t=S.team; th(t);
   setText('s8title',  t.name);
   setText('s8sub',    t.members.join(' · '));
@@ -929,15 +966,15 @@ function confirmDest(inputId, errId, nextKey, onSuccess) {
 function showReturnHome() {
   var t = S.team; th(t);
   var returnTexts = {
-    grec: "Comme Ulysse apercevant enfin les rivages d'Ithaque, votre odyssée touche à sa fin. Les dieux vous attendent à la Ferme d'Octave.",
-    nordique: "Le Bifröst s'illumine une dernière fois. Votre saga s'achève — le mead-hall de la Ferme d'Octave vous attend, guerriers.",
-    hindou: "Le dharma vous a guidés jusqu'ici. Votre yatra s'achève — le repos du moksha vous attend à la Ferme d'Octave."
+    grec: "Comme Ulysse apercevant enfin les rivages d'Ithaque, votre odyssée touche à sa fin. Revenez à la Ferme d'Octave — un dernier défi vous y attend !",
+    nordique: "Le Bifröst s'illumine une dernière fois. Revenez au mead-hall de la Ferme d'Octave — un dernier défi vous y attend, guerriers !",
+    hindou: "Le dharma vous a guidés jusqu'ici. Revenez à la Ferme d'Octave — un dernier défi vous y attend !"
   };
   setText('s6title', t.name);
   var erIconEl2=document.getElementById('erIcon');
   if(erIconEl2) erIconEl2.textContent='';
   setText('erName', 'Retour à la Ferme'); setStyle('erName', 'color', t.color);
-  setText('erAddr', returnTexts[t.key] || 'Retournez à la Ferme d\'Octave — 1 rue de la Fontaine des Champs');
+  setText('erAddr', returnTexts[t.key] || 'Revenez à la Ferme d\'Octave — un dernier défi vous y attend !');
   mkSteps('st6');
   // Mark all steps as done
   var steps = document.getElementById('st6');
@@ -950,7 +987,23 @@ function showReturnHome() {
   var s6 = document.getElementById('s6');
   var backBtn = document.getElementById('btnEnRouteBack');
   if (backBtn) backBtn.style.display = 'none';
-  s6.onclick = function(e) { s6.onclick = null; if (backBtn) backBtn.style.display = ''; showCode('ferme'); };
+  s6.onclick = function(e) { s6.onclick = null; if (backBtn) backBtn.style.display = ''; showFinalGame(); };
+}
+
+function showFinalGame() {
+  var t = S.team; th(t);
+  setText('sFinalTitle', t.name);
+  mkSteps('stFinal');
+  // Mark all steps as done + final
+  var steps = document.getElementById('stFinal');
+  if (steps) {
+    var fill = steps.querySelector('.steps-fill'); if (fill) fill.style.width = '100%';
+    steps.querySelectorAll('.steps-mk').forEach(function(d){ d.className = 'steps-mk done'; });
+  }
+  // Reset state: show briefing, hide game
+  document.getElementById('finalContent').style.display = '';
+  document.getElementById('finalGameDiv').style.display = 'none';
+  go('sFinal', 'forward');
 }
 
 // ═══════════════════════════════════════════
@@ -1026,7 +1079,7 @@ function resetGame() {
   var mjST = S.mjST, mjEnd = S.mjEnd, mjPen = S.mjPen, quizAnswers = S.quizAnswers, mjT = S.mjT, mjC = S.mjC, mjIv = S.mjIv;
   S={team:null,idx:0,t0:null,pen:0,oh:{},iv:null,onPen:false,plog:[],mjT:mjT,mjC:mjC,mjST:mjST,mjEnd:mjEnd,mjPen:mjPen,mjIv:mjIv,pendingTeam:null,quizAnswers:quizAnswers,cpTimes:[]};
   clr(); saveMJ(); th(null);
-  _mapUsed = false; _photoUsed = {};
+  _mapUses = 0; _mapUsed = false; _photoUsed = {};
   try { localStorage.removeItem('myth_mj_mode'); } catch(e){}
   _mjMode = false;
   syncMJOverlay();
@@ -1274,8 +1327,8 @@ function hardPass() {
     // Skip first destination input → go to first checkpoint
     showEnRoute(S.team.route[0]);
   } else if (id === 's6') {
-    // If returning to ferme (last stage), go to code entry for FINI
-    if (S.idx >= S.team.route.length) { showCode('ferme'); }
+    // If returning to ferme (last stage), go to final game
+    if (S.idx >= S.team.route.length) { showFinalGame(); }
     else { showEnigme(curCP()); }
   } else if (id === 'sEnigme') {
     // Skip enigme → show code entry
@@ -1290,6 +1343,10 @@ function hardPass() {
       if (isLast) { S.idx++; save(); showReturnHome(); }
       else { showHintsScreen(cpk); }
     }
+  } else if (id === 'sFinal') {
+    // Skip final game → arrival
+    S.cpTimes.push({cp:'ferme', t:Date.now()});
+    save(); showArrival();
   } else if (id === 's8') {
     // Skip destination input → advance to next checkpoint
     S.idx++; save();
@@ -1313,6 +1370,7 @@ function testGo(screenId) {
   else if(screenId==='sEnigme') showEnigme(curCP());
   else if(screenId==='s7')      showCode(curCP());
   else if(screenId==='s8')      showHintsScreen(curCP());
+  else if(screenId==='sFinal')   showFinalGame();
   else if(screenId==='s9')      showArrival();
   else if(screenId==='s3'){
     setText('s3title',S.team.name);
@@ -1347,7 +1405,8 @@ function toggleTheme() {
 // ═══════════════════════════════════════════
 // MAP + PHOTO HINT BUTTONS
 // ═══════════════════════════════════════════
-var _mapUsed = false;
+var _mapUses = 0;
+var _mapUsed = false; // compat: true when all uses spent
 var _photoUsed = {};
 
 // Placeholder photos par lieu (remplacer par les vrais fichiers plus tard)
@@ -1371,7 +1430,7 @@ function showHelpDrawer(show) {
   // Update map button state
   var mapBtn = document.getElementById('btnMap');
   if (mapBtn) {
-    if (_mapUsed) mapBtn.classList.add('used');
+    if (_mapUses >= 2) mapBtn.classList.add('used');
     else mapBtn.classList.remove('used');
   }
 }
@@ -1397,8 +1456,8 @@ var MAP_WARN = {
 };
 
 function openMap() {
-  if (_mapUsed) {
-    toast('Carte déjà consultée — usage unique');
+  if (_mapUses >= 2) {
+    toast('Carte déjà consultée 2 fois — plus d\'utilisation');
     return;
   }
   // Show confirmation first
@@ -1442,13 +1501,14 @@ function drawMapOnCanvas() {
 }
 
 function doOpenMap() {
-  _mapUsed = true;
-  addP(15, 'Carte consultée');
-  toast('+15 min — Carte');
+  _mapUses++;
+  if (_mapUses >= 2) _mapUsed = true;
+  addP(10/60, 'Carte consultée (+10 sec)');
+  toast('+10 sec — Carte (' + _mapUses + '/2)');
   vibrate(VIB.map);
-  // Griser le bouton
+  // Griser le bouton si 2 uses spent
   var btn = document.getElementById('btnMap');
-  if (btn) btn.classList.add('used');
+  if (btn && _mapUses >= 2) btn.classList.add('used');
   var ov = document.getElementById('mapOverlay');
   if (!ov) return;
   ov.style.display = 'flex';
@@ -1482,7 +1542,7 @@ function doOpenMap() {
       if (timer) {
         timer.style.cssText = 'font-family:Cinzel,serif;font-size:24px;color:var(--gold);letter-spacing:3px;position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(6,4,2,.8);padding:4px 16px;border-radius:20px;border:1px solid rgba(201,168,76,.3);z-index:1';
       }
-      var sec = 5;
+      var sec = 10;
       if (timer) timer.textContent = sec;
       var iv = setInterval(function() {
         sec--;
@@ -1601,6 +1661,16 @@ document.getElementById('btnPhotoConfirm').onclick = function(){
   document.getElementById('photoConfirm').style.display = 'none';
   doOpenPhoto();
 };
+document.getElementById('btnBackHintsEnigme').onclick = guardTap(function(){ reviewPrevHints('sEnigme'); });
+document.getElementById('btnBackHintsCode').onclick = guardTap(function(){ reviewPrevHints('s7'); });
+document.getElementById('btnReviewBack').onclick = guardTap(function(){ exitReviewHints(); });
+document.getElementById('btnFinalReady').onclick = guardTap(function(){
+  document.getElementById('finalContent').style.display = 'none';
+  document.getElementById('finalGameDiv').style.display = '';
+});
+document.getElementById('btnFinalStop').onclick = guardTap(function(){
+  showCode('ferme');
+});
 document.getElementById('btnClosePhoto').onclick = function(){ closePhoto(); };
 document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
 document.getElementById('btnMJFloat').onclick = function(){
@@ -1685,6 +1755,7 @@ if (saved && S.team && S.t0) {
   S.iv = setInterval(tick, 1000);
   var _done = S.idx >= S.team.route.length;
   if      (saved==='s9') showArrival();
+  else if (saved==='sFinal')   showFinalGame();
   else if (saved==='s8')       showHintsScreen(curCP());
   else if (saved==='s7')       showCode(curCP());
   else if (saved==='sEnigme')  showEnigme(curCP());

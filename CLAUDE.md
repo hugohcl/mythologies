@@ -10,9 +10,9 @@ Thème : **Mythologies**. Jeu du samedi après-midi : course d'orientation dans 
 ## Équipes
 | Équipe | Mascotte | Membres | Couleur | Route |
 |--------|----------|---------|---------|-------|
-| Grecque 🦉 | Antoine, Bastien, Matthieu, Thomas | #5a8fd4 | fresque → eglise → lavoir → salle |
-| Nordique 🐦‍⬛ | Alex, Livia, Raphaël, Victor | #c8c8c8 | mairie → salle → fresque → lavoir |
-| Hindoue 🐯 | Axel, Jade, LG, Patrick | #c080e8 | lavoir → mairie → eglise → fresque |
+| Grecque 🦉 | Antoine, Bastien, Matthieu, Thomas | #5a8fd4 | fresque → eglise → lavoir → mairie → salle |
+| Nordique 🐦‍⬛ | Alex, Livia, Raphaël, Victor | #c8c8c8 | mairie → salle → eglise → lavoir → fresque |
+| Hindoue 🐯 | Axel, Jade, LG, Patrick | #c080e8 | salle → eglise → fresque → lavoir → mairie |
 
 Toutes les équipes partent et arrivent à la **Ferme d'Octave**.
 
@@ -28,12 +28,15 @@ Toutes les équipes partent et arrivent à la **Ferme d'Octave**.
 
 ## Mécanique de jeu
 1. Toutes les équipes démarrent à la Ferme — reçoivent leur 1er indice sur place
-2. Les indices révèlent la **prochaine destination**
-3. À chaque checkpoint : **énigme de localisation** → trouvent la cachette → **code 4 lettres** → débloque les indices suivants
+2. Les indices révèlent la **prochaine destination** (+ servent de guide géographique, consultables via "Revoir les indices")
+3. À chaque checkpoint (5 par équipe) : **énigme de localisation** → trouvent la cachette → **code 4 lettres** → débloque les indices suivants
 4. 4 niveaux d'indices : I gratuit / II +3min / III +6min / IV +10min
 5. Mauvaise destination tapée = +1 min
 6. Connexion internet détectée = +30 min
-7. Score = chrono + pénalités
+7. Carte consultable **2 fois max** (+10 sec par consultation, 10 sec d'affichage)
+8. Retour à la Ferme → **dernier jeu physique** → MJ donne le code FINI à l'oral → chrono s'arrête
+9. Score = chrono + pénalités
+10. Contrainte : église toujours visitée AVANT le lavoir (toutes équipes)
 
 ## Code MJ
 `ZEUS`
@@ -54,7 +57,8 @@ Screens (divs avec class `screen hidden`) :
 - `s6` — En route (chrono visible)
 - `sEnigme` — Énigme pour trouver la cachette physique
 - `s7` — Saisie code 4 lettres
-- `s8` — Indices vers prochaine destination
+- `s8` — Indices vers prochaine destination (+ mode review depuis sEnigme/s7)
+- `sFinal` — Dernier défi physique à la Ferme (briefing → jeu en cours → code FINI)
 - `s9` — Arrivée + score
 - `sSplash` — Splash screen (toucher pour commencer)
 - `s10` — MJ Login (code ZEUS)
@@ -74,6 +78,8 @@ TEAMS, CPS, HINTS, ENIGMES, QUIZ, LVL, ACC, CITS
 - `showEnigme(cpk)` — affiche l'énigme cachette
 - `showCode(cpk)` — affiche la saisie du code
 - `showHintsScreen(cpk)` — affiche les indices
+- `reviewPrevHints(returnTo)` — revoir les indices précédents depuis sEnigme/s7
+- `showFinalGame()` — écran du dernier défi physique à la Ferme
 - `showArrival()` — écran d'arrivée
 - `openMJ()` — ouvre le mode MJ
 - `switchMJTab(tab)` — navigation onglets MJ (live/indices/quiz/lb)

@@ -421,7 +421,7 @@ html.light #testOv .tov-val{color:#8a6010}
     <div class="help-btn" id="btnMap">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       <span>Carte du village</span>
-      <span class="help-pen">+15 min</span>
+      <span class="help-pen">+10 sec (×2)</span>
     </div>
     <div class="help-btn" id="btnPhoto" style="display:none">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -436,9 +436,9 @@ html.light #testOv .tov-val{color:#8a6010}
     <div style="font-size:18px;font-family:Cinzel,serif;color:var(--gold);letter-spacing:2px;margin-bottom:16px;text-transform:uppercase">Carte</div>
     <div id="mapWarnLore" style="font-family:'IM Fell English',serif;font-size:16px;color:var(--text);line-height:1.7;font-style:italic;margin-bottom:22px"></div>
     <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--text);line-height:2;margin-bottom:18px;letter-spacing:.5px">
-      <div>La carte s'affiche <strong style="color:var(--gold)">5 secondes</strong></div>
-      <div>Consultable <strong style="color:var(--gold)">une seule fois</strong></div>
-      <div>Pénalité de <strong style="color:var(--danger)">+15 minutes</strong></div>
+      <div>La carte s'affiche <strong style="color:var(--gold)">10 secondes</strong></div>
+      <div>Consultable <strong style="color:var(--gold)">2 fois max</strong></div>
+      <div>Pénalité de <strong style="color:var(--danger)">+10 secondes</strong> par consultation</div>
     </div>
     <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:22px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="transform:rotate(90deg)"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/></svg><span>Tournez le téléphone vers la gauche</span></div>
     <div style="display:flex;gap:10px;justify-content:center">
@@ -603,6 +603,7 @@ html.light #testOv .tov-val{color:#8a6010}
       <p style="font-style:italic;line-height:1.9;font-size:15px;color:var(--text)" id="enigText">—</p>
     </div>
     <button class="btn bt" id="btnFoundCache" style="margin-top:8px">J'ai trouvé — entrer le code</button>
+    <button class="btn bgh" id="btnBackHintsEnigme" style="margin-top:6px;font-size:13px;opacity:.7">Revoir les indices</button>
   </div>
 </div>
 
@@ -618,6 +619,32 @@ html.light #testOv .tov-val{color:#8a6010}
       <div class="crow" id="codeRow"></div>
       <button class="btn bt" id="btnCode" style="max-width:260px;margin:0 auto">Valider le code</button>
       <p id="codeErr" style="color:var(--danger);font-size:13px;margin-top:12px;min-height:16px;font-family:'Cinzel',serif"></p>
+      <button class="btn bgh" id="btnBackHintsCode" style="margin-top:6px;font-size:13px;opacity:.7">Revoir les indices</button>
+    </div>
+  </div>
+</div>
+
+<!-- sFinal: DERNIER DÉFI À LA FERME -->
+<div class="screen hidden" id="sFinal">
+  <div class="hdr"><div class="ht" id="sFinalTitle">—</div><div class="hs">Dernier défi</div></div>
+  <div class="cbar"><div><div class="clbl">Chrono</div><div class="ct" id="cFinal">00:00</div></div><div class="cpen">Pénalités · <b id="pFinal">+0 min</b></div></div>
+  <div class="steps" id="stFinal"></div>
+  <div class="scroll parchment-scroll">
+    <div id="finalContent">
+      <div class="card ct2" style="text-align:center;padding:24px 16px">
+        <div style="font-size:40px;margin-bottom:12px">&#127919;</div>
+        <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--text);margin-bottom:12px">Un dernier défi vous attend !</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:20px">Bravo, vous avez trouvé tous les checkpoints !<br>Récupérez les règles du dernier jeu auprès du <b style="color:var(--gold)">Maître de Jeu</b>.</p>
+        <button class="btn bt" id="btnFinalReady" style="max-width:300px;margin:0 auto">Vous avez les règles ? C'est parti !</button>
+      </div>
+    </div>
+    <div id="finalGameDiv" style="display:none">
+      <div class="card ct2" style="text-align:center;padding:24px 16px">
+        <div style="font-size:40px;margin-bottom:12px">&#9201;</div>
+        <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--text);margin-bottom:8px">Jeu en cours...</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:24px">Le chrono tourne !<br>Quand vous avez terminé, le <b style="color:var(--gold)">Maître de Jeu</b> vous donnera un code à entrer.</p>
+        <button class="btn bt" id="btnFinalStop" style="max-width:300px;margin:0 auto">Entrer le code final</button>
+      </div>
     </div>
   </div>
 </div>
@@ -631,6 +658,7 @@ html.light #testOv .tov-val{color:#8a6010}
     <div class="cph"><div class="cpn" id="s8cpName">—</div><div class="cpa" id="s8cpAddr">—</div></div>
     <p style="font-size:14px;color:var(--muted);margin-bottom:13px;font-style:italic;line-height:1.7">Ouvrez les indices pour révéler votre prochaine destination. L'Indice I est gratuit.</p>
     <div id="hintsList"></div>
+    <button class="btn bgh" id="btnReviewBack" style="display:none;margin-top:12px;font-size:13px;opacity:.8">Retour</button>
     <div class="div"></div>
     <div class="cs">
       <div class="ctit">Où allez-vous ensuite ?</div>

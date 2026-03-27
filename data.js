@@ -17,7 +17,7 @@ const TEAMS = {
     arrival:"Comme Ulysse retrouvant Ithaque après vingt ans d'errance, votre odyssée s'achève ici.",
     members:["Antoine","Bastien","Matthieu","Thomas"],
     color:"#5a8fd4", colorLight:"#2a5a9a", bg:"rgba(90,143,212,0.12)", border:"rgba(90,143,212,0.32)",
-    route:["fresque","eglise","lavoir","salle"],
+    route:["fresque","eglise","lavoir","mairie","salle"],
     emblem:'./emblem-grec.webp',
     bgTexture:'./bg-grec.webp'
   },
@@ -27,7 +27,7 @@ const TEAMS = {
     arrival:"Comme Sigurd de retour de sa quête, vos exploits seront chantés au mead-hall ce soir.",
     members:["Alex","Livia","Raphaël","Victor"],
     color:"#c8c8c8", colorLight:"#5a5a5a", bg:"rgba(160,160,160,0.10)", border:"rgba(160,160,160,0.28)",
-    route:["mairie","salle","fresque","lavoir"],
+    route:["mairie","salle","eglise","lavoir","fresque"],
     emblem:'./emblem-nordique.webp',
     bgTexture:'./bg-nordique.webp'
   },
@@ -37,19 +37,19 @@ const TEAMS = {
     arrival:"Votre yatra s'achève. Le moksha vous attend — repos mérité après ce périple.",
     members:["Axel","Jade","LG","Patrick"],
     color:"#c080e8", colorLight:"#7a3aa0", bg:"rgba(160,80,200,0.12)", border:"rgba(160,80,200,0.32)",
-    route:["lavoir","mairie","eglise","fresque"],
+    route:["salle","eglise","fresque","lavoir","mairie"],
     emblem:'./emblem-hindou.webp',
     bgTexture:'./bg-hindou.webp'
   }
 };
 
 const ENIGMES = {
-  fresque:"[PLACEHOLDER — à compléter après repérage vendredi]",
-  eglise: "[PLACEHOLDER — à compléter après repérage vendredi]",
-  lavoir: "[PLACEHOLDER — à compléter après repérage vendredi]",
-  salle:  "[PLACEHOLDER — à compléter après repérage vendredi]",
-  mairie: "[PLACEHOLDER — à compléter après repérage vendredi]",
-  ferme:  "[PLACEHOLDER — à compléter après repérage vendredi]"
+  fresque:"Cherchez sous le soleil de Dosches.",
+  eglise: "À partir de l'arbre en fleur, marchez 24 pas vers l'est.",
+  lavoir: "À partir de la chèvre, faites 21 pas nord-ouest.",
+  salle:  "Placez-vous sous la fleur centrale sous le porche, et effectuez 12 pas vers le sud.",
+  mairie: "Trouvez le sapeur-pompier, puis faites 12 pas en lui faisant dos.",
+  ferme:  "[PLACEHOLDER]"
 };
 
 const CPS = {
@@ -64,10 +64,10 @@ const CPS = {
 // ─────────────────────────────────────────────────────────────────
 // HINTS : clé = CP QUI VIENT D'ÊTRE VALIDÉ → indices vers le SUIVANT
 //
-// Routes :
-//   Grec    : Ferme -> Fresque -> Eglise -> Lavoir -> Salle -> Ferme
-//   Nordique : Ferme -> Mairie -> Salle -> Fresque -> Lavoir -> Ferme
-//   Hindou  : Ferme -> Lavoir -> Mairie -> Eglise -> Fresque -> Ferme
+// Routes (5 CP chacune, église toujours avant lavoir) :
+//   Grec     : Ferme -> Fresque -> Église -> Lavoir -> Mairie -> Salle -> Ferme
+//   Nordique : Ferme -> Mairie -> Salle -> Église -> Lavoir -> Fresque -> Ferme
+//   Hindou   : Ferme -> Salle -> Église -> Fresque -> Lavoir -> Mairie -> Ferme
 // ─────────────────────────────────────────────────────────────────
 const HINTS = {
 
@@ -75,9 +75,9 @@ const HINTS = {
   ferme: {
     grec: [  // Ferme → Fresque
       "Sisyphe gravissait sa colline éternellement. Vous n'aurez qu'à la gravir là où Borée et Euros se rencontrent pour voir son éclat.",
-      "J'impose au regard un récit, je nais là où je demeure, et le temps m'écaille parfois mais c'est ainsi qu'il me consacre.",
-      "Dans le quart nord-est, des aiguilles de fer pointent vers le ciel, ornées d'une entrée peinte.",
-      "La fresque peinte sur le portail, en montant vers le nord-est du village."
+      "Mes couleurs se mélangent à celles de l'aube du pôle, et vous feront prendre de la hauteur.",
+      "Dans le quart nord-est, un portail en montée est orné d'un mur peint.",
+      "La fresque de Bécassine, rue des Buchettes — en prenant la rue qui monte."
     ],
     nordique: [  // Ferme → Mairie
       "Odin lisait les runes du destin, mais celui des hommes de Midgard s'écrit sans divinité.",
@@ -85,18 +85,16 @@ const HINTS = {
       "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
       "La mairie."
     ],
-    hindou: [  // Ferme → Lavoir
-      "Brahma l'a créé humblement, dans l'ordre discret des nécessités humaines.",
-      "La répétition est ma seule musique, je crée des souvenirs tout en les effaçant.",
-      "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
-      "Le lavoir."
+    hindou: [  // Ferme → Salle
+      "Le sabha rassemblait la communauté. Ce hall les accueille.",
+      "Je ne suis spécialisée en rien, ce qui me rend utile à tous. Je réunis sans distinguer, j'abrite sans imposer.",
+      "Un bâtiment ouvert à tous, pour festoyer au centre du village.",
+      "La salle polyvalente."
     ]
   },
 
-  // ── FRESQUE → prochaine étape de chaque équipe ───────────────
-  //   Grec : Fresque → Église
-  //   Nordique : Fresque → Lavoir
-  //   Hindou : Fresque → Ferme (arrivée)
+  // ── FRESQUE → prochaine étape ────────────────────────────────
+  //   Grec → Église | Nordique → Ferme (dernier) | Hindou → Lavoir
   fresque: {
     grec: [  // → Église
       "Chaque polis avait son temenos, mais la fin du « poly » olympien a engendré un héritier du monde qu'il a renversé.",
@@ -104,55 +102,57 @@ const HINTS = {
       "Un trésor de bois sculpté se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
       "L'église du village."
     ],
-    nordique: [  // → Lavoir
-      "Mimir l'honore de sa sagesse, mais sans saga, sans rune et sans épée, il a pourtant gardé mille voix.",
-      "La répétition est ma seule musique, je crée des souvenirs tout en les effaçant.",
-      "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
-      "Le lavoir."
-    ],
-    hindou: [  // Dernier CP → retour à la Ferme
-      "Votre yatra touche à sa fin. Retournez au point de départ — là où votre odyssée champenoise a commencé.",
-      "La rue de la Fontaine des Champs vous guide jusqu'au bout.",
-      "Retournez à la ferme par la rue de la Fontaine des Champs.",
-      "La Ferme d'Octave — 1 rue de la Fontaine des Champs."
-    ]
-  },
-
-  // ── ÉGLISE → prochaine étape de chaque équipe ────────────────
-  //   Grec : Église → Lavoir
-  //   Hindou : Église → Fresque
-  eglise: {
-    grec: [  // → Lavoir
-      "Les Naïades ne chantent aucune épopée héroïque, mais mille vies anonymes.",
-      "La répétition est ma seule musique, je crée des souvenirs tout en les effaçant.",
-      "L'eau jaillit du sol et coule sous un abri de pierre depuis des générations. Ce lieu a disparu de nos usages mais subsiste dans le village.",
-      "Le lavoir."
-    ],
-    nordique: ["—","—","—","—"],  // Nordique ne passe pas par l'Église
-    hindou: [  // → Fresque
-      "Là où la route montagneuse de Kubera penche vers l'aube d'Indra, les nuances éclairent le monde.",
-      "J'impose au regard un récit, je nais là où je demeure, et le temps m'écaille parfois mais c'est ainsi qu'il me consacre.",
-      "Dans le quart nord-est, des aiguilles de fer pointent vers le ciel, ornées d'une entrée peinte.",
-      "La fresque peinte sur le portail, en montant vers le nord-est du village."
-    ]
-  },
-
-  // ── LAVOIR → prochaine étape de chaque équipe ────────────────
-  //   Grec : Lavoir → Salle
-  //   Nordique : Lavoir → Ferme (arrivée)
-  //   Hindou : Lavoir → Mairie
-  lavoir: {
-    grec: [  // → Salle
-      "Un lieu qui réunissait les citoyens libres sous le ciel d'Athènes. Ce lieu porte le nom d'une fleur liée à Aphrodite elle-même.",
-      "Je ne suis spécialisée en rien, ce qui me rend utile à tous. Je réunis sans distinguer, j'abrite sans imposer.",
-      "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
-      "La salle polyvalente."
-    ],
     nordique: [  // Dernier CP → retour à la Ferme
       "Comme Sigurd de retour de sa quête, votre saga s'achève. Retournez au point de départ.",
       "La rue de la Fontaine des Champs vous guide jusqu'au bout.",
       "Retournez à la ferme par la rue de la Fontaine des Champs.",
       "La Ferme d'Octave — 1 rue de la Fontaine des Champs."
+    ],
+    hindou: [  // → Lavoir
+      "Ganga purifie les âmes depuis l'éternité. Cherchez l'endroit où l'eau servait un rituel plus humble, mais non moins sacré.",
+      "La répétition est ma seule musique, je crée des souvenirs tout en les effaçant.",
+      "L'eau jaillit sous un abri de pierre, en empruntant un chemin en pelouse face à la Ferme d'Octave.",
+      "Le lavoir."
+    ]
+  },
+
+  // ── ÉGLISE → prochaine étape ─────────────────────────────────
+  //   Grec → Lavoir | Nordique → Lavoir | Hindou → Fresque
+  eglise: {
+    grec: [  // → Lavoir
+      "Les Naïades ne chantent aucune épopée héroïque, mais mille vies anonymes.",
+      "La répétition est ma seule musique, je crée des souvenirs tout en les effaçant.",
+      "L'eau jaillit sous un abri de pierre, en empruntant un chemin en pelouse face à la Ferme d'Octave.",
+      "Le lavoir."
+    ],
+    nordique: [  // → Lavoir
+      "Mimir l'honore de sa sagesse, mais sans saga, sans rune et sans épée, il a pourtant gardé mille voix.",
+      "La répétition est ma seule musique, je crée des souvenirs tout en les effaçant.",
+      "L'eau jaillit sous un abri de pierre, en empruntant un chemin en pelouse face à la Ferme d'Octave.",
+      "Le lavoir."
+    ],
+    hindou: [  // → Fresque
+      "Là où la route montagneuse de Kubera penche vers l'aube d'Indra, les nuances éclairent le monde.",
+      "Mes couleurs se mélangent à celles de l'aube du pôle, et vous feront prendre de la hauteur.",
+      "Dans le quart nord-est, un portail en montée est orné d'un mur peint.",
+      "La fresque de Bécassine, rue des Buchettes — en prenant la rue qui monte."
+    ]
+  },
+
+  // ── LAVOIR → prochaine étape ─────────────────────────────────
+  //   Grec → Mairie | Nordique → Fresque | Hindou → Mairie
+  lavoir: {
+    grec: [  // → Mairie
+      "Solon a donné ses lois à Athènes — dans chaque cité, un édifice garde les registres du destin civique.",
+      "Je garde moins de secrets que de preuves, et bien des instants décisifs passent par moi.",
+      "La loi s'affiche sur ce bâtiment que chaque commune possède. Sa gardienne de pierre porte un prénom végétal — ni rose, ni lys.",
+      "La mairie."
+    ],
+    nordique: [  // → Fresque
+      "Entre le pays glacé du Niflheim et les terres de l'aurore, les Nains illuminaient les rochers.",
+      "Mes couleurs se mélangent à celles de l'aube du pôle, et vous feront prendre de la hauteur.",
+      "Dans le quart nord-est, un portail en montée est orné d'un mur peint.",
+      "La fresque de Bécassine, rue des Buchettes — en prenant la rue qui monte."
     ],
     hindou: [  // → Mairie
       "Ce que Dharma exigeait d'ordonner, ce que le temps dispersait sans traces, les hommes l'ont consacré sans dieu.",
@@ -162,9 +162,8 @@ const HINTS = {
     ]
   },
 
-  // ── SALLE → prochaine étape de chaque équipe ─────────────────
-  //   Grec : Salle → Ferme (arrivée)
-  //   Nordique : Salle → Fresque
+  // ── SALLE → prochaine étape ──────────────────────────────────
+  //   Grec → Ferme (dernier) | Nordique → Église | Hindou → Église
   salle: {
     grec: [  // Dernier CP → retour à la Ferme
       "Comme Ulysse apercevant Ithaque, votre odyssée champenoise s'achève. Retournez au point de départ.",
@@ -172,31 +171,40 @@ const HINTS = {
       "Retournez à la ferme par la rue de la Fontaine des Champs.",
       "La Ferme d'Octave — 1 rue de la Fontaine des Champs."
     ],
-    nordique: [  // → Fresque
-      "Entre le pays glacé du Niflheim et les terres de l'aurore, les Nains illuminaient les rochers.",
-      "J'impose au regard un récit, je nais là où je demeure, et le temps m'écaille parfois mais c'est ainsi qu'il me consacre.",
-      "Dans le quart nord-est, des aiguilles de fer pointent vers le ciel, ornées d'une entrée peinte.",
-      "La fresque peinte sur le portail, en montant vers le nord-est du village."
-    ],
-    hindou: ["—","—","—","—"]  // Hindou ne passe pas par la Salle
-  },
-
-  // ── MAIRIE → prochaine étape de chaque équipe ────────────────
-  //   Nordique : Mairie → Salle
-  //   Hindou : Mairie → Église
-  mairie: {
-    grec: ["—","—","—","—"],  // Grec ne passe pas par la Mairie
-    nordique: [  // → Salle
-      "Valhöll accueillait tous les guerriers sans distinction. Ce hall porte le nom d'une fleur que les scaldes offraient à leur muse.",
-      "Je ne suis spécialisée en rien, ce qui me rend utile à tous. Je réunis sans distinguer, j'abrite sans imposer.",
-      "Un bâtiment récent, ouvert à tous, dont le nom végétal pousse sur des tiges épineuses.",
-      "La salle polyvalente."
+    nordique: [  // → Église
+      "Le temple d'Ásgarðr n'a qu'un héritier à Midgard — un lieu où un seul dieu règne et où les mortels s'agenouillent.",
+      "On ne m'habite pas, mais on vient me voir pour être habité, j'abrite sans loger et j'élève sans enfanter.",
+      "Un trésor de bois sculpté se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
+      "L'église du village."
     ],
     hindou: [  // → Église
       "Aucun Brahmane n'y porte le feu d'Agni, car un seul homme a verticalisé son karma.",
       "On ne m'habite pas, mais on vient me voir pour être habité, j'abrite sans loger et j'élève sans enfanter.",
       "Un trésor de bois sculpté se cache dans un écrin de pierre. Son saint versait l'eau sur les fronts.",
       "L'église du village."
+    ]
+  },
+
+  // ── MAIRIE → prochaine étape ─────────────────────────────────
+  //   Grec → Salle | Nordique → Salle | Hindou → Ferme (dernier)
+  mairie: {
+    grec: [  // → Salle
+      "Un lieu qui réunissait les citoyens libres d'Athènes. Ce hall les accueille.",
+      "Je ne suis spécialisée en rien, ce qui me rend utile à tous. Je réunis sans distinguer, j'abrite sans imposer.",
+      "Un bâtiment ouvert à tous, pour festoyer au centre du village.",
+      "La salle polyvalente."
+    ],
+    nordique: [  // → Salle
+      "Valhöll accueillait tous les guerriers sans distinction. Ce hall les réunit.",
+      "Je ne suis spécialisée en rien, ce qui me rend utile à tous. Je réunis sans distinguer, j'abrite sans imposer.",
+      "Un bâtiment ouvert à tous, pour festoyer au centre du village.",
+      "La salle polyvalente."
+    ],
+    hindou: [  // Dernier CP → retour à la Ferme
+      "Votre yatra touche à sa fin. Retournez au point de départ — là où votre odyssée champenoise a commencé.",
+      "La rue de la Fontaine des Champs vous guide jusqu'au bout.",
+      "Retournez à la ferme par la rue de la Fontaine des Champs.",
+      "La Ferme d'Octave — 1 rue de la Fontaine des Champs."
     ]
   }
 };
