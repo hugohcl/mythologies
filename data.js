@@ -109,7 +109,7 @@ const HINTS = {
       "La Ferme d'Octave — 1 rue de la Fontaine des Champs."
     ],
     hindou: [  // → Lavoir
-      "Ganga purifie les âmes depuis l'éternité. Cherchez l'endroit où l'eau servait un rituel plus humble, mais non moins sacré.",
+      "Brahma l'a créé humblement, dans l'ordre discret des nécessités humaines.",
       "La répétition est ma seule musique, je crée des souvenirs tout en les effaçant.",
       "L'eau jaillit sous un abri de pierre, en empruntant un chemin en pelouse face à la Ferme d'Octave.",
       "Le lavoir."
