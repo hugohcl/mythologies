@@ -1506,8 +1506,8 @@ function drawMapOnCanvas() {
 function doOpenMap() {
   _mapUses++;
   if (_mapUses >= 2) _mapUsed = true;
-  addP(10/60, 'Carte consultée (+10 sec)');
-  toast('+10 sec — Carte (' + _mapUses + '/2)');
+  addP(10, 'Carte consultée (+10 min)');
+  toast('+10 min — Carte (' + _mapUses + '/2)');
   vibrate(VIB.map);
   // Griser le bouton si 2 uses spent
   var btn = document.getElementById('btnMap');
