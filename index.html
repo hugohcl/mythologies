@@ -242,6 +242,8 @@ body>*{position:relative;z-index:1}
 #helpDrawer{position:fixed;bottom:0;right:0;z-index:1100;display:none;font-family:'Cinzel',serif}
 #helpTab{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));right:16px;width:48px;height:48px;border-radius:50%;background:var(--bg2);border:2px solid rgba(201,168,76,.5);color:var(--gold);font-size:22px;font-family:'Cinzel',serif;font-weight:700;cursor:pointer;touch-action:manipulation;box-shadow:0 2px 16px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:1101;transition:transform .2s,box-shadow .2s}
 #helpTab:active{transform:scale(.92)}
+#helpTab svg{display:block}
+#helpLabel{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px));right:4px;z-index:1101;font-family:'Cinzel',serif;font-size:8px;color:var(--gold);letter-spacing:.5px;text-align:center;width:72px;pointer-events:none;opacity:.85}
 #helpTab.help-pulse{animation:helpPulse 2s ease-in-out 3}
 @keyframes helpPulse{0%,100%{box-shadow:0 2px 16px rgba(0,0,0,.4)}50%{box-shadow:0 0 20px rgba(201,168,76,.6),0 0 40px rgba(201,168,76,.3)}}
 #helpPanel{position:fixed;bottom:calc(74px + env(safe-area-inset-bottom,0px));right:16px;background:var(--bg2);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:14px 16px;display:none;flex-direction:column;gap:10px;box-shadow:0 -4px 20px rgba(0,0,0,.3);min-width:200px;z-index:1101}
@@ -418,7 +420,8 @@ html.light #testOv .tov-val{color:#8a6010}
 <button id="btnMJFloat" style="position:fixed;bottom:calc(8px + env(safe-area-inset-bottom,0px));left:8px;z-index:1000;background:none;border:none;color:var(--muted);opacity:.2;font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;cursor:pointer;touch-action:manipulation;padding:6px 8px">MJ</button>
 <button id="btnTheme" onclick="toggleTheme()"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
 <div id="helpDrawer">
-  <div id="helpTab" class="help-pulse">?</div>
+  <div id="helpTab" class="help-pulse"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></div>
+  <div id="helpLabel">Carte & Photos</div>
   <div id="helpPanel">
     <div class="help-title"><span>Besoin d'aide ?</span><button class="help-close" id="helpClose">✕</button></div>
     <div class="help-btn" id="btnMap">
