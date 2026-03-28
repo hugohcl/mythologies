@@ -1697,10 +1697,13 @@ document.getElementById('btnMJFloat').onclick = function(){
   } else {
     // Ask for MJ code via prompt
     var code = prompt('Code MJ :');
-    if (code && code.toUpperCase() === 'ZEUS') {
+    if (!code) return;
+    if (code.toUpperCase() === 'ZEUS') {
       activateMJ();
       updateTestOverlay(true);
       toast('Mode MJ activé');
+    } else if (code.toUpperCase() === 'RESET') {
+      if (confirm('Revenir au menu principal ?')) resetGame();
     }
   }
 };
