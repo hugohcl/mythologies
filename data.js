@@ -48,7 +48,7 @@ const ENIGMES = {
   eglise: "Repérez l'arbre en fleur, puis comptez 24 pas vers l'est.",
   lavoir: "Depuis la chèvre, comptez 21 pas en direction du nord-ouest.",
   salle:  "Tenez-vous sous la fleur centrale du porche, puis avancez de 12 pas vers le sud.",
-  mairie: "Trouvez le sapeur-pompier, tournez-lui le dos et comptez 12 pas.",
+  mairie: "Autour de la mairie, trouvez le sapeur-pompier, tournez-lui le dos et comptez 12 pas.",
   ferme:  "[PLACEHOLDER]"
 };
 
