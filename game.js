@@ -529,8 +529,9 @@ function showCit(tk) {
   setTimeout(function(){ ov.classList.remove('show'); }, 2400);
 }
 
+function fmtP(v){return Math.round(v*100)/100;}
 function addP(min, reason) {
-  S.pen+=min; S.plog.push({min:min,reason:reason}); save();
+  S.pen=fmtP(S.pen+min); S.plog.push({min:fmtP(min),reason:reason}); save();
 }
 
 function setText(id, val) { var e=document.getElementById(id); if(e) e.textContent=val; }
