@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════
 // MJ MODE (remplace TEST_MODE)
 // ═══════════════════════════════════════════
-var _mjMode = true;
+var _mjMode = false;
 function isMJ() { return _mjMode; }
 function activateMJ() {
   _mjMode = true;
@@ -1681,7 +1681,8 @@ document.getElementById('btnFinalStop').onclick = guardTap(function(){
   }
 });
 document.getElementById('btnClosePhoto').onclick = function(){ closePhoto(); };
-document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
+var _btnMJAccess = document.getElementById('btnMJAccess');
+if (_btnMJAccess) _btnMJAccess.onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
 document.getElementById('btnMJFloat').onclick = function(){
   if(_mjMode){
     // Toggle test overlay on current screen
