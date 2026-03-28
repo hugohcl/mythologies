@@ -736,6 +736,13 @@ function showEnigme(cpk) {
   mkSteps('stEnigme');
   go('sEnigme','forward'); updateTestOverlay();
   createTeamParticles('sEnigme', t.key, 10);
+  if (PHOTO_HINTS[cpk] && !_photoUsed[cpk]) {
+    setTimeout(function(){
+      toast('Photo indice disponible ↘');
+      var tab = document.getElementById('helpTab');
+      if (tab) { tab.classList.remove('help-pulse'); void tab.offsetWidth; tab.classList.add('help-pulse'); }
+    }, 800);
+  }
 }
 
 // ═══════════════════════════════════════════
