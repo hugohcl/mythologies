@@ -1428,7 +1428,9 @@ function showHelpDrawer(show) {
   var panel = document.getElementById('helpPanel');
   var tab = document.getElementById('helpTab');
   if (panel) panel.style.display = 'none';
-  if (tab) { tab.style.display = ''; tab.textContent = '?'; }
+  if (tab) { tab.style.display = ''; tab.innerHTML = _helpSvg; }
+  var lbl = document.getElementById('helpLabel');
+  if (lbl) lbl.style.display = show ? '' : 'none';
   // Update map button state
   var mapBtn = document.getElementById('btnMap');
   if (mapBtn) {
@@ -1442,13 +1444,16 @@ function showPhotoBtn(show) {
   if (btn) btn.style.display = show ? '' : 'none';
 }
 
+var _helpSvg='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>';
 function toggleHelpPanel() {
   var panel = document.getElementById('helpPanel');
   var tab = document.getElementById('helpTab');
+  var lbl = document.getElementById('helpLabel');
   if (!panel) return;
   var open = panel.style.display === 'flex';
   panel.style.display = open ? 'none' : 'flex';
-  if (tab) { tab.textContent = open ? '?' : '✕'; tab.classList.remove('help-pulse'); }
+  if (tab) { tab.innerHTML = open ? _helpSvg : '✕'; tab.classList.remove('help-pulse'); }
+  if (lbl) lbl.style.display = open ? '' : 'none';
 }
 
 var MAP_WARN = {
