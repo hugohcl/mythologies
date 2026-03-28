@@ -1003,9 +1003,8 @@ function showFinalGame() {
     var fill = steps.querySelector('.steps-fill'); if (fill) fill.style.width = '100%';
     steps.querySelectorAll('.steps-mk').forEach(function(d){ d.className = 'steps-mk done'; });
   }
-  // Reset state: show briefing, hide game
   document.getElementById('finalContent').style.display = '';
-  document.getElementById('finalGameDiv').style.display = 'none';
+  var fi = document.getElementById('finalCodeInput'); if (fi) fi.value = '';
   go('sFinal', 'forward');
 }
 
@@ -1667,12 +1666,19 @@ document.getElementById('btnPhotoConfirm').onclick = function(){
 document.getElementById('btnBackHintsEnigme').onclick = guardTap(function(){ reviewPrevHints('sEnigme'); });
 document.getElementById('btnBackHintsCode').onclick = guardTap(function(){ reviewPrevHints('s7'); });
 document.getElementById('btnReviewBack').onclick = guardTap(function(){ exitReviewHints(); });
-document.getElementById('btnFinalReady').onclick = guardTap(function(){
-  document.getElementById('finalContent').style.display = 'none';
-  document.getElementById('finalGameDiv').style.display = '';
-});
 document.getElementById('btnFinalStop').onclick = guardTap(function(){
-  showCode('ferme');
+  var fi = document.getElementById('finalCodeInput');
+  var v = (fi.value||'').trim().toUpperCase();
+  if (!v) return;
+  if (v === CPS.ferme.code) {
+    playSound('success'); vibrate(VIB.success);
+    S.cpTimes.push({cp:'ferme',t:Date.now()});
+    save(); showArrival();
+  } else {
+    playSound('error'); vibrate(VIB.error);
+    fi.value = '';
+    toast('Mauvais code !');
+  }
 });
 document.getElementById('btnClosePhoto').onclick = function(){ closePhoto(); };
 document.getElementById('btnMJAccess').onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
