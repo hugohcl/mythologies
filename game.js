@@ -1703,7 +1703,7 @@ document.getElementById('btnMJFloat').onclick = function(){
       toast('Mode MJ activé');
     }
   } else if (c === 'RESET') {
-    if (confirm('Revenir au menu principal ?')) resetGame();
+    resetGame();
   }
 };
 document.getElementById('btnMJLogin').onclick  = function(){ loginMJ(); };
