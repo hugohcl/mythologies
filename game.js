@@ -1689,22 +1689,21 @@ document.getElementById('btnClosePhoto').onclick = function(){ closePhoto(); };
 var _btnMJAccess = document.getElementById('btnMJAccess');
 if (_btnMJAccess) _btnMJAccess.onclick = function(){ buildMJRow(); setText('mjErr',''); go('s10','forward'); };
 document.getElementById('btnMJFloat').onclick = function(){
-  if(_mjMode){
-    // Toggle test overlay on current screen
-    var ov = document.getElementById('testOv');
-    if (ov) ov.style.display = ov.style.display === 'block' ? 'none' : 'block';
-    updateTestOverlay(true);
-  } else {
-    // Ask for MJ code via prompt
-    var code = prompt('Code MJ :');
-    if (!code) return;
-    if (code.toUpperCase() === 'ZEUS') {
+  var code = prompt('Code :');
+  if (!code) return;
+  var c = code.toUpperCase();
+  if (c === 'ZEUS') {
+    if (_mjMode) {
+      var ov = document.getElementById('testOv');
+      if (ov) ov.style.display = ov.style.display === 'block' ? 'none' : 'block';
+      updateTestOverlay(true);
+    } else {
       activateMJ();
       updateTestOverlay(true);
       toast('Mode MJ activé');
-    } else if (code.toUpperCase() === 'RESET') {
-      if (confirm('Revenir au menu principal ?')) resetGame();
     }
+  } else if (c === 'RESET') {
+    if (confirm('Revenir au menu principal ?')) resetGame();
   }
 };
 document.getElementById('btnMJLogin').onclick  = function(){ loginMJ(); };
