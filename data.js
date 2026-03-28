@@ -45,10 +45,10 @@ const TEAMS = {
 
 const ENIGMES = {
   fresque:"Cherchez sous le soleil de Dosches.",
-  eglise: "À partir de l'arbre en fleur, marchez 24 pas vers l'est.",
-  lavoir: "À partir de la chèvre, faites 21 pas nord-ouest.",
-  salle:  "Placez-vous sous la fleur centrale sous le porche, et effectuez 12 pas vers le sud.",
-  mairie: "Trouvez le sapeur-pompier, puis faites 12 pas en lui faisant dos.",
+  eglise: "Repérez l'arbre en fleur, puis comptez 24 pas vers l'est.",
+  lavoir: "Depuis la chèvre, comptez 21 pas en direction du nord-ouest.",
+  salle:  "Tenez-vous sous la fleur centrale du porche, puis avancez de 12 pas vers le sud.",
+  mairie: "Trouvez le sapeur-pompier, tournez-lui le dos et comptez 12 pas.",
   ferme:  "[PLACEHOLDER]"
 };
 
