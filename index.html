@@ -632,18 +632,10 @@ html.light #testOv .tov-val{color:#8a6010}
   <div class="scroll parchment-scroll">
     <div id="finalContent">
       <div class="card ct2" style="text-align:center;padding:24px 16px">
-        <div style="font-size:40px;margin-bottom:12px">&#127919;</div>
-        <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--text);margin-bottom:12px">Un dernier défi vous attend !</div>
-        <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:20px">Bravo, vous avez trouvé tous les checkpoints !<br>Récupérez les règles du dernier jeu auprès du <b style="color:var(--gold)">Maître de Jeu</b>.</p>
-        <button class="btn bt" id="btnFinalReady" style="max-width:300px;margin:0 auto">Vous avez les règles ? C'est parti !</button>
-      </div>
-    </div>
-    <div id="finalGameDiv" style="display:none">
-      <div class="card ct2" style="text-align:center;padding:24px 16px">
-        <div style="font-size:40px;margin-bottom:12px">&#9201;</div>
-        <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--text);margin-bottom:8px">Jeu en cours...</div>
-        <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:24px">Le chrono tourne !<br>Quand vous avez terminé, le <b style="color:var(--gold)">Maître de Jeu</b> vous donnera un code à entrer.</p>
-        <button class="btn bt" id="btnFinalStop" style="max-width:300px;margin:0 auto">Entrer le code final</button>
+        <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--text);margin-bottom:12px">Un dernier défi vous attend</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:20px">Bravo, vous avez trouvé tous les checkpoints !<br>Récupérez les règles du dernier jeu auprès du <b style="color:var(--gold)">Maître de Jeu</b>.<br>Quand vous avez terminé, entrez le code qu'il vous donnera.</p>
+        <input class="din" id="finalCodeInput" type="text" maxlength="4" placeholder="Code final…" autocomplete="off" autocorrect="off" spellcheck="false" style="text-align:center;font-size:20px;letter-spacing:6px;text-transform:uppercase;max-width:220px;margin:0 auto 16px"/>
+        <button class="btn bt" id="btnFinalStop" style="max-width:300px;margin:0 auto">Valider</button>
       </div>
     </div>
   </div>
