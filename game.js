@@ -1428,7 +1428,7 @@ function showHelpDrawer(show) {
   var panel = document.getElementById('helpPanel');
   var tab = document.getElementById('helpTab');
   if (panel) panel.style.display = 'none';
-  if (tab) tab.style.display = '';
+  if (tab) { tab.style.display = ''; tab.textContent = '?'; }
   // Update map button state
   var mapBtn = document.getElementById('btnMap');
   if (mapBtn) {
@@ -1448,7 +1448,7 @@ function toggleHelpPanel() {
   if (!panel) return;
   var open = panel.style.display === 'flex';
   panel.style.display = open ? 'none' : 'flex';
-  if (tab) tab.style.display = open ? '' : 'none';
+  if (tab) { tab.textContent = open ? '?' : '✕'; tab.classList.remove('help-pulse'); }
 }
 
 var MAP_WARN = {
